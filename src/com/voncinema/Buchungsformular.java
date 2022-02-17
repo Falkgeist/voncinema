@@ -9,11 +9,11 @@ public class Buchungsformular {
     private JComboBox selectVorstellung;
     private JSpinner spinnerAnzahlKinder;
     private JSpinner spinnerAnzahlErwachsene;
-    private JSpinner spinnerAnzahlErmaeßigt;
+    private JSpinner spinnerAnzahlErmaessigt;
     private JTextField textField1;
     private JLabel labelAnzahlKinder;
     private JLabel labelAnzahlErwachsene;
-    private JLabel labelAnzahlErmaeßigt;
+    private JLabel labelAnzahlErmaessigt;
     private JLabel labelRabattcode;
     private JPanel tickets;
     private JLabel labelFilm;
@@ -23,7 +23,7 @@ public class Buchungsformular {
         JFrame frame = new JFrame("VonCinema");
         Buchungsformular form = new Buchungsformular();
         Kinoverwaltung kv = new Kinoverwaltung();
-        form.selectFilm.setModel(new DefaultComboBoxModel(kv.filme.toArray()));
+        form.selectFilm.setModel(new DefaultComboBoxModel(kv.getFilme().toArray()));
         JPanel contentPane = form.start;
         frame.setContentPane(contentPane);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

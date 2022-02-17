@@ -4,23 +4,17 @@ import java.sql.*;
 import java.util.*;
 
 public class Kinoverwaltung {
-    ArrayList<Film> filme = new ArrayList<Film>();
-
-    Kinoverwaltung() {
-        getFilme();
-    }
-
-    public void getFilme()
+    public ArrayList<Film> getFilme()
     {
+        ArrayList<Film> filme = new ArrayList<>();
         try {
             Connection conn = setupConnection();
             Statement stat = conn.createStatement();
             String sql = "select * from vc_film;";
             ResultSet rs = stat.executeQuery(sql);
-            System.out.println();
 
             while (rs.next()) {
-                this.filme.add(new Film(rs.getInt("ID"), rs.getString("name"), rs.getString("beschreibung"), rs.getInt("laenge")));
+                filme.add(new Film(rs.getInt("ID"), rs.getString("name"), rs.getString("beschreibung"), rs.getInt("laenge")));
             }
 
             rs.close();
@@ -30,9 +24,10 @@ public class Kinoverwaltung {
         {
             System.err.println(e);
         }
+        return filme;
     }
 
-    public void anzeigenVorstellungen()
+    public void getVorstellungen()
     {
 
     }
