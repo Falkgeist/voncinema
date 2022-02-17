@@ -2,7 +2,7 @@ package com.voncinema;
 
 import javax.swing.*;
 
-public class VonCinema {
+public class Buchungsformular {
     private JPanel start;
     private JComboBox selectFilm;
     private JButton buttonBuchen;
@@ -21,7 +21,11 @@ public class VonCinema {
 
     public static void main(String[] args) {
         JFrame frame = new JFrame("VonCinema");
-        frame.setContentPane(new VonCinema().start);
+        Buchungsformular form = new Buchungsformular();
+        Kinoverwaltung kv = new Kinoverwaltung();
+        form.selectFilm.setModel(new DefaultComboBoxModel(kv.filme.toArray()));
+        JPanel contentPane = form.start;
+        frame.setContentPane(contentPane);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
         frame.setVisible(true);
