@@ -11,4 +11,9 @@ public class Vorstellung {
         this.beginn = beginn;
         this.ende = ende;
     }
+
+    @Override
+    public String toString() {
+        return beginn + " - " +ende;
+    }
 }

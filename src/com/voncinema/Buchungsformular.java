@@ -1,6 +1,7 @@
 package com.voncinema;
 
 import javax.swing.*;
+import java.util.ArrayList;
 
 public class Buchungsformular {
     private JPanel start;
@@ -22,8 +23,10 @@ public class Buchungsformular {
     public static void main(String[] args) {
         JFrame frame = new JFrame("VonCinema");
         Buchungsformular form = new Buchungsformular();
-        Kinoverwaltung kv = new Kinoverwaltung();
-        form.selectFilm.setModel(new DefaultComboBoxModel(kv.getFilme().toArray()));
+        ArrayList<Object> filme = Kinoverwaltung.getFromDB("Film", "vc_film");
+        ArrayList<Object> vorstellungen = Kinoverwaltung.getFromDB("Vorstellung", "vc_vorstellung");
+        form.selectFilm.setModel(new DefaultComboBoxModel(filme.toArray()));
+        form.selectVorstellung.setModel(new DefaultComboBoxModel(vorstellungen.toArray()));
         JPanel contentPane = form.start;
         frame.setContentPane(contentPane);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
