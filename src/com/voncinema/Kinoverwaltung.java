@@ -14,7 +14,7 @@ public class Kinoverwaltung {
             ResultSet rs = stat.executeQuery(sql);
 
             while (rs.next()) {
-                filme.add(new Film(rs.getInt("ID"), rs.getString("name"), rs.getString("beschreibung"), rs.getInt("laenge")));
+                filme.add(new Film(rs.getInt("ID"), rs.getString("name"), rs.getString("beschreibung"), rs.getInt("laenge"), rs.getInt("kategorie"), rs.getString("genre")));
             }
 
             rs.close();
