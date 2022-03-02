@@ -1,5 +1,8 @@
 package com.voncinema;
 
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 
 public class Film {
@@ -22,5 +25,22 @@ public class Film {
     @Override
     public String toString() {
         return name + " (" +laenge+" min)";
+    }
+
+
+
+    public void saveToDB()
+    {
+        try {
+            Connection conn = Kinoverwaltung.setupConnection();
+            Statement stat = conn.createStatement();
+            String sql = "INSERT INTO vc_film VALUES(" + name + "," + beschreibung + "," + laenge + "," + kategorie + "," + genre + ");";
+            stat.executeUpdate(sql);
+            conn.close();
+        }
+        catch (ClassNotFoundException | SQLException e)
+        {
+            System.err.println(e);
+        }
     }
 }
