@@ -1,5 +1,9 @@
 package com.voncinema;
 
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
+
 public class KinosaalKonfigurationPlatzkategorie {
     private int ID;
     private int konfiguration;
@@ -11,5 +15,20 @@ public class KinosaalKonfigurationPlatzkategorie {
         this.konfiguration = konfiguration;
         this.platzkategorie = platzkategorie;
         this.anzahl = anzahl;
+    }
+
+    public void saveToDB()
+    {
+        try {
+            Connection conn = Kinoverwaltung.setupConnection();
+            Statement stat = conn.createStatement();
+            String sql = "INSERT INTO vc_film VALUES(" + konfiguration + "," + platzkategorie + "," + anzahl + ");";
+            stat.executeUpdate(sql);
+            conn.close();
+        }
+        catch (ClassNotFoundException | SQLException e)
+        {
+            System.err.println(e);
+        }
     }
 }
