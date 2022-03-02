@@ -1,5 +1,9 @@
 package com.voncinema;
 
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
+
 public class Vorstellung {
     private int ID, film, kinosaal;
     private String beginn, ende;
@@ -15,5 +19,20 @@ public class Vorstellung {
     @Override
     public String toString() {
         return beginn + " - " +ende;
+    }
+
+    public void saveToDB()
+    {
+        try {
+            Connection conn = Kinoverwaltung.setupConnection();
+            Statement stat = conn.createStatement();
+            String sql = "INSERT INTO vc_karte VALUES(" + film + "," + kinosaal + "," + beginn + "," + ende +");";
+            stat.executeUpdate(sql);
+            conn.close();
+        }
+        catch (ClassNotFoundException | SQLException e)
+        {
+            System.err.println(e);
+        }
     }
 }
