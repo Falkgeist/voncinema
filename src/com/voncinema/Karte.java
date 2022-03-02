@@ -29,7 +29,7 @@ public class Karte {
         }
     }
 
-    public int getLastIdFromDB()
+    public int getLastIDFromDB()
     {
         try {
             Connection conn = Kinoverwaltung.setupConnection();
@@ -43,6 +43,6 @@ public class Karte {
         {
             System.err.println(e);
         }
-
+        return 0;
     }
 }
