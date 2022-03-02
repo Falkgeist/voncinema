@@ -13,7 +13,7 @@ public class Buchungsformular {
     private JSpinner spinnerAnzahlKinder;
     private JSpinner spinnerAnzahlErwachsene;
     private JSpinner spinnerAnzahlErmaessigt;
-    private JTextField textField1;
+    private JTextField inputRabattcode;
     private JLabel labelAnzahlKinder;
     private JLabel labelAnzahlErwachsene;
     private JLabel labelAnzahlErmaessigt;
@@ -21,6 +21,8 @@ public class Buchungsformular {
     private JPanel tickets;
     private JLabel labelFilm;
     private JLabel labelVorstellung;
+    private JTextField inputPerson;
+    private JLabel labelPerson;
 
     public Buchungsformular() {
         selectFilm.addActionListener(new ActionListener() {
