@@ -133,7 +133,7 @@ public class Kinoverwaltung {
 
     }
 
-    private static Connection setupConnection() throws ClassNotFoundException, SQLException
+    static Connection setupConnection() throws ClassNotFoundException, SQLException
     {
         Class.forName("org.sqlite.JDBC");
         return DriverManager.getConnection("jdbc:sqlite:voncinema_db.sqlite");

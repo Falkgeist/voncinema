@@ -33,6 +33,12 @@ public class Buchungsformular {
                 selectVorstellung.setModel(new DefaultComboBoxModel(vorstellungen.toArray()));
             }
         });
+        buttonBuchen.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+
+            }
+        });
     }
 
     public static void main(String[] args) {
