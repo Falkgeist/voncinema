@@ -10,14 +10,17 @@ public class Buchung {
     private int ID;
     private String person;
     private int vorstellung;
-    private int karten;
     private String status;
 
-    Buchung(int ID, String person, int vorstellung, int karten, String status) {
+    Buchung(String person, int vorstellung) {
+        this.person = person;
+        this.vorstellung = vorstellung;
+    }
+
+    Buchung(int ID, String person, int vorstellung, String status) {
         this.ID = ID;
         this.person = person;
         this.vorstellung = vorstellung;
-        this.karten = karten;
         this.status = status;
     }
 
