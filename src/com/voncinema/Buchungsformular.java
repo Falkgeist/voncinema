@@ -1,6 +1,8 @@
 package com.voncinema;
 
 import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 public class Buchungsformular {
@@ -19,6 +21,19 @@ public class Buchungsformular {
     private JPanel tickets;
     private JLabel labelFilm;
     private JLabel labelVorstellung;
+
+    public Buchungsformular() {
+        selectFilm.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JComboBox cb = (JComboBox)e.getSource();
+                Film film = (Film)cb.getSelectedItem();
+                Integer filmID = film.getID();
+                ArrayList<Object> vorstellungen = Kinoverwaltung.getFromDB("Vorstellung", "vc_vorstellung", "WHERE id="+filmID);
+                selectVorstellung.setModel(new DefaultComboBoxModel(vorstellungen.toArray()));
+            }
+        });
+    }
 
     public static void main(String[] args) {
         JFrame frame = new JFrame("VonCinema");

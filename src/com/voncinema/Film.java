@@ -15,6 +15,10 @@ public class Film {
         this.genre = genre;
     }
 
+    public int getID() {
+        return ID;
+    }
+
     @Override
     public String toString() {
         return name + " (" +laenge+" min)";
