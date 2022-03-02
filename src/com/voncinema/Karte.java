@@ -8,6 +8,11 @@ import java.sql.Statement;
 public class Karte {
     private int ID, rabatt, platzkategorie;
 
+    Karte(int rabatt, int platzkategorie) {
+        this.rabatt = rabatt;
+        this.platzkategorie = platzkategorie;
+    }
+
     Karte(int ID, int rabatt, int platzkategorie) {
         this.ID = ID;
         this.rabatt = rabatt;

@@ -21,14 +21,14 @@ public class Buchung {
         this.status = status;
     }
 
-    public void setPerson()
+    public void hinzufuegenKarte(int rabatt, int platzkategorie)
     {
-
-    }
-
-    public void hinzufuegenKarte()
-    {
-
+        Karte karte = new Karte(rabatt, platzkategorie);
+        karte.saveToDB();
+        int kartenID = Karte.getLastIdFromDB();
+        BuchungKarten karten = new BuchungKarten(this.ID, karte.getID());
+        //karten.saveToDB();
+        System.out.println(karte);
     }
 
     public void setVorstellung()
