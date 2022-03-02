@@ -1,5 +1,8 @@
 package com.voncinema;
 
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 
 public class Platzkategorie {
@@ -11,5 +14,20 @@ public class Platzkategorie {
         this.ID = ID;
         this.name = name;
         this.zuschlagFix = zuschlagFix;
+    }
+
+    public void saveToDB()
+    {
+        try {
+            Connection conn = Kinoverwaltung.setupConnection();
+            Statement stat = conn.createStatement();
+            String sql = "INSERT INTO vc_platzkategorie VALUES(" + name + "," + zuschlagFix + ");";
+            stat.executeUpdate(sql);
+            conn.close();
+        }
+        catch (ClassNotFoundException | SQLException e)
+        {
+            System.err.println(e);
+        }
     }
 }
