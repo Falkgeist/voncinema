@@ -34,7 +34,7 @@ public class Karte {
         }
     }
 
-    public int getLastIDFromDB()
+    public static int getLastIDFromDB()
     {
         try {
             Connection conn = Kinoverwaltung.setupConnection();

@@ -28,8 +28,8 @@ public class Buchung {
     {
         Karte karte = new Karte(rabatt, platzkategorie);
         karte.saveToDB();
-        int kartenID = Karte.getLastIdFromDB();
-        BuchungKarten karten = new BuchungKarten(this.ID, karte.getID());
+        int kartenID = Karte.getLastIDFromDB();
+        //BuchungKarten karten = new BuchungKarten(this.ID, karte.getID());
         //karten.saveToDB();
         System.out.println(karte);
     }
@@ -54,7 +54,7 @@ public class Buchung {
         try {
             Connection conn = Kinoverwaltung.setupConnection();
             Statement stat = conn.createStatement();
-            String sql = "Insert into vc_buchung VALUES(" + person + "," + vorstellung + "," + karten + "," + status + ");";
+            String sql = "Insert into vc_buchung VALUES(" + person + "," + vorstellung + "," + status + ");";
             stat.executeUpdate(sql);
             conn.close();
         }

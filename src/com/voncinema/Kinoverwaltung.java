@@ -16,7 +16,7 @@ public class Kinoverwaltung {
             while (rs.next()) {
                 switch (objectClass) {
                     case "Buchung":
-                        objects.add(new Buchung(rs.getInt("ID"), rs.getString("person"), rs.getInt("vorstellung"), rs.getInt("karten"), rs.getString("status")));
+                        objects.add(new Buchung(rs.getInt("ID"), rs.getString("person"), rs.getInt("vorstellung"), rs.getString("status")));
                         break;
                     case "BuchungKarten":
                         objects.add(new BuchungKarten(rs.getInt("ID"), rs.getInt("buchung"), rs.getInt("karte")));
@@ -73,7 +73,7 @@ public class Kinoverwaltung {
             while (rs.next()) {
                 switch (objectClass) {
                     case "Buchung":
-                        objects.add(new Buchung(rs.getInt("ID"), rs.getString("person"), rs.getInt("vorstellung"), rs.getInt("karten"), rs.getString("status")));
+                        objects.add(new Buchung(rs.getInt("ID"), rs.getString("person"), rs.getInt("vorstellung"), rs.getString("status")));
                         break;
                     case "BuchungKarten":
                         objects.add(new BuchungKarten(rs.getInt("ID"), rs.getInt("buchung"), rs.getInt("karte")));
