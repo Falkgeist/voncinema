@@ -44,10 +44,7 @@ public class Buchungsformular {
                 Vorstellung vorstellung = (Vorstellung)selectVorstellung.getSelectedItem();
                 Buchung buchung = new Buchung(inputPerson.getText(), vorstellung.getID());
                 buchung.saveToDB();
-                int tickets = (int) spinnerAnzahl.getValue();
-                //for (int i = 1; i <= tickets; i++) {
-                    //buchung.hinzufuegenKarte(inputRabattcode.getText(), 1, 1);
-                //}
+                buchung.hinzufuegenKarten();
             }
         });
     }

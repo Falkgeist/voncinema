@@ -11,6 +11,7 @@ public class Buchung {
     private String person;
     private int vorstellung;
     private String status;
+    private ArrayList<Karte> karten = new ArrayList<>();
 
     Buchung(String person, int vorstellung) {
         this.person = person;
@@ -24,15 +25,14 @@ public class Buchung {
         this.status = status;
     }
 
-    public void hinzufuegenKarte(String rabattcode, int platzkategorie, int kartentyp)
+    public void hinzufuegenKarten()
     {
-        int rabattID = Rabatt.findIDByString(rabattcode);
-        Karte karte = new Karte(rabattID, platzkategorie, kartentyp);
-        karte.saveToDB();
-        int kartenID = Karte.getLastIDFromDB();
-        BuchungKarten karten = new BuchungKarten(this.ID, kartenID);
-        karten.saveToDB();
-        System.out.println(karte);
+        for (Karte karte : this.karten) {
+            karte.saveToDB();
+            int kartenID = Karte.getLastIDFromDB();
+            BuchungKarten karten = new BuchungKarten(this.ID, kartenID);
+            karten.saveToDB();
+        }
     }
 
     public void setVorstellung()
