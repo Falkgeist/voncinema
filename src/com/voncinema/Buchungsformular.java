@@ -26,6 +26,7 @@ public class Buchungsformular {
     private JButton buttonTicket;
     private JTextField inputPerson;
     private JLabel labelPerson;
+    private Buchung buchung = new Buchung();
 
     public Buchungsformular() {
         selectFilm.addActionListener(new ActionListener() {
@@ -41,13 +42,19 @@ public class Buchungsformular {
         buttonBuchen.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Vorstellung vorstellung = (Vorstellung)selectVorstellung.getSelectedItem();
-                Buchung buchung = new Buchung(inputPerson.getText(), vorstellung.getID());
                 buchung.saveToDB();
                 int tickets = (int) spinnerAnzahl.getValue();
                 //for (int i = 1; i <= tickets; i++) {
                     //buchung.hinzufuegenKarte(inputRabattcode.getText(), 1, 1);
                 //}
+            }
+        });
+        buttonTicket.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                Vorstellung vorstellung = (Vorstellung)selectVorstellung.getSelectedItem();
+                //buchung.hinzufuegenKarte(inputRabattcode.getText(), selectKartentyp.getSelectedItem().getID(), selectPlatzkategorie.getSelectedItem().getID());
+
             }
         });
     }
