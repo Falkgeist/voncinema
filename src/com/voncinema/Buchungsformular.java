@@ -21,6 +21,8 @@ public class Buchungsformular {
     private JPanel tickets;
     private JLabel labelFilm;
     private JLabel labelVorstellung;
+    private JTextField inputName;
+    private JLabel lableName;
     private JTextField inputPerson;
     private JLabel labelPerson;
 
