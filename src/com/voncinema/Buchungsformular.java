@@ -23,9 +23,10 @@ public class Buchungsformular {
     private JLabel labelPlatzkategorie;
     private JLabel labelKartentyp;
     private JLabel labelAnzahl;
-    private JButton buttonTicket;
+    private JButton buttonHinzufuegenKarte;
     private JTextField inputPerson;
     private JLabel labelPerson;
+    private Buchung buchung = new Buchung();
 
     public Buchungsformular() {
         selectFilm.addActionListener(new ActionListener() {
@@ -42,8 +43,13 @@ public class Buchungsformular {
             @Override
             public void actionPerformed(ActionEvent e) {
                 Vorstellung vorstellung = (Vorstellung)selectVorstellung.getSelectedItem();
-                Buchung buchung = new Buchung(inputPerson.getText(), vorstellung.getID());
                 Kinoverwaltung.bucheBuchung(vorstellung, buchung);
+            }
+        });
+        buttonHinzufuegenKarte.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                //buchung.hinzufuegenKarte(inputRabattcode.getText(), selectKartentyp.getSelectedItem().getID(), selectPlatzkategorie.getSelectedItem().getID());
             }
         });
     }
@@ -51,10 +57,6 @@ public class Buchungsformular {
     public static void main(String[] args) {
         JFrame frame = new JFrame("VonCinema");
         Buchungsformular form = new Buchungsformular();
-        //ArrayList<Object> filme = Kinoverwaltung.getFromDB("Film", "vc_film");
-        //form.selectFilm.setModel(new DefaultComboBoxModel(filme.toArray()));
-        //ArrayList<Object> vorstellungen = Kinoverwaltung.getFromDB("Vorstellung", "vc_vorstellung");
-        //form.selectVorstellung.setModel(new DefaultComboBoxModel(vorstellungen.toArray()));
         form.getOptionsFromDB("Film", "vc_film");
         form.getOptionsFromDB("Vorstellung", "vc_vorstellung");
         form.getOptionsFromDB("Platzkategorie", "vc_platzkategorie");

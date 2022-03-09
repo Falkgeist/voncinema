@@ -37,6 +37,13 @@ public class Buchung {
         }
     }
 
+    public void hinzufuegenKarte(String rabattcode, int platzkategorie, int kartentyp)
+    {
+        int rabattID = Rabatt.findIDByString(rabattcode);
+        Karte karte = new Karte(rabattID, platzkategorie, kartentyp);
+        karten.add(karte);
+    }
+
     public void setVorstellung()
     {
 
