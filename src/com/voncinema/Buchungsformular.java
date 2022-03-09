@@ -23,7 +23,7 @@ public class Buchungsformular {
     private JLabel labelPlatzkategorie;
     private JLabel labelKartentyp;
     private JLabel labelAnzahl;
-    private JButton buttonTicket;
+    private JButton buttonHinzufuegenKarte;
     private JTextField inputPerson;
     private JLabel labelPerson;
     private Buchung buchung = new Buchung();
@@ -49,7 +49,7 @@ public class Buchungsformular {
                 //}
             }
         });
-        buttonTicket.addActionListener(new ActionListener() {
+        buttonHinzufuegenKarte.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 Vorstellung vorstellung = (Vorstellung)selectVorstellung.getSelectedItem();
