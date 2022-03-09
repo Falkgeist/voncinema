@@ -30,6 +30,9 @@ public class Kinoverwaltung {
                     case "Karte":
                         objects.add(new Karte(rs.getInt("ID"), rs.getInt("rabatt"), rs.getInt("platzkategorie")));
                         break;
+                    case "Kartentyp":
+                        objects.add(new Kartentyp(rs.getInt("ID"), rs.getString("name"), rs.getDouble("preis")));
+                        break;
                     case "Kinosaal":
                         objects.add(new Kinosaal(rs.getInt("ID"), rs.getInt("konfiguration")));
                         break;
@@ -87,6 +90,9 @@ public class Kinoverwaltung {
                     case "Karte":
                         objects.add(new Karte(rs.getInt("ID"), rs.getInt("rabatt"), rs.getInt("platzkategorie")));
                         break;
+                    case "Kartentyp":
+                        objects.add(new Kartentyp(rs.getInt("ID"), rs.getString("name"), rs.getDouble("preis")));
+                        break;
                     case "Kinosaal":
                         objects.add(new Kinosaal(rs.getInt("ID"), rs.getInt("konfiguration")));
                         break;
@@ -118,22 +124,23 @@ public class Kinoverwaltung {
         return objects;
     }
 
-    public void getVorstellungen()
+    public static void getVorstellungen()
     {
 
     }
 
-    public void bucheBuchung()
+    public static void bucheBuchung(Vorstellung vorstellung, Buchung buchung)
+    {
+        buchung.saveToDB();
+        buchung.hinzufuegenKarten();
+    }
+
+    public static void storniereBuchung()
     {
 
     }
 
-    public void storniereBuchung()
-    {
-
-    }
-
-    static Connection setupConnection() throws ClassNotFoundException, SQLException
+    public static Connection setupConnection() throws ClassNotFoundException, SQLException
     {
         Class.forName("org.sqlite.JDBC");
         return DriverManager.getConnection("jdbc:sqlite:voncinema_db.sqlite");

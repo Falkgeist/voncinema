@@ -13,6 +13,8 @@ public class Buchung {
     private String status;
     private ArrayList<Karte> karten = new ArrayList<>();
 
+    Buchung(){}
+
     Buchung(String person, int vorstellung) {
         this.person = person;
         this.vorstellung = vorstellung;

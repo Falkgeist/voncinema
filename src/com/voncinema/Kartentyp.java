@@ -10,4 +10,13 @@ public class Kartentyp {
         this.name = name;
         this.preis = preis;
     }
+
+    public int getId() {
+        return id;
+    }
+
+    @Override
+    public String toString() {
+        return name;
+    }
 }

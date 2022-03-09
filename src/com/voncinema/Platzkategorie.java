@@ -30,4 +30,13 @@ public class Platzkategorie {
             System.err.println(e);
         }
     }
+
+    public int getID() {
+        return ID;
+    }
+
+    @Override
+    public String toString() {
+        return name;
+    }
 }
