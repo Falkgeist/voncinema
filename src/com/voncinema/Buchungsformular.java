@@ -13,7 +13,7 @@ public class Buchungsformular {
     private JSpinner spinnerAnzahl;
     private JTextField inputRabattcode;
     private JLabel labelRabattcode;
-    private JPanel tickets;
+    private JPanel labelKarten;
     private JLabel labelFilm;
     private JLabel labelVorstellung;
     private JTextField inputName;
