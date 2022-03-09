@@ -6,17 +6,19 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 public class Karte {
-    private int ID, rabatt, platzkategorie;
+    private int ID, rabatt, platzkategorie, kartentyp;
 
-    Karte(int rabatt, int platzkategorie) {
+    Karte(int rabatt, int platzkategorie, int kartentyp) {
         this.rabatt = rabatt;
         this.platzkategorie = platzkategorie;
+        this.kartentyp = kartentyp;
     }
 
-    Karte(int ID, int rabatt, int platzkategorie) {
+    Karte(int ID, int rabatt, int platzkategorie, int kartentyp) {
         this.ID = ID;
         this.rabatt = rabatt;
         this.platzkategorie = platzkategorie;
+        this.kartentyp = kartentyp;
     }
 
     public void saveToDB()

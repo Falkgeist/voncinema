@@ -10,19 +10,20 @@ public class Buchungsformular {
     private JComboBox selectFilm;
     private JButton buttonBuchen;
     private JComboBox selectVorstellung;
-    private JSpinner spinnerAnzahlKinder;
-    private JSpinner spinnerAnzahlErwachsene;
-    private JSpinner spinnerAnzahlErmaessigt;
+    private JSpinner spinnerAnzahl;
     private JTextField inputRabattcode;
-    private JLabel labelAnzahlKinder;
-    private JLabel labelAnzahlErwachsene;
-    private JLabel labelAnzahlErmaessigt;
     private JLabel labelRabattcode;
     private JPanel tickets;
     private JLabel labelFilm;
     private JLabel labelVorstellung;
     private JTextField inputName;
-    private JLabel lableName;
+    private JLabel labelName;
+    private JComboBox selectKartentyp;
+    private JComboBox selectPlatzkategorie;
+    private JLabel labelPlatzkategorie;
+    private JLabel labelKartentyp;
+    private JLabel labelAnzahl;
+    private JButton buttonTicket;
     private JTextField inputPerson;
     private JLabel labelPerson;
 
@@ -39,8 +40,14 @@ public class Buchungsformular {
         });
         buttonBuchen.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-
+            public void actionPerformed(ActionEvent e) {
+                Vorstellung vorstellung = (Vorstellung)selectVorstellung.getSelectedItem();
+                Buchung buchung = new Buchung(inputPerson.getText(), vorstellung.getID());
+                buchung.saveToDB();
+                int tickets = (int) spinnerAnzahl.getValue();
+                //for (int i = 1; i <= tickets; i++) {
+                    //buchung.hinzufuegenKarte(inputRabattcode.getText(), 1, 1);
+                //}
             }
         });
     }

@@ -35,4 +35,8 @@ public class Vorstellung {
             System.err.println(e);
         }
     }
+
+    public int getID() {
+        return ID;
+    }
 }

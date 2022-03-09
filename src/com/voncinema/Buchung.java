@@ -24,13 +24,14 @@ public class Buchung {
         this.status = status;
     }
 
-    public void hinzufuegenKarte(int rabatt, int platzkategorie)
+    public void hinzufuegenKarte(String rabattcode, int platzkategorie, int kartentyp)
     {
-        Karte karte = new Karte(rabatt, platzkategorie);
+        int rabattID = Rabatt.findIDByString(rabattcode);
+        Karte karte = new Karte(rabattID, platzkategorie, kartentyp);
         karte.saveToDB();
         int kartenID = Karte.getLastIDFromDB();
-        //BuchungKarten karten = new BuchungKarten(this.ID, karte.getID());
-        //karten.saveToDB();
+        BuchungKarten karten = new BuchungKarten(this.ID, kartenID);
+        karten.saveToDB();
         System.out.println(karte);
     }
 

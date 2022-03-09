@@ -1,8 +1,6 @@
 package com.voncinema;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 
 public class Rabatt {
     private int ID;
@@ -13,6 +11,29 @@ public class Rabatt {
         this.ID = ID;
         this.name = name;
         this.wert = wert;
+    }
+
+    public static int findIDByString(String name) {
+        int id = 0;
+        try {
+            Connection conn = Kinoverwaltung.setupConnection();
+            String sql = "select id from vc_rabatt where name=?;";
+            PreparedStatement stat = conn.prepareStatement(sql);
+            stat.setString(1, name);
+            ResultSet rs = stat.executeQuery();
+
+            while (rs.next()) {
+                id = rs.getInt("ID");
+            }
+
+            rs.close();
+            conn.close();
+        }
+        catch (ClassNotFoundException | SQLException e)
+        {
+            System.err.println(e);
+        }
+        return id;
     }
 
     public void saveToDB()

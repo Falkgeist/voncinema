@@ -1,5 +1,9 @@
 package com.voncinema;
 
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
+
 public class BuchungKarten {
     private int ID, buchung, karte;
 
@@ -12,5 +16,20 @@ public class BuchungKarten {
         this.ID = ID;
         this.buchung = buchung;
         this.karte = karte;
+    }
+
+    public void saveToDB()
+    {
+        try {
+            Connection conn = Kinoverwaltung.setupConnection();
+            Statement stat = conn.createStatement();
+            String sql = "INSERT INTO vc_buchung_karten VALUES(" + this.buchung + "," + this.karte + ");";
+            stat.executeUpdate(sql);
+            conn.close();
+        }
+        catch (ClassNotFoundException | SQLException e)
+        {
+            System.err.println(e);
+        }
     }
 }
