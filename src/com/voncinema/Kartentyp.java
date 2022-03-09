@@ -1,18 +1,18 @@
 package com.voncinema;
 
 public class Kartentyp {
-    int id;
+    int ID;
     String name;
     double preis;
 
-    Kartentyp (int id, String name, double preis) {
-        this.id = id;
+    Kartentyp (int ID, String name, double preis) {
+        this.ID = ID;
         this.name = name;
         this.preis = preis;
     }
 
-    public int getId() {
-        return id;
+    public int getID() {
+        return ID;
     }
 
     @Override

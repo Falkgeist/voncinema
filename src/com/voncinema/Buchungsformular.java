@@ -49,7 +49,9 @@ public class Buchungsformular {
         buttonHinzufuegenKarte.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                //buchung.hinzufuegenKarte(inputRabattcode.getText(), selectKartentyp.getSelectedItem().getID(), selectPlatzkategorie.getSelectedItem().getID());
+                Kartentyp kartentyp = (Kartentyp)selectKartentyp.getSelectedItem();
+                Platzkategorie platzkategorie = (Platzkategorie)selectPlatzkategorie.getSelectedItem();
+                buchung.hinzufuegenKarte(inputRabattcode.getText(), kartentyp.getID(), platzkategorie.getID());
             }
         });
     }
