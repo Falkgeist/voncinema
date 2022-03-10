@@ -43,8 +43,9 @@ public class Karte {
             Statement stat = conn.createStatement();
             String sql = "SELECT ID FROM vc_buchung ORDER BY ID DESC LIMIT 1;";
             ResultSet rs = stat.executeQuery(sql);
+            int id = rs.getInt("ID");
             conn.close();
-            return rs.getInt("ID");
+            return id;
         }
         catch (ClassNotFoundException | SQLException e)
         {
