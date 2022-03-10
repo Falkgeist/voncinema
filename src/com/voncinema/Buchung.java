@@ -81,4 +81,7 @@ public class Buchung {
         this.person = person;
     }
 
+    public void setVorstellung(int vorstellung) {
+        this.vorstellung = vorstellung;
+    }
 }
