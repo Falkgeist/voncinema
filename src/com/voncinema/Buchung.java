@@ -10,8 +10,8 @@ public class Buchung {
     private int ID;
     private String person;
     private int vorstellung;
-    private String status;
     private ArrayList<Karte> karten = new ArrayList<>();
+    private String status;
 
     Buchung(){}
 
