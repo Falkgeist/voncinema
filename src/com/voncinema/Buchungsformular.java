@@ -51,7 +51,10 @@ public class Buchungsformular {
             public void actionPerformed(ActionEvent actionEvent) {
                 Kartentyp kartentyp = (Kartentyp)selectKartentyp.getSelectedItem();
                 Platzkategorie platzkategorie = (Platzkategorie)selectPlatzkategorie.getSelectedItem();
-                buchung.hinzufuegenKarte(inputRabattcode.getText(), kartentyp.getID(), platzkategorie.getID());
+
+                for (int i = 1; i <= (int)spinnerAnzahl.getValue(); i++){
+                    buchung.hinzufuegenKarte(inputRabattcode.getText(), kartentyp.getID(), platzkategorie.getID());
+                }
             }
         });
     }
