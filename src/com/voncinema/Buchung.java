@@ -34,6 +34,7 @@ public class Buchung {
         karten.add(karte);
     }
 
+    // TODO: Fix error with 0 as buchungsID and all the same ID for all the tickets (per booking)
     public void hinzufuegenKarten()
     {
         for (Karte karte : this.karten) {
