@@ -4,6 +4,19 @@ import java.sql.*;
 import java.util.*;
 
 public class Kinoverwaltung {
+    private static ArrayList<Buchung> buchungen = new ArrayList<>();
+    private static ArrayList<BuchungKarten> buchungKarten = new ArrayList<>();
+    private static ArrayList<Film> filme = new ArrayList<>();
+    private static ArrayList<FilmKategorie> filmKategorien = new ArrayList<>();
+    private static ArrayList<Karte> karten = new ArrayList<>();
+    private static ArrayList<Kartentyp> kartentypen = new ArrayList<>();
+    private static ArrayList<Kinosaal> kinosaele = new ArrayList<>();
+    private static ArrayList<KinosaalKonfiguration> kinosaalKonfigurationen = new ArrayList<>();
+    private static ArrayList<KinosaalKonfigurationPlatzkategorie> kinosaalKonfigurationPlatzkategorien = new ArrayList<>();
+    private static ArrayList<Platzkategorie> platzkategorien = new ArrayList<>();
+    private static ArrayList<Rabatt> rabatte = new ArrayList<>();
+    private static ArrayList<Vorstellung> vorstellungen = new ArrayList<>();
+
     public static ArrayList<Object> getFromDB(String objectClass, String databaseTable)
     {
         ArrayList<Object> objects = new ArrayList<>();
@@ -16,40 +29,64 @@ public class Kinoverwaltung {
             while (rs.next()) {
                 switch (objectClass) {
                     case "Buchung":
-                        objects.add(new Buchung(rs.getInt("ID"), rs.getString("person"), rs.getInt("vorstellung"), rs.getString("status")));
+                        Buchung buchung = new Buchung(rs.getInt("ID"), rs.getString("person"), rs.getInt("vorstellung"), rs.getString("status"));
+                        objects.add(buchung);
+                        buchungen.add(buchung);
                         break;
                     case "BuchungKarten":
-                        objects.add(new BuchungKarten(rs.getInt("ID"), rs.getInt("buchung"), rs.getInt("karte")));
+                        BuchungKarten objBuchungKarten = new BuchungKarten(rs.getInt("ID"), rs.getInt("buchung"), rs.getInt("karte"));
+                        objects.add(objBuchungKarten);
+                        buchungKarten.add(objBuchungKarten);
                         break;
                     case "Film":
-                        objects.add(new Film(rs.getInt("ID"), rs.getString("name"), rs.getString("beschreibung"), rs.getInt("laenge"), rs.getInt("kategorie"), rs.getString("genre")));
+                        Film film = new Film(rs.getInt("ID"), rs.getString("name"), rs.getString("beschreibung"), rs.getInt("laenge"), rs.getInt("kategorie"), rs.getString("genre"));
+                        objects.add(film);
+                        filme.add(film);
                         break;
-                    case "Filmkategorie":
-                        objects.add(new FilmKategorie(rs.getInt("ID"), rs.getString("name"), rs.getDouble("zuschlagProzent")));
+                    case "FilmKategorie":
+                        FilmKategorie filmKategorie = new FilmKategorie(rs.getInt("ID"), rs.getString("name"), rs.getDouble("zuschlagProzent"));
+                        objects.add(filmKategorie);
+                        filmKategorien.add(filmKategorie);
                         break;
                     case "Karte":
-                        objects.add(new Karte(rs.getInt("ID"), rs.getInt("rabatt"), rs.getInt("platzkategorie")));
+                        Karte karte = new Karte(rs.getInt("ID"), rs.getInt("rabatt"), rs.getInt("platzkategorie"));
+                        objects.add(karte);
+                        karten.add(karte);
                         break;
                     case "Kartentyp":
-                        objects.add(new Kartentyp(rs.getInt("ID"), rs.getString("name"), rs.getDouble("preis")));
+                        Kartentyp kartentyp = new Kartentyp(rs.getInt("ID"), rs.getString("name"), rs.getDouble("preis"));
+                        objects.add(kartentyp);
+                        kartentypen.add(kartentyp);
                         break;
                     case "Kinosaal":
-                        objects.add(new Kinosaal(rs.getInt("ID"), rs.getInt("konfiguration")));
+                        Kinosaal kinosaal = new Kinosaal(rs.getInt("ID"), rs.getInt("konfiguration"));
+                        objects.add(kinosaal);
+                        kinosaele.add(kinosaal);
                         break;
                     case "KinosaalKonfiguration":
-                        objects.add(new KinosaalKonfiguration(rs.getInt("ID")));
+                        KinosaalKonfiguration kinosaalKonfiguration = new KinosaalKonfiguration(rs.getInt("ID"));
+                        objects.add(kinosaalKonfiguration);
+                        kinosaalKonfigurationen.add(kinosaalKonfiguration);
                         break;
                     case "KinosaalKonfigurationPlatzkategorie":
-                        objects.add(new KinosaalKonfigurationPlatzkategorie(rs.getInt("ID"), rs.getInt("konfiguration"), rs.getInt("kategorie"), rs.getInt("anzahl")));
+                        KinosaalKonfigurationPlatzkategorie kinosaalKonfigurationPlatzkategorie = new KinosaalKonfigurationPlatzkategorie(rs.getInt("ID"), rs.getInt("konfiguration"), rs.getInt("kategorie"), rs.getInt("anzahl"));
+                        objects.add(kinosaalKonfigurationPlatzkategorie);
+                        kinosaalKonfigurationPlatzkategorien.add(kinosaalKonfigurationPlatzkategorie);
                         break;
                     case "Platzkategorie":
-                        objects.add(new Platzkategorie(rs.getInt("ID"), rs.getString("name"), rs.getDouble("zuschlagFix")));
+                        Platzkategorie platzkategorie = new Platzkategorie(rs.getInt("ID"), rs.getString("name"), rs.getDouble("zuschlagFix"));
+                        objects.add(platzkategorie);
+                        platzkategorien.add(platzkategorie);
                         break;
                     case "Rabatt":
-                        objects.add(new Rabatt(rs.getInt("ID"), rs.getString("name"), rs.getDouble("wert")));
+                        Rabatt rabatt = new Rabatt(rs.getInt("ID"), rs.getString("name"), rs.getDouble("wert"));
+                        objects.add(rabatt);
+                        rabatte.add(rabatt);
                         break;
                     case "Vorstellung":
-                        objects.add(new Vorstellung(rs.getInt("ID"), rs.getInt("film"), rs.getInt("kinosaal"), rs.getString("beginn"), rs.getString("ende")));
+                        Vorstellung vorstellung = new Vorstellung(rs.getInt("ID"), rs.getInt("film"), rs.getInt("kinosaal"), rs.getString("beginn"), rs.getString("ende"));
+                        objects.add(vorstellung);
+                        vorstellungen.add(vorstellung);
                         break;
                 }
             }
@@ -76,40 +113,64 @@ public class Kinoverwaltung {
             while (rs.next()) {
                 switch (objectClass) {
                     case "Buchung":
-                        objects.add(new Buchung(rs.getInt("ID"), rs.getString("person"), rs.getInt("vorstellung"), rs.getString("status")));
+                        Buchung buchung = new Buchung(rs.getInt("ID"), rs.getString("person"), rs.getInt("vorstellung"), rs.getString("status"));
+                        objects.add(buchung);
+                        Kinoverwaltung.buchungen.add(buchung);
                         break;
                     case "BuchungKarten":
-                        objects.add(new BuchungKarten(rs.getInt("ID"), rs.getInt("buchung"), rs.getInt("karte")));
+                        BuchungKarten buchungKarten = new BuchungKarten(rs.getInt("ID"), rs.getInt("buchung"), rs.getInt("karte"));
+                        objects.add(buchungKarten);
+                        Kinoverwaltung.buchungKarten.add(buchungKarten);
                         break;
                     case "Film":
-                        objects.add(new Film(rs.getInt("ID"), rs.getString("name"), rs.getString("beschreibung"), rs.getInt("laenge"), rs.getInt("kategorie"), rs.getString("genre")));
+                        Film film = new Film(rs.getInt("ID"), rs.getString("name"), rs.getString("beschreibung"), rs.getInt("laenge"), rs.getInt("kategorie"), rs.getString("genre"));
+                        objects.add(film);
+                        Kinoverwaltung.filme.add(film);
                         break;
-                    case "Filmkategorie":
-                        objects.add(new FilmKategorie(rs.getInt("ID"), rs.getString("name"), rs.getDouble("zuschlagProzent")));
+                    case "FilmKategorie":
+                        FilmKategorie filmKategorie = new FilmKategorie(rs.getInt("ID"), rs.getString("name"), rs.getDouble("zuschlagProzent"));
+                        objects.add(filmKategorie);
+                        Kinoverwaltung.filmKategorien.add(filmKategorie);
                         break;
                     case "Karte":
-                        objects.add(new Karte(rs.getInt("ID"), rs.getInt("rabatt"), rs.getInt("platzkategorie")));
+                        Karte karte = new Karte(rs.getInt("ID"), rs.getInt("rabatt"), rs.getInt("platzkategorie"));
+                        objects.add(karte);
+                        Kinoverwaltung.karten.add(karte);
                         break;
                     case "Kartentyp":
-                        objects.add(new Kartentyp(rs.getInt("ID"), rs.getString("name"), rs.getDouble("preis")));
+                        Kartentyp kartentyp = new Kartentyp(rs.getInt("ID"), rs.getString("name"), rs.getDouble("preis"));
+                        objects.add(kartentyp);
+                        Kinoverwaltung.kartentypen.add(kartentyp);
                         break;
                     case "Kinosaal":
-                        objects.add(new Kinosaal(rs.getInt("ID"), rs.getInt("konfiguration")));
+                        Kinosaal kinosaal = new Kinosaal(rs.getInt("ID"), rs.getInt("konfiguration"));
+                        objects.add(kinosaal);
+                        Kinoverwaltung.kinosaele.add(kinosaal);
                         break;
                     case "KinosaalKonfiguration":
-                        objects.add(new KinosaalKonfiguration(rs.getInt("ID")));
+                        KinosaalKonfiguration kinosaalKonfiguration = new KinosaalKonfiguration(rs.getInt("ID"));
+                        objects.add(kinosaalKonfiguration);
+                        Kinoverwaltung.kinosaalKonfigurationen.add(kinosaalKonfiguration);
                         break;
                     case "KinosaalKonfigurationPlatzkategorie":
-                        objects.add(new KinosaalKonfigurationPlatzkategorie(rs.getInt("ID"), rs.getInt("konfiguration"), rs.getInt("kategorie"), rs.getInt("anzahl")));
+                        KinosaalKonfigurationPlatzkategorie kinosaalKonfigurationPlatzkategorie = new KinosaalKonfigurationPlatzkategorie(rs.getInt("ID"), rs.getInt("konfiguration"), rs.getInt("kategorie"), rs.getInt("anzahl"));
+                        objects.add(kinosaalKonfigurationPlatzkategorie);
+                        Kinoverwaltung.kinosaalKonfigurationPlatzkategorien.add(kinosaalKonfigurationPlatzkategorie);
                         break;
                     case "Platzkategorie":
-                        objects.add(new Platzkategorie(rs.getInt("ID"), rs.getString("name"), rs.getDouble("zuschlagFix")));
+                        Platzkategorie platzkategorie = new Platzkategorie(rs.getInt("ID"), rs.getString("name"), rs.getDouble("zuschlagFix"));
+                        objects.add(platzkategorie);
+                        Kinoverwaltung.platzkategorien.add(platzkategorie);
                         break;
                     case "Rabatt":
-                        objects.add(new Rabatt(rs.getInt("ID"), rs.getString("name"), rs.getDouble("wert")));
+                        Rabatt rabatt = new Rabatt(rs.getInt("ID"), rs.getString("name"), rs.getDouble("wert"));
+                        objects.add(rabatt);
+                        Kinoverwaltung.rabatte.add(rabatt);
                         break;
                     case "Vorstellung":
-                        objects.add(new Vorstellung(rs.getInt("ID"), rs.getInt("film"), rs.getInt("kinosaal"), rs.getString("beginn"), rs.getString("ende")));
+                        Vorstellung vorstellung = new Vorstellung(rs.getInt("ID"), rs.getInt("film"), rs.getInt("kinosaal"), rs.getString("beginn"), rs.getString("ende"));
+                        objects.add(vorstellung);
+                        Kinoverwaltung.vorstellungen.add(vorstellung);
                         break;
                 }
             }
@@ -144,5 +205,60 @@ public class Kinoverwaltung {
     {
         Class.forName("org.sqlite.JDBC");
         return DriverManager.getConnection("jdbc:sqlite:voncinema_db.sqlite");
+    }
+
+    public static Film getFilm(int ID){
+        Film returnFilm = null;
+        for (Film film : filme) {
+            if (film.hasID(ID)){
+                returnFilm = film;
+                break;
+            }
+        }
+        return returnFilm;
+    }
+
+    public static FilmKategorie getFilmKategorie(int ID) {
+        FilmKategorie returnFilmKategorie = null;
+        for (FilmKategorie filmKategorie : filmKategorien) {
+            if (filmKategorie.hasID(ID)){
+                returnFilmKategorie = filmKategorie;
+                break;
+            }
+        }
+        return returnFilmKategorie;
+    }
+
+    public static Kartentyp getKartentyp(int ID) {
+        Kartentyp returnKartentyp = null;
+        for (Kartentyp kartentyp : kartentypen) {
+            if (kartentyp.hasID(ID)){
+                returnKartentyp = kartentyp;
+                break;
+            }
+        }
+        return returnKartentyp;
+    }
+
+    public static Platzkategorie getPlatzkategorie(int ID) {
+        Platzkategorie returnPlatzkategorie = null;
+        for (Platzkategorie platzkategorie : platzkategorien) {
+            if (platzkategorie.hasID(ID)){
+                returnPlatzkategorie = platzkategorie;
+                break;
+            }
+        }
+        return returnPlatzkategorie;
+    }
+
+    public static Rabatt getRabatt(int ID) {
+        Rabatt returnRabatt = null;
+        for (Rabatt rabatt : rabatte) {
+            if (rabatt.hasID(ID)){
+                returnRabatt = rabatt;
+                break;
+            }
+        }
+        return returnRabatt;
     }
 }

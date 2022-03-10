@@ -35,6 +35,17 @@ public class Platzkategorie {
         return ID;
     }
 
+    public double getZuschlagFix() {
+        return zuschlagFix;
+    }
+
+    public boolean hasID(int ID) {
+        if (this.ID == ID) {
+            return true;
+        }
+        return false;
+    }
+
     @Override
     public String toString() {
         return name;

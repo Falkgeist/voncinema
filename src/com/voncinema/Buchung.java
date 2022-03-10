@@ -27,6 +27,13 @@ public class Buchung {
         this.status = status;
     }
 
+    public void hinzufuegenKarte(String rabattcode, int platzkategorie, int kartentyp)
+    {
+        int rabattID = Rabatt.findIDByString(rabattcode);
+        Karte karte = new Karte(rabattID, platzkategorie, kartentyp);
+        karten.add(karte);
+    }
+
     public void hinzufuegenKarten()
     {
         for (Karte karte : this.karten) {
@@ -35,13 +42,6 @@ public class Buchung {
             BuchungKarten karten = new BuchungKarten(this.ID, kartenID);
             karten.saveToDB();
         }
-    }
-
-    public void hinzufuegenKarte(String rabattcode, int platzkategorie, int kartentyp)
-    {
-        int rabattID = Rabatt.findIDByString(rabattcode);
-        Karte karte = new Karte(rabattID, platzkategorie, kartentyp);
-        karten.add(karte);
     }
 
     public void setVorstellung()
@@ -54,7 +54,7 @@ public class Buchung {
 
     }
 
-    public void berechnePreis()
+    public void berechneGesamtpreis()
     {
 
     }

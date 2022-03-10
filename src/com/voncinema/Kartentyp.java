@@ -1,9 +1,9 @@
 package com.voncinema;
 
 public class Kartentyp {
-    int ID;
-    String name;
-    double preis;
+    private int ID;
+    private String name;
+    private double preis;
 
     Kartentyp (int ID, String name, double preis) {
         this.ID = ID;
@@ -13,6 +13,17 @@ public class Kartentyp {
 
     public int getID() {
         return ID;
+    }
+
+    public double getPreis() {
+        return preis;
+    }
+
+    public boolean hasID(int ID) {
+        if (this.ID == ID) {
+            return true;
+        }
+        return false;
     }
 
     @Override

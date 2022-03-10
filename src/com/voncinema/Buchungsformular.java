@@ -63,14 +63,23 @@ public class Buchungsformular {
         JFrame frame = new JFrame("VonCinema");
         Buchungsformular form = new Buchungsformular();
         form.getOptionsFromDB("Film", "vc_film");
+        Kinoverwaltung.getFromDB("FilmKategorie", "vc_film_kategorie");
         form.getOptionsFromDB("Vorstellung", "vc_vorstellung");
         form.getOptionsFromDB("Platzkategorie", "vc_platzkategorie");
         form.getOptionsFromDB("Kartentyp", "vc_kartentyp");
+        Kinoverwaltung.getFromDB("Rabatt", "vc_rabatt");
         JPanel contentPane = form.start;
         frame.setContentPane(contentPane);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
         frame.setVisible(true);
+
+        // DEBUGGING FOR CALCULATION
+        /*Karte karte = new Karte(1, 1, 2, 1);
+        Film film = Kinoverwaltung.getFilm(1);
+        FilmKategorie filmKategorie = Kinoverwaltung.getFilmKategorie(film.getKategorie());
+        double zuschlagFilm = filmKategorie.getZuschlagProzent();
+        System.out.println(karte.berechnePreis(zuschlagFilm));*/
     }
 
     public void getOptionsFromDB(String strClass, String table) {

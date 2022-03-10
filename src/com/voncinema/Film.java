@@ -18,17 +18,6 @@ public class Film {
         this.genre = genre;
     }
 
-    public int getID() {
-        return ID;
-    }
-
-    @Override
-    public String toString() {
-        return name + " (" +laenge+" min)";
-    }
-
-
-
     public void saveToDB()
     {
         try {
@@ -42,5 +31,24 @@ public class Film {
         {
             System.err.println(e);
         }
+    }
+
+    public boolean hasID(int ID) {
+        if (this.ID == ID) {
+            return true;
+        }
+        return false;
+    }
+
+    public int getID() {
+        return ID;
+    }
+    public int getKategorie() {
+        return kategorie;
+    }
+
+    @Override
+    public String toString() {
+        return name + " (" +laenge+" min)";
     }
 }

@@ -36,6 +36,10 @@ public class Rabatt {
         return id;
     }
 
+    public double getWert() {
+        return wert;
+    }
+
     public void saveToDB()
     {
         try {
@@ -49,5 +53,12 @@ public class Rabatt {
         {
             System.err.println(e);
         }
+    }
+
+    public boolean hasID(int ID) {
+        if (this.ID == ID) {
+            return true;
+        }
+        return false;
     }
 }

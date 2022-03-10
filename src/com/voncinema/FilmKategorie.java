@@ -10,4 +10,15 @@ public class FilmKategorie {
         this.name = name;
         this.zuschlagProzent = zuschlagProzent;
     }
+
+    public double getZuschlagProzent() {
+        return zuschlagProzent;
+    }
+
+    public boolean hasID(int ID) {
+        if (this.ID == ID) {
+            return true;
+        }
+        return false;
+    }
 }

@@ -21,6 +21,19 @@ public class Karte {
         this.kartentyp = kartentyp;
     }
 
+    public double berechnePreis(double zuschlagFilm) {
+        Kartentyp kartentyp = Kinoverwaltung.getKartentyp(this.kartentyp);
+        double grundpreis = kartentyp.getPreis();
+        Platzkategorie platzkategorie = Kinoverwaltung.getPlatzkategorie(this.platzkategorie);
+        double zuschlagPlatz = platzkategorie.getZuschlagFix();
+        Rabatt objRabatt = Kinoverwaltung.getRabatt(this.rabatt);
+        double rabatt = objRabatt.getWert();
+        double fixpreis = grundpreis + zuschlagPlatz;
+        double zuschlag = fixpreis * (zuschlagFilm/100 + 1);
+        double endpreis = zuschlag - (zuschlag * rabatt);
+        return endpreis;
+    }
+
     public void saveToDB()
     {
         try {
