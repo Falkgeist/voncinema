@@ -68,7 +68,7 @@ public class Buchung {
             Connection conn = Kinoverwaltung.setupConnection();
             Statement stat = conn.createStatement();
             System.out.println(person + vorstellung + status);
-            String sql = "INSERT INTO vc_buchung VALUES("+ person + "," + vorstellung + "," + status + ");";
+            String sql = "INSERT INTO vc_buchung (person, vorstellung, status) VALUES ('"+ person + "','" + vorstellung + "','" + status + "');";
             stat.executeUpdate(sql);
             conn.close();
         }
