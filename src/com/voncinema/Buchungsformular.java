@@ -43,6 +43,8 @@ public class Buchungsformular {
             @Override
             public void actionPerformed(ActionEvent e) {
                 Vorstellung vorstellung = (Vorstellung)selectVorstellung.getSelectedItem();
+                buchung.setPerson(inputName.getText());
+                buchung.setVorstellung(vorstellung.getID());
                 Kinoverwaltung.bucheBuchung(vorstellung, buchung);
             }
         });
