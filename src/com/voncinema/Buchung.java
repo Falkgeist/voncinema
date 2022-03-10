@@ -8,12 +8,12 @@ import java.util.ArrayList;
 
 public class Buchung {
     private int ID;
+
     private String person;
     private int vorstellung;
     private ArrayList<Karte> karten = new ArrayList<>();
     private String status;
 
-    Buchung(){}
 
     Buchung(String person, int vorstellung) {
         this.person = person;
@@ -25,6 +25,9 @@ public class Buchung {
         this.person = person;
         this.vorstellung = vorstellung;
         this.status = status;
+    }
+
+    public Buchung() {
     }
 
     public void hinzufuegenKarten()
@@ -64,7 +67,8 @@ public class Buchung {
         try {
             Connection conn = Kinoverwaltung.setupConnection();
             Statement stat = conn.createStatement();
-            String sql = "Insert into vc_buchung VALUES(" + person + "," + vorstellung + "," + status + ");";
+            System.out.println(person + vorstellung + status);
+            String sql = "INSERT INTO vc_buchung VALUES("+ person + "," + vorstellung + "," + status + ");";
             stat.executeUpdate(sql);
             conn.close();
         }
@@ -73,4 +77,8 @@ public class Buchung {
             System.err.println(e);
         }
     }
+    public void setPerson(String person) {
+        this.person = person;
+    }
+
 }
