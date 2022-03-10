@@ -57,6 +57,7 @@ public class Karte {
             String sql = "SELECT ID FROM vc_buchung ORDER BY ID DESC LIMIT 1;";
             ResultSet rs = stat.executeQuery(sql);
             int id = rs.getInt("ID");
+            rs.close();
             conn.close();
             return id;
         }
