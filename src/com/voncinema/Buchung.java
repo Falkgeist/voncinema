@@ -35,8 +35,8 @@ public class Buchung {
         for (Karte karte : this.karten) {
             karte.saveToDB();
             int kartenID = Karte.getLastIDFromDB();
-            BuchungKarten karten = new BuchungKarten(this.ID, kartenID);
-            karten.saveToDB();
+            BuchungKarten buchungKarten = new BuchungKarten(this.ID, kartenID);
+            buchungKarten.saveToDB();
         }
     }
 
