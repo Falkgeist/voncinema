@@ -41,7 +41,7 @@ public class Rabatt {
         try {
             Connection conn = Kinoverwaltung.setupConnection();
             Statement stat = conn.createStatement();
-            String sql = "INSERT INTO vc_rabatt VALUES(" + name + "," + wert + ");";
+            String sql = "INSERT INTO vc_rabatt (name, wert) VALUES(" + name + "," + wert + ");";
             stat.executeUpdate(sql);
             conn.close();
         }

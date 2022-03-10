@@ -23,7 +23,7 @@ public class BuchungKarten {
         try {
             Connection conn = Kinoverwaltung.setupConnection();
             Statement stat = conn.createStatement();
-            String sql = "INSERT INTO vc_buchung_karten VALUES(" + this.buchung + "," + this.karte + ");";
+            String sql = "INSERT INTO vc_buchung_karten (buchung, karte) VALUES(" + this.buchung + "," + this.karte + ");";
             stat.executeUpdate(sql);
             conn.close();
         }
