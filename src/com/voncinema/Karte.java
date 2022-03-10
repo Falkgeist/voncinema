@@ -26,7 +26,7 @@ public class Karte {
         try {
             Connection conn = Kinoverwaltung.setupConnection();
             Statement stat = conn.createStatement();
-            String sql = "INSERT INTO vc_karte VALUES(" + rabatt + "," + platzkategorie + ");";
+            String sql = "INSERT INTO vc_karte (rabatt, platzkategorie, kartentyp) VALUES(" + rabatt + "," + platzkategorie + "," + kartentyp + ");";
             stat.executeUpdate(sql);
             conn.close();
         }
