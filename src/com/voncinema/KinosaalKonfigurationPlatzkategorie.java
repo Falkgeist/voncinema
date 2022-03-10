@@ -22,7 +22,7 @@ public class KinosaalKonfigurationPlatzkategorie {
         try {
             Connection conn = Kinoverwaltung.setupConnection();
             Statement stat = conn.createStatement();
-            String sql = "INSERT INTO vc_film VALUES(" + konfiguration + "," + platzkategorie + "," + anzahl + ");";
+            String sql = "INSERT INTO vc_film (konfiguration, platzkategorie, anzahl) VALUES(" + konfiguration + "," + platzkategorie + "," + anzahl + ");";
             stat.executeUpdate(sql);
             conn.close();
         }

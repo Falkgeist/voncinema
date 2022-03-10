@@ -26,7 +26,7 @@ public class Vorstellung {
         try {
             Connection conn = Kinoverwaltung.setupConnection();
             Statement stat = conn.createStatement();
-            String sql = "INSERT INTO vc_karte VALUES(" + film + "," + kinosaal + "," + beginn + "," + ende +");";
+            String sql = "INSERT INTO vc_karte (film, kinosaal, beginn, ende) VALUES(" + film + "," + kinosaal + "," + beginn + "," + ende +");";
             stat.executeUpdate(sql);
             conn.close();
         }

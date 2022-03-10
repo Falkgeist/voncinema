@@ -39,7 +39,7 @@ public class Karte {
         try {
             Connection conn = Kinoverwaltung.setupConnection();
             Statement stat = conn.createStatement();
-            String sql = "INSERT INTO vc_karte VALUES(" + rabatt + "," + platzkategorie + ");";
+            String sql = "INSERT INTO vc_karte (rabatt, platzkategorie, kartentyp) VALUES(" + rabatt + "," + platzkategorie + "," + kartentyp + ");";
             stat.executeUpdate(sql);
             conn.close();
         }
@@ -56,8 +56,9 @@ public class Karte {
             Statement stat = conn.createStatement();
             String sql = "SELECT ID FROM vc_buchung ORDER BY ID DESC LIMIT 1;";
             ResultSet rs = stat.executeQuery(sql);
+            int id = rs.getInt("ID");
             conn.close();
-            return rs.getInt("ID");
+            return id;
         }
         catch (ClassNotFoundException | SQLException e)
         {

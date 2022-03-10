@@ -21,7 +21,7 @@ public class Platzkategorie {
         try {
             Connection conn = Kinoverwaltung.setupConnection();
             Statement stat = conn.createStatement();
-            String sql = "INSERT INTO vc_platzkategorie VALUES(" + name + "," + zuschlagFix + ");";
+            String sql = "INSERT INTO vc_platzkategorie (name, zuschlagFix) VALUES(" + name + "," + zuschlagFix + ");";
             stat.executeUpdate(sql);
             conn.close();
         }

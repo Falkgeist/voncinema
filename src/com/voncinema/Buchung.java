@@ -39,8 +39,8 @@ public class Buchung {
         for (Karte karte : this.karten) {
             karte.saveToDB();
             int kartenID = Karte.getLastIDFromDB();
-            BuchungKarten karten = new BuchungKarten(this.ID, kartenID);
-            karten.saveToDB();
+            BuchungKarten buchungKarten = new BuchungKarten(this.ID, kartenID);
+            buchungKarten.saveToDB();
         }
     }
 
@@ -64,7 +64,7 @@ public class Buchung {
         try {
             Connection conn = Kinoverwaltung.setupConnection();
             Statement stat = conn.createStatement();
-            String sql = "Insert into vc_buchung VALUES(" + person + "," + vorstellung + "," + status + ");";
+            String sql = "INSERT INTO vc_buchung (person, vorstellung) VALUES ('"+ person + "','" + vorstellung + "');";
             stat.executeUpdate(sql);
             conn.close();
         }
@@ -72,5 +72,12 @@ public class Buchung {
         {
             System.err.println(e);
         }
+    }
+    public void setPerson(String person) {
+        this.person = person;
+    }
+
+    public void setVorstellung(int vorstellung) {
+        this.vorstellung = vorstellung;
     }
 }

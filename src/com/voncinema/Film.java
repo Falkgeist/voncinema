@@ -23,7 +23,7 @@ public class Film {
         try {
             Connection conn = Kinoverwaltung.setupConnection();
             Statement stat = conn.createStatement();
-            String sql = "INSERT INTO vc_film VALUES(" + name + "," + beschreibung + "," + laenge + "," + kategorie + "," + genre + ");";
+            String sql = "INSERT INTO vc_film (name, beschreibung, laenge, kategorie, genre) VALUES(" + name + "," + beschreibung + "," + laenge + "," + kategorie + "," + genre + ");";
             stat.executeUpdate(sql);
             conn.close();
         }
