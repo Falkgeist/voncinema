@@ -29,6 +29,18 @@ public class Buchungsformular {
     private JLabel labelPerson;
     private Buchung buchung = new Buchung();
 
+    /**TODO: im Tab Meine Buchungen:
+     * ein Feld zum angeben das namen hinzufügen
+     * ein Button BuchungenAnzeigen hinzufügen
+     * eine Funktion zum hinzufügen eines Textfeldes und einen button bezahlen und einen button stornieren
+     * beim klick auf BuchungAnzeigen jede Buchung mit Funktion zum Tab hinzufügen
+     * Funktion zum bezahlen
+     * Funktion zum stornieren
+     * Textfeld zum anzeigen von Feedback
+     */
+
+
+
     public Buchungsformular() {
         selectFilm.addActionListener(new ActionListener() {
             @Override
@@ -47,6 +59,8 @@ public class Buchungsformular {
                 buchung.setPerson(inputName.getText());
                 buchung.setVorstellung(vorstellung.getID());
                 Kinoverwaltung.bucheBuchung(vorstellung, buchung);
+                //TODO: Methode zum füllen eines Texfeldes das den Erfolg der Buchung anzeigt
+                //TODO: Taxfeld im Tab Buchen hinzufügen
             }
         });
         buttonHinzufuegenKarte.addActionListener(new ActionListener() {
@@ -59,6 +73,8 @@ public class Buchungsformular {
                     buchung.hinzufuegenKarte(inputRabattcode.getText(), kartentyp.getID(), platzkategorie.getID());
                 }
             }
+            //TODO: Methode zum füllen eines Texfeldes das den Erfolg des Hinzufügen anzeigt
+            //TODO: Taxfeld im Tab Buchen hinzufügen
         });
     }
 
