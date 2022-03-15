@@ -34,13 +34,12 @@ public class Buchung {
         karten.add(karte);
     }
 
-    // TODO: Fix error with 0 as buchungsID and all the same ID for all the tickets (per booking)
-    public void hinzufuegenKarten()
+    public void speichernKarten()
     {
         for (Karte karte : this.karten) {
             karte.saveToDB();
-            int kartenID = Karte.getLastIDFromDB();
-            BuchungKarten buchungKarten = new BuchungKarten(this.ID, kartenID);
+            karte.getLastIDFromDB();
+            BuchungKarten buchungKarten = new BuchungKarten(this.ID, karte.getID());
             buchungKarten.saveToDB();
         }
     }
@@ -58,6 +57,23 @@ public class Buchung {
     public void berechneGesamtpreis()
     {
 
+    }
+
+    public void getLastIDFromDB()
+    {
+        try {
+            Connection conn = Kinoverwaltung.setupConnection();
+            Statement stat = conn.createStatement();
+            String sql = "SELECT ID FROM vc_buchung ORDER BY ID DESC LIMIT 1;";
+            ResultSet rs = stat.executeQuery(sql);
+            this.ID = rs.getInt("ID");
+            rs.close();
+            conn.close();
+        }
+        catch (ClassNotFoundException | SQLException e)
+        {
+            System.err.println(e);
+        }
     }
 
     public void saveToDB()

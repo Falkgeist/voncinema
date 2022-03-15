@@ -49,22 +49,24 @@ public class Karte {
         }
     }
 
-    public static int getLastIDFromDB()
+    public void getLastIDFromDB()
     {
         try {
             Connection conn = Kinoverwaltung.setupConnection();
             Statement stat = conn.createStatement();
-            String sql = "SELECT ID FROM vc_buchung ORDER BY ID DESC LIMIT 1;";
+            String sql = "SELECT ID FROM vc_karte ORDER BY ID DESC LIMIT 1;";
             ResultSet rs = stat.executeQuery(sql);
-            int id = rs.getInt("ID");
+            this.ID = rs.getInt("ID");
             rs.close();
             conn.close();
-            return id;
         }
         catch (ClassNotFoundException | SQLException e)
         {
             System.err.println(e);
         }
-        return 0;
+    }
+
+    public int getID() {
+        return ID;
     }
 }

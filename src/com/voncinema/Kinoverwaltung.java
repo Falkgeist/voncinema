@@ -193,7 +193,8 @@ public class Kinoverwaltung {
     public static void bucheBuchung(Vorstellung vorstellung, Buchung buchung)
     {
         buchung.saveToDB();
-        buchung.hinzufuegenKarten();
+        buchung.getLastIDFromDB();
+        buchung.speichernKarten();
     }
 
     public static void storniereBuchung()
