@@ -24,6 +24,7 @@ public class Buchungsformular {
     private JLabel labelKartentyp;
     private JLabel labelAnzahl;
     private JButton buttonHinzufuegenKarte;
+    private JTabbedPane tabbedPane1;
     private JTextField inputPerson;
     private JLabel labelPerson;
     private Buchung buchung = new Buchung();
