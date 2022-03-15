@@ -39,4 +39,8 @@ public class Vorstellung {
     public int getID() {
         return ID;
     }
+
+    public int getFilm() {
+        return film;
+    }
 }

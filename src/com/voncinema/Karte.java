@@ -26,8 +26,11 @@ public class Karte {
         double grundpreis = kartentyp.getPreis();
         Platzkategorie platzkategorie = Kinoverwaltung.getPlatzkategorie(this.platzkategorie);
         double zuschlagPlatz = platzkategorie.getZuschlagFix();
-        Rabatt objRabatt = Kinoverwaltung.getRabatt(this.rabatt);
-        double rabatt = objRabatt.getWert();
+        double rabatt = 0.0;
+        if (this.rabatt != 0) {
+            Rabatt objRabatt = Kinoverwaltung.getRabatt(this.rabatt);
+            rabatt = objRabatt.getWert();
+        }
         double fixpreis = grundpreis + zuschlagPlatz;
         double zuschlag = fixpreis * (zuschlagFilm/100 + 1);
         double endpreis = zuschlag - (zuschlag * rabatt);

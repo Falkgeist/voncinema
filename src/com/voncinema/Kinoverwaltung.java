@@ -194,6 +194,7 @@ public class Kinoverwaltung {
     {
         buchung.saveToDB();
         buchung.getLastIDFromDB();
+        System.out.println(buchung.berechneGesamtpreis());
         buchung.speichernKarten();
     }
 

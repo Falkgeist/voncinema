@@ -1,9 +1,11 @@
 package com.voncinema;
 
+import java.math.RoundingMode;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 public class Buchung {
@@ -54,9 +56,24 @@ public class Buchung {
 
     }
 
-    public void berechneGesamtpreis()
+    public double berechneGesamtpreis()
     {
-
+        // Hole den prozentualen Zuschlag über die Vorstellung, den Film und entsprechend die Kategorie
+        ArrayList<Object> resultVorstellung = Kinoverwaltung.getFromDB("Vorstellung", "vc_vorstellung", "WHERE id="+this.vorstellung);
+        Vorstellung vorstellung = (Vorstellung) resultVorstellung.get(0);
+        ArrayList<Object> resultFilm = Kinoverwaltung.getFromDB("Film", "vc_film", "WHERE id="+vorstellung.getFilm());
+        Film film = (Film) resultFilm.get(0);
+        ArrayList<Object> resultKategorie = Kinoverwaltung.getFromDB("FilmKategorie", "vc_film_kategorie", "WHERE id="+film.getKategorie());
+        FilmKategorie kategorie = (FilmKategorie) resultKategorie.get(0);
+        double filmZuschlag = kategorie.getZuschlagProzent();
+        double sum = 0;
+        for (Karte karte : karten) {
+            sum += karte.berechnePreis(filmZuschlag);
+        }
+        // TODO: round to 2 decimal places
+        //DecimalFormat df = new DecimalFormat("#####0,00");
+        //sum = Double.parseDouble(df.format(sum));
+        return sum;
     }
 
     public void getLastIDFromDB()
