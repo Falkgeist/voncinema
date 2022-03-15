@@ -96,7 +96,7 @@ public class Kinoverwaltung {
         }
         catch (ClassNotFoundException | SQLException e)
         {
-            System.err.println(e);
+            e.printStackTrace();
         }
         return objects;
     }
@@ -180,7 +180,7 @@ public class Kinoverwaltung {
         }
         catch (ClassNotFoundException | SQLException e)
         {
-            System.err.println(e);
+            e.printStackTrace();
         }
         return objects;
     }

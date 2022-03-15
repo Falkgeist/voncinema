@@ -27,7 +27,7 @@ public class Platzkategorie {
         }
         catch (ClassNotFoundException | SQLException e)
         {
-            System.err.println(e);
+            e.printStackTrace();
         }
     }
 
@@ -40,10 +40,7 @@ public class Platzkategorie {
     }
 
     public boolean hasID(int ID) {
-        if (this.ID == ID) {
-            return true;
-        }
-        return false;
+        return this.ID == ID;
     }
 
     @Override

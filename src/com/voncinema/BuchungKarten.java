@@ -29,7 +29,7 @@ public class BuchungKarten {
         }
         catch (ClassNotFoundException | SQLException e)
         {
-            System.err.println(e);
+            e.printStackTrace();
         }
     }
 }

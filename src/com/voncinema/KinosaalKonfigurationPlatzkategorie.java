@@ -22,13 +22,13 @@ public class KinosaalKonfigurationPlatzkategorie {
         try {
             Connection conn = Kinoverwaltung.setupConnection();
             Statement stat = conn.createStatement();
-            String sql = "INSERT INTO vc_film (konfiguration, platzkategorie, anzahl) VALUES(" + konfiguration + "," + platzkategorie + "," + anzahl + ");";
+            String sql = "INSERT INTO vc_kinosaalkonfiguration_platzkategorie (konfiguration, kategorie, anzahl) VALUES(" + konfiguration + "," + platzkategorie + "," + anzahl + ");";
             stat.executeUpdate(sql);
             conn.close();
         }
         catch (ClassNotFoundException | SQLException e)
         {
-            System.err.println(e);
+            e.printStackTrace();
         }
     }
 }
