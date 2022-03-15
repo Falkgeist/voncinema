@@ -72,7 +72,7 @@ public class Buchung {
         }
         catch (ClassNotFoundException | SQLException e)
         {
-            System.err.println(e);
+            e.printStackTrace();
         }
     }
 
@@ -87,7 +87,7 @@ public class Buchung {
         }
         catch (ClassNotFoundException | SQLException e)
         {
-            System.err.println(e);
+            e.printStackTrace();
         }
     }
     public void setPerson(String person) {

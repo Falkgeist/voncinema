@@ -23,7 +23,7 @@ public class Kinosaal {
         }
         catch (ClassNotFoundException | SQLException e)
         {
-            System.err.println(e);
+            e.printStackTrace();
         }
     }
 }
