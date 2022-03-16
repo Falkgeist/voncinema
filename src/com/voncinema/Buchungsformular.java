@@ -73,6 +73,7 @@ public class Buchungsformular {
                 Kinoverwaltung.bucheBuchung(vorstellung, buchung);
                 textBuchung.append("Die Buchung wurde gespeichert.\n" +
                         "Details:\n" +
+                        "Name des Buchenden: " + inputName.getText() + "\n" +
                         buchung + "\n" +
                         "Karten:\n" +
                         buchung.getKartenAsList());
