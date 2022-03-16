@@ -72,4 +72,19 @@ public class Karte {
     public int getID() {
         return ID;
     }
+
+    public int getPlatzkategorie() {
+        return platzkategorie;
+    }
+
+    public int getKartentyp() {
+        return kartentyp;
+    }
+
+    @Override
+    public String toString() {
+        Platzkategorie objPlatzkategorie = Kinoverwaltung.getPlatzkategorie(platzkategorie);
+        Kartentyp objKartentyp = Kinoverwaltung.getKartentyp(kartentyp);
+        return objKartentyp + " (" + objPlatzkategorie + ")";
+    }
 }

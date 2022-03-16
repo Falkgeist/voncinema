@@ -109,6 +109,20 @@ public class Buchung {
             e.printStackTrace();
         }
     }
+
+    public ArrayList<Karte> getKarten() {
+        return karten;
+    }
+
+    public String getKartenAsList() {
+        StringBuilder list = new StringBuilder();
+        int anzahlKarten = 0;
+        for (Karte karte : karten) {
+            list.append("- ").append(karte).append("\n");
+        }
+        return list.toString();
+    }
+
     public void setPerson(String person) {
         this.person = person;
     }
