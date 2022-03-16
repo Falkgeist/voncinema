@@ -7,43 +7,25 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 public class Buchungsformular {
-    private JPanel start;
-    private JComboBox selectFilm;
-    private JButton buttonBuchen;
-    private JComboBox selectVorstellung;
+    private JPanel start, labelKarten;
+    private JComboBox selectFilm, selectVorstellung, selectKartentyp, selectPlatzkategorie;
+    private JButton buttonBuchen, buttonHinzufuegenKarte, buttonBuchungenAnzeigen;
     private JSpinner spinnerAnzahl;
-    private JTextField inputRabattcode;
-    private JLabel labelRabattcode;
-    private JPanel labelKarten;
-    private JLabel labelFilm;
-    private JLabel labelVorstellung;
-    private JTextField inputName;
-    private JLabel labelName;
-    private JComboBox selectKartentyp;
-    private JComboBox selectPlatzkategorie;
-    private JLabel labelPlatzkategorie;
-    private JLabel labelKartentyp;
-    private JLabel labelAnzahl;
-    private JButton buttonHinzufuegenKarte;
+    private JTextField inputRabattcode, inputName, inputPerson, textFieldNameLogin;
+    private JLabel labelRabattcode, labelPerson, labelFilm, labelVorstellung, labelName, labelPlatzkategorie, labelKartentyp, labelAnzahl;
     private JTabbedPane tabbedPane1;
-    private JTextArea textKarten;
-    private JTextArea textBuchung;
-    private JTextField inputPerson;
-    private JTextField textFieldNameLogin;
-    private JButton buttonBuchungenAnzeigen;
+    private JTextArea textKarten, textBuchung, textAreaFeedback;
     private JScrollPane scrollPaneMeineBuchungen;
-    private JTextArea textAreaFeedback;
-    private JLabel labelPerson;
     private ArrayList<Karte> karten = new ArrayList<>();
 
     /**TODO: im Tab Meine Buchungen:
-     * ein Feld zum angeben des Namen hinzufügen
-     * ein Button BuchungenAnzeigen hinzufügen
+     * ein Feld zum angeben des Namen hinzufügen DONE
+     * ein Button BuchungenAnzeigen hinzufügen DONE
      * eine Funktion zum hinzufügen eines Textfeldes und einen button bezahlen und einen button stornieren
      * beim klick auf BuchungAnzeigen jede Buchung mit Funktion zum Tab hinzufügen
      * Funktion zum bezahlen
      * Funktion zum stornieren
-     * Textfeld zum anzeigen von Feedback
+     * Textfeld zum anzeigen von Feedback DONE
      */
 
 

@@ -160,14 +160,6 @@
                   <text value="Buchung bestätigen"/>
                 </properties>
               </component>
-              <component id="9ad36" class="javax.swing.JTextArea" binding="textKarten">
-                <constraints>
-                  <grid row="6" column="1" row-span="1" col-span="1" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
-                    <preferred-size width="150" height="50"/>
-                  </grid>
-                </constraints>
-                <properties/>
-              </component>
               <component id="2d5d0" class="javax.swing.JTextArea" binding="textBuchung">
                 <constraints>
                   <grid row="7" column="1" row-span="3" col-span="1" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
@@ -175,7 +167,18 @@
                   </grid>
                 </constraints>
                 <properties>
+                  <enabled value="false"/>
                   <text value=""/>
+                </properties>
+              </component>
+              <component id="9ad36" class="javax.swing.JTextArea" binding="textKarten">
+                <constraints>
+                  <grid row="6" column="1" row-span="1" col-span="1" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
+                    <preferred-size width="150" height="50"/>
+                  </grid>
+                </constraints>
+                <properties>
+                  <enabled value="false"/>
                 </properties>
               </component>
             </children>
