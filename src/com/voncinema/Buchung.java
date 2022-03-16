@@ -63,11 +63,20 @@ public class Buchung {
         return sum;
     }
 
-    public void bezahleBuchung()
-    {}
-
-    public void storniereBuchung()
-    {}
+    public void setStatus(String status)
+    {
+        try {
+            Connection conn = Kinoverwaltung.setupConnection();
+            Statement stat = conn.createStatement();
+            String sql = "UPDATE vc_buchung status = WHERE '" + status + "'ID = " + this.ID +";";
+            stat.executeQuery(sql);
+            conn.close();
+        }
+        catch (ClassNotFoundException | SQLException e)
+        {
+            e.printStackTrace();
+        }
+    }
 
     public void getLastIDFromDB()
     {
