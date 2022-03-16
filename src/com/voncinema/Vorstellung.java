@@ -43,4 +43,8 @@ public class Vorstellung {
     public int getFilm() {
         return film;
     }
+
+    public boolean hasID(int ID) {
+        return this.ID == ID;
+    }
 }

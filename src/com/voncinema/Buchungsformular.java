@@ -1,6 +1,7 @@
 package com.voncinema;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -66,8 +67,9 @@ public class Buchungsformular {
                 }
                 karten.clear();
                 Kinoverwaltung.bucheBuchung(vorstellung, buchung);
-                //TODO: Methode zum füllen eines Texfeldes das den Erfolg der Buchung anzeigt
-                //TODO: Taxfeld im Tab Buchen hinzufügen
+                textBuchung.append("Die Buchung wurde gespeichert.\n" +
+                        "Details:\n" +
+                        buchung);
             }
         });
         buttonHinzufuegenKarte.addActionListener(new ActionListener() {
@@ -81,9 +83,9 @@ public class Buchungsformular {
                     Karte karte = new Karte(rabattID, platzkategorie.getID(), kartentyp.getID());
                     karten.add(karte);
                 }
+                textKarten.append(spinnerAnzahl.getValue() + " Karten ("+kartentyp.toString()+", "+platzkategorie.toString()+") hinzugefügt.\n----------\n");
+                //textKarten.setWrapStyleWord(true);
             }
-            //TODO: Methode zum füllen eines Texfeldes das den Erfolg des Hinzufügen anzeigt
-            //TODO: Taxfeld im Tab Buchen hinzufügen
         });
     }
 
@@ -96,6 +98,8 @@ public class Buchungsformular {
         form.getOptionsFromDB("Platzkategorie", "vc_platzkategorie");
         form.getOptionsFromDB("Kartentyp", "vc_kartentyp");
         Kinoverwaltung.getFromDB("Rabatt", "vc_rabatt");
+        form.textKarten.setLineWrap(true);
+        form.textBuchung.setLineWrap(true);
         JPanel contentPane = form.start;
         frame.setContentPane(contentPane);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

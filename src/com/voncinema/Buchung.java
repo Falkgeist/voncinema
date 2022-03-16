@@ -44,16 +44,6 @@ public class Buchung {
         }
     }
 
-    public void setVorstellung()
-    {
-
-    }
-
-    public void bezahleBuchung()
-    {
-
-    }
-
     public double berechneGesamtpreis()
     {
         // Hole den prozentualen Zuschlag über die Vorstellung, den Film und entsprechend die Kategorie
@@ -68,11 +58,16 @@ public class Buchung {
         for (Karte karte : karten) {
             sum += karte.berechnePreis(filmZuschlag);
         }
-        // TODO: round to 2 decimal places
         BigDecimal decSum = new BigDecimal(sum).setScale(2, RoundingMode.HALF_UP);
         sum = decSum.doubleValue();
         return sum;
     }
+
+    public void bezahleBuchung()
+    {}
+
+    public void storniereBuchung()
+    {}
 
     public void getLastIDFromDB()
     {
@@ -111,5 +106,14 @@ public class Buchung {
 
     public void setVorstellung(int vorstellung) {
         this.vorstellung = vorstellung;
+    }
+
+    @Override
+    public String toString() {
+        Vorstellung objVorstellung = Kinoverwaltung.getVorstellung(this.vorstellung);
+        Film objFilm = Kinoverwaltung.getFilm(objVorstellung.getFilm());
+        return "Film: " + objFilm + "\n" +
+                "Uhrzeit: " + objVorstellung + "\n" +
+                "Preis: " + String.format("%.2f", this.berechneGesamtpreis()) + " €";
     }
 }

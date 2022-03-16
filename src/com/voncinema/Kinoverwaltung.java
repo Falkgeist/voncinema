@@ -185,16 +185,10 @@ public class Kinoverwaltung {
         return objects;
     }
 
-    public static void getVorstellungen()
-    {
-
-    }
-
     public static void bucheBuchung(Vorstellung vorstellung, Buchung buchung)
     {
         buchung.saveToDB();
         buchung.getLastIDFromDB();
-        System.out.println(buchung.berechneGesamtpreis());
         buchung.speichernKarten();
     }
 
@@ -262,5 +256,16 @@ public class Kinoverwaltung {
             }
         }
         return returnRabatt;
+    }
+
+    public static Vorstellung getVorstellung(int ID) {
+        Vorstellung returnVorstellung = null;
+        for (Vorstellung vorstellung : vorstellungen) {
+            if (vorstellung.hasID(ID)){
+                returnVorstellung = vorstellung;
+                break;
+            }
+        }
+        return returnVorstellung;
     }
 }
