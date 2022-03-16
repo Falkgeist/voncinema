@@ -69,7 +69,9 @@ public class Buchungsformular {
                 Kinoverwaltung.bucheBuchung(vorstellung, buchung);
                 textBuchung.append("Die Buchung wurde gespeichert.\n" +
                         "Details:\n" +
-                        buchung);
+                        buchung + "\n" +
+                        "Karten:\n" +
+                        buchung.getKartenAsList());
             }
         });
         buttonHinzufuegenKarte.addActionListener(new ActionListener() {
@@ -84,7 +86,6 @@ public class Buchungsformular {
                     karten.add(karte);
                 }
                 textKarten.append(spinnerAnzahl.getValue() + " Karten ("+kartentyp.toString()+", "+platzkategorie.toString()+") hinzugefügt.\n----------\n");
-                //textKarten.setWrapStyleWord(true);
             }
         });
     }
