@@ -1,11 +1,11 @@
 package com.voncinema;
 
+import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 public class Buchung {
@@ -29,10 +29,8 @@ public class Buchung {
         this.status = status;
     }
 
-    public void hinzufuegenKarte(String rabattcode, int platzkategorie, int kartentyp)
+    public void hinzufuegenKarte(Karte karte)
     {
-        int rabattID = Rabatt.findIDByString(rabattcode);
-        Karte karte = new Karte(rabattID, platzkategorie, kartentyp);
         karten.add(karte);
     }
 
@@ -71,8 +69,8 @@ public class Buchung {
             sum += karte.berechnePreis(filmZuschlag);
         }
         // TODO: round to 2 decimal places
-        //DecimalFormat df = new DecimalFormat("#####0,00");
-        //sum = Double.parseDouble(df.format(sum));
+        BigDecimal decSum = new BigDecimal(sum).setScale(2, RoundingMode.HALF_UP);
+        sum = decSum.doubleValue();
         return sum;
     }
 

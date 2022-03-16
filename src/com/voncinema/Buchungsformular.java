@@ -27,7 +27,7 @@ public class Buchungsformular {
     private JTabbedPane tabbedPane1;
     private JTextField inputPerson;
     private JLabel labelPerson;
-    private Buchung buchung = new Buchung();
+    private ArrayList<Karte> karten = new ArrayList<>();
 
     /**TODO: im Tab Meine Buchungen:
      * ein Feld zum angeben des Namen hinzufügen
@@ -55,9 +55,14 @@ public class Buchungsformular {
         buttonBuchen.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                Buchung buchung = new Buchung();
                 Vorstellung vorstellung = (Vorstellung)selectVorstellung.getSelectedItem();
                 buchung.setPerson(inputName.getText());
                 buchung.setVorstellung(vorstellung.getID());
+                for (Karte karte : karten) {
+                    buchung.hinzufuegenKarte(karte);
+                }
+                karten.clear();
                 Kinoverwaltung.bucheBuchung(vorstellung, buchung);
                 //TODO: Methode zum füllen eines Texfeldes das den Erfolg der Buchung anzeigt
                 //TODO: Taxfeld im Tab Buchen hinzufügen
@@ -70,7 +75,9 @@ public class Buchungsformular {
                 Platzkategorie platzkategorie = (Platzkategorie)selectPlatzkategorie.getSelectedItem();
 
                 for (int i = 1; i <= (int)spinnerAnzahl.getValue(); i++){
-                    buchung.hinzufuegenKarte(inputRabattcode.getText(), kartentyp.getID(), platzkategorie.getID());
+                    int rabattID = Rabatt.findIDByString(inputRabattcode.getText());
+                    Karte karte = new Karte(rabattID, platzkategorie.getID(), kartentyp.getID());
+                    karten.add(karte);
                 }
             }
             //TODO: Methode zum füllen eines Texfeldes das den Erfolg des Hinzufügen anzeigt
