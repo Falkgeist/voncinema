@@ -16,6 +16,7 @@ public class Buchungsformular {
     private JTabbedPane tabbedPane1;
     private JTextArea textKarten, textBuchung, textAreaFeedback;
     private JScrollPane scrollPaneMeineBuchungen;
+    private JPanel paneMeineBuchungen;
     private ArrayList<Karte> karten = new ArrayList<>();
 
     /**TODO: im Tab Meine Buchungen:
@@ -23,8 +24,8 @@ public class Buchungsformular {
      * ein Button BuchungenAnzeigen hinzufügen DONE
      * eine Funktion zum hinzufügen eines Textfeldes und einen button bezahlen und einen button stornieren
      * beim klick auf BuchungAnzeigen jede Buchung mit Funktion zum Tab hinzufügen
-     * Funktion zum bezahlen
-     * Funktion zum stornieren
+     * Funktion zum bezahlen DONE
+     * Funktion zum stornieren DONE
      * Textfeld zum anzeigen von Feedback DONE
      */
 
