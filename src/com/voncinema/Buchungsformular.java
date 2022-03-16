@@ -29,6 +29,10 @@ public class Buchungsformular {
     private JTextArea textKarten;
     private JTextArea textBuchung;
     private JTextField inputPerson;
+    private JTextField textFieldNameLogin;
+    private JButton buttonBuchungenAnzeigen;
+    private JScrollPane scrollPaneMeineBuchungen;
+    private JTextArea textAreaFeedback;
     private JLabel labelPerson;
     private ArrayList<Karte> karten = new ArrayList<>();
 
