@@ -15,6 +15,7 @@ public class Buchung {
     private int vorstellung;
     private ArrayList<Karte> karten = new ArrayList<>();
     private String status;
+    private int rabatt;
 
     Buchung(){}
 
@@ -47,21 +48,65 @@ public class Buchung {
 
     public double berechneGesamtpreis()
     {
-        // Hole den prozentualen Zuschlag über die Vorstellung, den Film und entsprechend die Kategorie
-        ArrayList<Object> resultVorstellung = Kinoverwaltung.getFromDB("Vorstellung", "vc_vorstellung", "WHERE id="+this.vorstellung);
-        Vorstellung vorstellung = (Vorstellung) resultVorstellung.get(0);
-        ArrayList<Object> resultFilm = Kinoverwaltung.getFromDB("Film", "vc_film", "WHERE id="+vorstellung.getFilm());
-        Film film = (Film) resultFilm.get(0);
-        ArrayList<Object> resultKategorie = Kinoverwaltung.getFromDB("FilmKategorie", "vc_film_kategorie", "WHERE id="+film.getKategorie());
-        FilmKategorie kategorie = (FilmKategorie) resultKategorie.get(0);
-        double filmZuschlag = kategorie.getZuschlagProzent();
-        double sum = 0;
-        for (Karte karte : karten) {
-            sum += karte.berechnePreis(filmZuschlag);
+//        // Hole den prozentualen Zuschlag über die Vorstellung, den Film und entsprechend die Kategorie
+//        ArrayList<Object> resultVorstellung = Kinoverwaltung.getFromDB("Vorstellung", "vc_vorstellung", "WHERE id="+this.vorstellung);
+//        Vorstellung vorstellung = (Vorstellung) resultVorstellung.get(0);
+//        ArrayList<Object> resultFilm = Kinoverwaltung.getFromDB("Film", "vc_film", "WHERE id="+vorstellung.getFilm());
+//        Film film = (Film) resultFilm.get(0);
+//        ArrayList<Object> resultKategorie = Kinoverwaltung.getFromDB("FilmKategorie", "vc_film_kategorie", "WHERE id="+film.getKategorie());
+//        FilmKategorie kategorie = (FilmKategorie) resultKategorie.get(0);
+//        double filmZuschlag = kategorie.getZuschlagProzent();
+//        double sum = 0;
+//        for (Karte karte : karten) {
+//            sum += karte.berechnePreis(filmZuschlag);
+//        }
+//        BigDecimal decSum = new BigDecimal(sum).setScale(2, RoundingMode.HALF_UP);
+//        sum = decSum.doubleValue();
+//        return sum;
+        double gesamtpreis = 0;
+        try {
+            Connection conn = Kinoverwaltung.setupConnection();
+            Statement stat = conn.createStatement();
+            String sql = "SELECT karte FROM vc_buchung_karten WHERE buchung = " + ID + ";";
+            ResultSet rs_vc_buchung_karten = stat.executeQuery(sql);
+            while(rs_vc_buchung_karten.next()){
+                Connection conn2 = Kinoverwaltung.setupConnection();
+                Statement stat2 = conn.createStatement();
+                sql ="SELECT zuschlagFIX FROM vc_platzkategorie WHERE ID = (SELECT platzkategorie FROM vc_karte WHERE ID = "  + rs_vc_buchung_karten.getInt("karte") +");";
+                ResultSet rs_vc_karte = stat2.executeQuery(sql);
+                gesamtpreis += rs_vc_karte.getInt("zuschlagFix");
+                rs_vc_karte.close();
+                conn2.close();
+
+                Connection conn3 = Kinoverwaltung.setupConnection();
+                Statement stat3 = conn.createStatement();
+                sql ="SELECT preis FROM vc_kartentyp WHERE ID = (SELECT kartentyp FROM vc_karte WHERE ID = "  + rs_vc_buchung_karten.getInt("karte") +");";
+                ResultSet vc_kartentyp = stat3.executeQuery(sql);
+                gesamtpreis += vc_kartentyp.getInt("preis");
+                vc_kartentyp.close();
+                conn3.close();
+            }
+            rs_vc_buchung_karten.close();
+            //TODO:
+            //+ Preis Film kategorie DONE
+            //+ Überlänge zuschlag
+            //- Rabatt aus Table karte entfernen und in buchung einfügen?
+            sql = "SELECT zuschlagProzent FROM vc_film_kategorie WHERE ID = (SELECT kategorie FROM vc_film WHERE ID = (SELECT film FROM vc_vorstellung WHERE ID = "+ this.vorstellung+"));";
+            ResultSet rs_vc_film_kategorie = stat.executeQuery(sql);
+            gesamtpreis *= 1 + ((double)rs_vc_film_kategorie.getInt("zuschlagProzent") / 100);
+            rs_vc_film_kategorie.close();
+
+            sql = "SELECT wert FROM vc_rabatt WHERE ID = (SELECT rabatt FROM vc_buchung WHERE ID =" + ID +");";
+            ResultSet rs_vc_rabatt = stat.executeQuery(sql);
+            gesamtpreis *= 1 - rs_vc_rabatt.getDouble("wert");
+            rs_vc_rabatt.close();
+            conn.close();
         }
-        BigDecimal decSum = new BigDecimal(sum).setScale(2, RoundingMode.HALF_UP);
-        sum = decSum.doubleValue();
-        return sum;
+        catch (ClassNotFoundException | SQLException e)
+        {
+            e.printStackTrace();
+        }
+        return gesamtpreis;
     }
 
     public void setStatus(String status)
@@ -101,7 +146,7 @@ public class Buchung {
         try {
             Connection conn = Kinoverwaltung.setupConnection();
             Statement stat = conn.createStatement();
-            String sql = "INSERT INTO vc_buchung (person, vorstellung) VALUES ('"+ person + "','" + vorstellung + "');";
+            String sql = "INSERT INTO vc_buchung (person, vorstellung, rabatt) VALUES ('"+ person + "','" + vorstellung + "'" + rabatt + "');";
             stat.executeUpdate(sql);
             conn.close();
         }
@@ -134,6 +179,9 @@ public class Buchung {
 
     public boolean hasName(String name) {
         return Objects.equals(this.person, name);
+    }
+
+    public void setRabatt(int rabatt) {this.rabatt = rabatt;
     }
 
     @Override

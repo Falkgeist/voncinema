@@ -6,17 +6,16 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 public class Karte {
-    private int ID, rabatt, platzkategorie, kartentyp;
+    private int ID,  platzkategorie, kartentyp;
 
-    Karte(int rabatt, int platzkategorie, int kartentyp) {
-        this.rabatt = rabatt;
+    Karte( int platzkategorie, int kartentyp) {
+
         this.platzkategorie = platzkategorie;
         this.kartentyp = kartentyp;
     }
 
-    Karte(int ID, int rabatt, int platzkategorie, int kartentyp) {
+    Karte(int ID, int platzkategorie, int kartentyp) {
         this.ID = ID;
-        this.rabatt = rabatt;
         this.platzkategorie = platzkategorie;
         this.kartentyp = kartentyp;
     }
@@ -26,14 +25,9 @@ public class Karte {
         double grundpreis = kartentyp.getPreis();
         Platzkategorie platzkategorie = Kinoverwaltung.getPlatzkategorie(this.platzkategorie);
         double zuschlagPlatz = platzkategorie.getZuschlagFix();
-        double rabatt = 0.0;
-        if (this.rabatt != 0) {
-            Rabatt objRabatt = Kinoverwaltung.getRabatt(this.rabatt);
-            rabatt = objRabatt.getWert();
-        }
         double fixpreis = grundpreis + zuschlagPlatz;
         double zuschlag = fixpreis * (zuschlagFilm/100 + 1);
-        double endpreis = zuschlag - (zuschlag * rabatt);
+        double endpreis = zuschlag - (zuschlag);
         return endpreis;
     }
 
@@ -42,7 +36,7 @@ public class Karte {
         try {
             Connection conn = Kinoverwaltung.setupConnection();
             Statement stat = conn.createStatement();
-            String sql = "INSERT INTO vc_karte (rabatt, platzkategorie, kartentyp) VALUES(" + rabatt + "," + platzkategorie + "," + kartentyp + ");";
+            String sql = "INSERT INTO vc_karte (platzkategorie, kartentyp) VALUES("+ platzkategorie + "," + kartentyp + ");";
             stat.executeUpdate(sql);
             conn.close();
         }

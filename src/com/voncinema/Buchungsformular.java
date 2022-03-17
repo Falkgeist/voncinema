@@ -24,12 +24,6 @@ public class Buchungsformular {
     private JButton buttonBezahlen;
     private ArrayList<Karte> karten = new ArrayList<>();
 
-    /**TODO: im Tab Meine Buchungen:
-     * eine Funktion zum hinzufügen eines Textfeldes und einen button bezahlen und einen button stornieren
-     * beim klick auf BuchungAnzeigen jede Buchung mit Funktion zum Tab hinzufügen
-     */
-
-
 
     public Buchungsformular() {
         selectFilm.addActionListener(new ActionListener() {
@@ -60,6 +54,7 @@ public class Buchungsformular {
                         buchung + "\n" +
                         "Karten:\n" +
                         buchung.getKartenAsList());
+                buchung.setRabatt(Rabatt.findIDByString(inputRabattcode.getText()));
             }
         });
         buttonHinzufuegenKarte.addActionListener(new ActionListener() {
@@ -69,8 +64,8 @@ public class Buchungsformular {
                 Platzkategorie platzkategorie = (Platzkategorie)selectPlatzkategorie.getSelectedItem();
 
                 for (int i = 1; i <= (int)spinnerAnzahl.getValue(); i++){
-                    int rabattID = Rabatt.findIDByString(inputRabattcode.getText());
-                    Karte karte = new Karte(rabattID, platzkategorie.getID(), kartentyp.getID());
+
+                    Karte karte = new Karte( platzkategorie.getID(), kartentyp.getID());
                     karten.add(karte);
                 }
                 textKarten.append(spinnerAnzahl.getValue() + " Karten ("+kartentyp.toString()+", "+platzkategorie.toString()+") hinzugefügt.\n----------\n");
