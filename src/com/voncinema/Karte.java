@@ -40,10 +40,7 @@ public class Karte {
             stat.executeUpdate(sql);
             conn.close();
         }
-        catch (ClassNotFoundException | SQLException e)
-        {
-            e.printStackTrace();
-        }
+        catch (ClassNotFoundException | SQLException e){e.printStackTrace();}
     }
 
     public void getLastIDFromDB()
@@ -57,10 +54,7 @@ public class Karte {
             rs.close();
             conn.close();
         }
-        catch (ClassNotFoundException | SQLException e)
-        {
-            e.printStackTrace();
-        }
+        catch (ClassNotFoundException | SQLException e){e.printStackTrace();}
     }
 
     public int getID() {

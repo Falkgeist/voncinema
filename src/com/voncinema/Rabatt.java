@@ -25,14 +25,10 @@ public class Rabatt {
             while (rs.next()) {
                 id = rs.getInt("ID");
             }
-
             rs.close();
             conn.close();
         }
-        catch (ClassNotFoundException | SQLException e)
-        {
-            e.printStackTrace();
-        }
+        catch (ClassNotFoundException | SQLException e){e.printStackTrace();}
         return id;
     }
 
@@ -49,9 +45,7 @@ public class Rabatt {
             stat.executeUpdate(sql);
             conn.close();
         }
-        catch (ClassNotFoundException | SQLException e)
-        {
-            e.printStackTrace();
+        catch (ClassNotFoundException | SQLException e){e.printStackTrace();
         }
     }
 

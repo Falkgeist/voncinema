@@ -27,10 +27,7 @@ public class Film {
             stat.executeUpdate(sql);
             conn.close();
         }
-        catch (ClassNotFoundException | SQLException e)
-        {
-            e.printStackTrace();
-        }
+        catch (ClassNotFoundException | SQLException e){e.printStackTrace();}
     }
 
     public boolean hasID(int ID) {

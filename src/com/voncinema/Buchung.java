@@ -48,21 +48,6 @@ public class Buchung {
 
     public double berechneGesamtpreis()
     {
-//        // Hole den prozentualen Zuschlag über die Vorstellung, den Film und entsprechend die Kategorie
-//        ArrayList<Object> resultVorstellung = Kinoverwaltung.getFromDB("Vorstellung", "vc_vorstellung", "WHERE id="+this.vorstellung);
-//        Vorstellung vorstellung = (Vorstellung) resultVorstellung.get(0);
-//        ArrayList<Object> resultFilm = Kinoverwaltung.getFromDB("Film", "vc_film", "WHERE id="+vorstellung.getFilm());
-//        Film film = (Film) resultFilm.get(0);
-//        ArrayList<Object> resultKategorie = Kinoverwaltung.getFromDB("FilmKategorie", "vc_film_kategorie", "WHERE id="+film.getKategorie());
-//        FilmKategorie kategorie = (FilmKategorie) resultKategorie.get(0);
-//        double filmZuschlag = kategorie.getZuschlagProzent();
-//        double sum = 0;
-//        for (Karte karte : karten) {
-//            sum += karte.berechnePreis(filmZuschlag);
-//        }
-//        BigDecimal decSum = new BigDecimal(sum).setScale(2, RoundingMode.HALF_UP);
-//        sum = decSum.doubleValue();
-//        return sum;
         double gesamtpreis = 0;
         try {
             Connection conn = Kinoverwaltung.setupConnection();
@@ -90,7 +75,6 @@ public class Buchung {
             gesamtpreis *= 1 + ((double)rs_vc_film_kategorie.getInt("zuschlagProzent") / 100);
             rs_vc_film_kategorie.close();
 
-
             Statement stat2 = conn.createStatement();
             sql = "SELECT rabatt FROM vc_buchung WHERE ID = " + this.ID +";";
             ResultSet rs_vc_buchung = stat2.executeQuery(sql);
@@ -104,13 +88,9 @@ public class Buchung {
                 gesamtpreis *= 1 - rs_vc_rabatt.getDouble("wert");
                 rs_vc_rabatt.close();
             }
-
             conn.close();
         }
-        catch (ClassNotFoundException | SQLException e)
-        {
-            e.printStackTrace();
-        }
+        catch (ClassNotFoundException | SQLException e){e.printStackTrace();}
         return gesamtpreis;
     }
 
@@ -123,10 +103,7 @@ public class Buchung {
             stat.executeQuery(sql);
             conn.close();
         }
-        catch (ClassNotFoundException | SQLException e)
-        {
-            e.printStackTrace();
-        }
+        catch (ClassNotFoundException | SQLException e){e.printStackTrace();}
     }
 
     public void getLastIDFromDB()
@@ -140,10 +117,7 @@ public class Buchung {
             rs.close();
             conn.close();
         }
-        catch (ClassNotFoundException | SQLException e)
-        {
-            e.printStackTrace();
-        }
+        catch (ClassNotFoundException | SQLException e){e.printStackTrace();}
     }
 
     public void saveToDB()
@@ -163,10 +137,7 @@ public class Buchung {
             stat.executeUpdate(sql);
             conn.close();
         }
-        catch (ClassNotFoundException | SQLException e)
-        {
-            e.printStackTrace();
-        }
+        catch (ClassNotFoundException | SQLException e){e.printStackTrace();}
     }
 
     public ArrayList<Karte> getKarten() {
