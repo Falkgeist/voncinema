@@ -145,27 +145,6 @@
                   <text value="Buchung bestätigen"/>
                 </properties>
               </component>
-              <component id="2d5d0" class="javax.swing.JTextArea" binding="textBuchung">
-                <constraints>
-                  <grid row="7" column="1" row-span="4" col-span="1" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
-                    <preferred-size width="150" height="50"/>
-                  </grid>
-                </constraints>
-                <properties>
-                  <enabled value="false"/>
-                  <text value=""/>
-                </properties>
-              </component>
-              <component id="9ad36" class="javax.swing.JTextArea" binding="textKarten">
-                <constraints>
-                  <grid row="6" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
-                    <preferred-size width="150" height="150"/>
-                  </grid>
-                </constraints>
-                <properties>
-                  <enabled value="false"/>
-                </properties>
-              </component>
               <component id="327e1" class="javax.swing.JLabel" binding="labelRabattcode">
                 <constraints>
                   <grid row="7" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
@@ -189,6 +168,16 @@
                   <grid row="9" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
                 </constraints>
               </vspacer>
+              <component id="9ad36" class="javax.swing.JTextArea" binding="textAusgabe">
+                <constraints>
+                  <grid row="0" column="1" row-span="10" col-span="1" vsize-policy="3" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
+                    <preferred-size width="150" height="150"/>
+                  </grid>
+                </constraints>
+                <properties>
+                  <enabled value="false"/>
+                </properties>
+              </component>
             </children>
           </grid>
           <grid id="7141" layout-manager="GridLayoutManager" row-count="4" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
