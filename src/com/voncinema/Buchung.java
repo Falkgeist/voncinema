@@ -48,11 +48,11 @@ public class Buchung {
     public double berechneGesamtpreis()
     {
         // Hole den prozentualen Zuschlag über die Vorstellung, den Film und entsprechend die Kategorie
-        ArrayList<Object> resultVorstellung = Kinoverwaltung.getFromDB("Vorstellung", "vc_vorstellung", "WHERE id="+this.vorstellung);
+        ArrayList<Object> resultVorstellung = Kinoverwaltung.getFromDB("vc_vorstellung", "WHERE id="+this.vorstellung);
         Vorstellung vorstellung = (Vorstellung) resultVorstellung.get(0);
-        ArrayList<Object> resultFilm = Kinoverwaltung.getFromDB("Film", "vc_film", "WHERE id="+vorstellung.getFilm());
+        ArrayList<Object> resultFilm = Kinoverwaltung.getFromDB("vc_film", "WHERE id="+vorstellung.getFilm());
         Film film = (Film) resultFilm.get(0);
-        ArrayList<Object> resultKategorie = Kinoverwaltung.getFromDB("FilmKategorie", "vc_film_kategorie", "WHERE id="+film.getKategorie());
+        ArrayList<Object> resultKategorie = Kinoverwaltung.getFromDB("vc_film_kategorie", "WHERE id="+film.getKategorie());
         FilmKategorie kategorie = (FilmKategorie) resultKategorie.get(0);
         double filmZuschlag = kategorie.getZuschlagProzent();
         double sum = 0;
