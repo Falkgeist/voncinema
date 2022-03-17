@@ -38,6 +38,9 @@ public class Buchungsformular {
             }
         });
         buttonBuchen.addActionListener(new ActionListener() {
+
+            //TODO: Prüfung ob Rabattcode gültig ist
+
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (Objects.equals(inputName.getText(), "")) {
@@ -66,6 +69,9 @@ public class Buchungsformular {
             }
         });
         buttonHinzufuegenKarte.addActionListener(new ActionListener() {
+
+            //TODO: Überprüfung ob im Kinosaal genug Plätze der kategorie frei sind
+
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 Kartentyp kartentyp = (Kartentyp)selectKartentyp.getSelectedItem();

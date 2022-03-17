@@ -89,6 +89,7 @@ public class Buchung {
                 rs_vc_rabatt.close();
             }
             conn.close();
+            //TODO: gesamtpreis + Zuschlag bei überlänge
         }
         catch (ClassNotFoundException | SQLException e){e.printStackTrace();}
         return gesamtpreis;
