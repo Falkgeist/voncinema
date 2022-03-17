@@ -70,36 +70,41 @@ public class Buchung {
             String sql = "SELECT karte FROM vc_buchung_karten WHERE buchung = " + ID + ";";
             ResultSet rs_vc_buchung_karten = stat.executeQuery(sql);
             while(rs_vc_buchung_karten.next()){
-                Connection conn2 = Kinoverwaltung.setupConnection();
                 Statement stat2 = conn.createStatement();
                 sql ="SELECT zuschlagFIX FROM vc_platzkategorie WHERE ID = (SELECT platzkategorie FROM vc_karte WHERE ID = "  + rs_vc_buchung_karten.getInt("karte") +");";
                 ResultSet rs_vc_karte = stat2.executeQuery(sql);
                 gesamtpreis += rs_vc_karte.getInt("zuschlagFix");
                 rs_vc_karte.close();
-                conn2.close();
 
-                Connection conn3 = Kinoverwaltung.setupConnection();
                 Statement stat3 = conn.createStatement();
                 sql ="SELECT preis FROM vc_kartentyp WHERE ID = (SELECT kartentyp FROM vc_karte WHERE ID = "  + rs_vc_buchung_karten.getInt("karte") +");";
                 ResultSet vc_kartentyp = stat3.executeQuery(sql);
                 gesamtpreis += vc_kartentyp.getInt("preis");
                 vc_kartentyp.close();
-                conn3.close();
             }
             rs_vc_buchung_karten.close();
-            //TODO:
-            //+ Preis Film kategorie DONE
-            //+ Überlänge zuschlag
-            //- Rabatt aus Table karte entfernen und in buchung einfügen?
+
+            stat = conn.createStatement();
             sql = "SELECT zuschlagProzent FROM vc_film_kategorie WHERE ID = (SELECT kategorie FROM vc_film WHERE ID = (SELECT film FROM vc_vorstellung WHERE ID = "+ this.vorstellung+"));";
             ResultSet rs_vc_film_kategorie = stat.executeQuery(sql);
             gesamtpreis *= 1 + ((double)rs_vc_film_kategorie.getInt("zuschlagProzent") / 100);
             rs_vc_film_kategorie.close();
 
-            sql = "SELECT wert FROM vc_rabatt WHERE ID = (SELECT rabatt FROM vc_buchung WHERE ID =" + ID +");";
-            ResultSet rs_vc_rabatt = stat.executeQuery(sql);
-            gesamtpreis *= 1 - rs_vc_rabatt.getDouble("wert");
-            rs_vc_rabatt.close();
+
+            Statement stat2 = conn.createStatement();
+            sql = "SELECT rabatt FROM vc_buchung WHERE ID = " + this.ID +";";
+            ResultSet rs_vc_buchung = stat2.executeQuery(sql);
+            int test = rs_vc_buchung.getInt("rabatt");
+            rs_vc_buchung.close();
+
+            if(test > 0){
+                Statement stat3 = conn.createStatement();
+                sql = "SELECT wert FROM vc_rabatt WHERE ID = " + test +";";
+                ResultSet rs_vc_rabatt = stat3.executeQuery(sql);
+                gesamtpreis *= 1 - rs_vc_rabatt.getDouble("wert");
+                rs_vc_rabatt.close();
+            }
+
             conn.close();
         }
         catch (ClassNotFoundException | SQLException e)
@@ -146,7 +151,15 @@ public class Buchung {
         try {
             Connection conn = Kinoverwaltung.setupConnection();
             Statement stat = conn.createStatement();
-            String sql = "INSERT INTO vc_buchung (person, vorstellung, rabatt) VALUES ('"+ person + "','" + vorstellung + "'" + rabatt + "');";
+            String sql = "";
+            if(rabatt == 0){
+                sql = "INSERT INTO vc_buchung (person, vorstellung) VALUES ('"+ person + "','" + vorstellung +"');";
+            }
+            else{
+                sql = "INSERT INTO vc_buchung (person, vorstellung, rabatt) VALUES ('"+ person + "','" + vorstellung + "','" + rabatt + "');";
+            }
+
+
             stat.executeUpdate(sql);
             conn.close();
         }

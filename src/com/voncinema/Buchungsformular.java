@@ -51,6 +51,7 @@ public class Buchungsformular {
                 Vorstellung vorstellung = (Vorstellung)selectVorstellung.getSelectedItem();
                 buchung.setPerson(inputName.getText());
                 buchung.setVorstellung(vorstellung.getID());
+                buchung.setRabatt(Rabatt.findIDByString(inputRabattcode.getText()));
                 for (Karte karte : karten) {
                     buchung.hinzufuegenKarte(karte);
                 }
@@ -63,7 +64,6 @@ public class Buchungsformular {
                         "Karten:\n" +
                         buchung.getKartenAsList() + "\n" +
                         "----------");
-                buchung.setRabatt(Rabatt.findIDByString(inputRabattcode.getText()));
             }
         });
         buttonHinzufuegenKarte.addActionListener(new ActionListener() {
