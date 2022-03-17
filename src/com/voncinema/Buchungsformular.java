@@ -60,11 +60,12 @@ public class Buchungsformular {
                 karten.clear();
                 Kinoverwaltung.bucheBuchung(vorstellung, buchung);
                 textBuchung.append("Die Buchung wurde gespeichert.\n" +
+                        "----------\n" +
                         "Details:\n" +
-                        "Name des Buchenden: " + inputName.getText() + "\n" +
                         buchung + "\n" +
                         "Karten:\n" +
-                        buchung.getKartenAsList());
+                        buchung.getKartenAsList() + "\n" +
+                        "----------");
             }
         });
         buttonHinzufuegenKarte.addActionListener(new ActionListener() {
