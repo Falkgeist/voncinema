@@ -95,10 +95,7 @@ public class Kinoverwaltung {
             rs.close();
             conn.close();
         }
-        catch (ClassNotFoundException | SQLException e)
-        {
-            e.printStackTrace();
-        }
+        catch (ClassNotFoundException | SQLException e){e.printStackTrace();}
         return objects;
     }
 
@@ -176,14 +173,10 @@ public class Kinoverwaltung {
                         break;
                 }
             }
-
             rs.close();
             conn.close();
         }
-        catch (ClassNotFoundException | SQLException e)
-        {
-            e.printStackTrace();
-        }
+        catch (ClassNotFoundException | SQLException e){e.printStackTrace();}
         return objects;
     }
 
@@ -233,11 +226,6 @@ public class Kinoverwaltung {
         buchung.saveToDB();
         buchung.getLastIDFromDB();
         buchung.speichernKarten();
-    }
-
-    public static void storniereBuchung()
-    {
-
     }
 
     public static Connection setupConnection() throws ClassNotFoundException, SQLException

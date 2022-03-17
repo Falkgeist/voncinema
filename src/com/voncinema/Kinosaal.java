@@ -21,9 +21,6 @@ public class Kinosaal {
             stat.executeUpdate(sql);
             conn.close();
         }
-        catch (ClassNotFoundException | SQLException e)
-        {
-            e.printStackTrace();
-        }
+        catch (ClassNotFoundException | SQLException e){e.printStackTrace();}
     }
 }
