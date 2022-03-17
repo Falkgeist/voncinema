@@ -140,6 +140,14 @@ public class Buchung {
     public String toString() {
         Vorstellung objVorstellung = Kinoverwaltung.getVorstellung(this.vorstellung);
         Film objFilm = Kinoverwaltung.getFilm(objVorstellung.getFilm());
+        return "Film: " + objFilm + "\n" +
+                "Uhrzeit: " + objVorstellung + "\n" +
+                "Preis: " + String.format("%.2f", this.berechneGesamtpreis()) + " €";
+    }
+
+    public String toHTML() {
+        Vorstellung objVorstellung = Kinoverwaltung.getVorstellung(this.vorstellung);
+        Film objFilm = Kinoverwaltung.getFilm(objVorstellung.getFilm());
         return "<html>Film: " + objFilm + "<br>" +
                 "Uhrzeit: " + objVorstellung + "<br>" +
                 "Preis: " + String.format("%.2f", this.berechneGesamtpreis()) + " €</html>";

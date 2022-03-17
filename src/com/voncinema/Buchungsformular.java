@@ -89,7 +89,7 @@ public class Buchungsformular {
                 ArrayList<Buchung> buchungenForUser = Kinoverwaltung.getBuchungenByName(username);
                 DefaultListModel model = new DefaultListModel();
                 for (Buchung buchung : buchungenForUser) {
-                    model.addElement(buchung.toString());
+                    model.addElement(buchung.toHTML());
                 }
                 listMeineBuchungen.setModel(model);
                 listMeineBuchungen.revalidate();
