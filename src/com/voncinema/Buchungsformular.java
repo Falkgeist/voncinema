@@ -49,6 +49,9 @@ public class Buchungsformular {
                 if (Objects.equals(inputName.getText(), "")) {
                     textBuchung.append("Bitte einen Namen für die Buchung angeben!");
                     return;
+                } else if (karten.isEmpty()) {
+                    textBuchung.append("Bitte Karten hinzufügen!");
+                    return;
                 }
                 Buchung buchung = new Buchung();
                 Vorstellung vorstellung = (Vorstellung)selectVorstellung.getSelectedItem();
