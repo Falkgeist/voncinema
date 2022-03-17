@@ -169,7 +169,7 @@ public class Kinoverwaltung {
                         objects.add(rabatt);
                         Kinoverwaltung.rabatte.add(rabatt);
                         break;
-                    case "Vorstellung":
+                    case "vc_vorstellung":
                         Vorstellung vorstellung = new Vorstellung(rs.getInt("ID"), rs.getInt("film"), rs.getInt("kinosaal"), rs.getString("uhrzeit"));
                         objects.add(vorstellung);
                         Kinoverwaltung.vorstellungen.add(vorstellung);
