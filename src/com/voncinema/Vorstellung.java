@@ -3,22 +3,25 @@ package com.voncinema;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalTime;
 
 public class Vorstellung {
     private int ID, film, kinosaal;
-    private String beginn, ende;
+    private String uhrzeit;
 
-    Vorstellung(int ID, int film, int kinosaal, String beginn, String ende){
+    Vorstellung(int ID, int film, int kinosaal, String uhrzeit){
         this.ID = ID;
         this.film = film;
         this.kinosaal = kinosaal;
-        this.beginn = beginn;
-        this.ende = ende;
+        this.uhrzeit = uhrzeit;
     }
 
     @Override
     public String toString() {
-        return beginn + " - " +ende;
+        Film film = Kinoverwaltung.getFilm(this.film);
+        LocalTime time = LocalTime.parse(uhrzeit);
+        time = time.plusMinutes(film.getLaenge());
+        return uhrzeit + "-" + time.getHour() + ":" + time.getMinute();
     }
 
     public void saveToDB()
@@ -26,7 +29,7 @@ public class Vorstellung {
         try {
             Connection conn = Kinoverwaltung.setupConnection();
             Statement stat = conn.createStatement();
-            String sql = "INSERT INTO vc_vorstellung (film, kinosaal, beginn, ende) VALUES(" + film + "," + kinosaal + "," + beginn + "," + ende +");";
+            String sql = "INSERT INTO vc_vorstellung (film, kinosaal, uhrzeit) VALUES(" + film + "," + kinosaal + "," + uhrzeit +");";
             stat.executeUpdate(sql);
             conn.close();
         }

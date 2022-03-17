@@ -43,6 +43,9 @@ public class Film {
     public int getKategorie() {
         return kategorie;
     }
+    public int getLaenge() {
+        return laenge;
+    }
 
     @Override
     public String toString() {

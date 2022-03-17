@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class Buchungsformular {
     private static JFrame frame = new JFrame("VonCinema");
@@ -14,7 +15,7 @@ public class Buchungsformular {
     private JList listMeineBuchungen;
     private JButton buttonBuchen, buttonHinzufuegenKarte, buttonBuchungenAnzeigen;
     private JSpinner spinnerAnzahl;
-    private JTextField inputRabattcode, inputName, inputPerson, textFieldNameLogin;
+    private JTextField inputRabattcode, inputName, textFieldNameLogin;
     private JLabel labelRabattcode, labelPerson, labelFilm, labelVorstellung, labelName, labelPlatzkategorie, labelKartentyp, labelAnzahl;
     private JTabbedPane tabbedPane1;
     private JTextArea textKarten, textBuchung, textAreaFeedback;
@@ -32,13 +33,20 @@ public class Buchungsformular {
                 JComboBox cb = (JComboBox)e.getSource();
                 Film film = (Film)cb.getSelectedItem();
                 int filmID = film.getID();
-                ArrayList<Object> vorstellungen = Kinoverwaltung.getFromDB("Vorstellung", "vc_vorstellung", "WHERE id="+filmID);
+                ArrayList<Object> vorstellungen = Kinoverwaltung.getFromDB("vc_vorstellung", "WHERE id="+filmID);
                 selectVorstellung.setModel(new DefaultComboBoxModel(vorstellungen.toArray()));
             }
         });
         buttonBuchen.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                if (Objects.equals(inputName.getText(), "")) {
+                    textBuchung.append("Bitte einen Namen für die Buchung angeben!");
+                    return;
+                } else if (karten.isEmpty()) {
+                    textBuchung.append("Bitte Karten hinzufügen!");
+                    return;
+                }
                 Buchung buchung = new Buchung();
                 Vorstellung vorstellung = (Vorstellung)selectVorstellung.getSelectedItem();
                 buchung.setPerson(inputName.getText());
@@ -49,11 +57,12 @@ public class Buchungsformular {
                 karten.clear();
                 Kinoverwaltung.bucheBuchung(vorstellung, buchung);
                 textBuchung.append("Die Buchung wurde gespeichert.\n" +
+                        "----------\n" +
                         "Details:\n" +
-                        "Name des Buchenden: " + inputName.getText() + "\n" +
                         buchung + "\n" +
                         "Karten:\n" +
-                        buchung.getKartenAsList());
+                        buchung.getKartenAsList() + "\n" +
+                        "----------");
                 buchung.setRabatt(Rabatt.findIDByString(inputRabattcode.getText()));
             }
         });
@@ -79,11 +88,11 @@ public class Buchungsformular {
                     textAreaFeedback.setText("Bitte einen Namen eingeben");
                 }
                 else {
-                    Kinoverwaltung.getFromDB("Buchung", "vc_buchung");
+                    Kinoverwaltung.getFromDB("vc_buchung");
                     ArrayList<Buchung> buchungenForUser = Kinoverwaltung.getBuchungenByName(username);
                     DefaultListModel model = new DefaultListModel();
                     for (Buchung buchung : buchungenForUser) {
-                        model.addElement(buchung.toString());
+                        model.addElement(buchung.toHTML());
                     }
                     listMeineBuchungen.setModel(model);
                     listMeineBuchungen.revalidate();
@@ -93,12 +102,12 @@ public class Buchungsformular {
     }
 
     public static void main(String[] args) {
-        form.getOptionsFromDB("Film", "vc_film");
-        Kinoverwaltung.getFromDB("FilmKategorie", "vc_film_kategorie");
-        form.getOptionsFromDB("Vorstellung", "vc_vorstellung");
-        form.getOptionsFromDB("Platzkategorie", "vc_platzkategorie");
-        form.getOptionsFromDB("Kartentyp", "vc_kartentyp");
-        Kinoverwaltung.getFromDB("Rabatt", "vc_rabatt");
+        form.getOptionsFromDB("vc_film");
+        Kinoverwaltung.getFromDB("vc_film_kategorie");
+        form.getOptionsFromDB("vc_vorstellung");
+        form.getOptionsFromDB("vc_platzkategorie");
+        form.getOptionsFromDB("vc_kartentyp");
+        Kinoverwaltung.getFromDB("vc_rabatt");
         form.textKarten.setLineWrap(true);
         form.textBuchung.setLineWrap(true);
         JPanel contentPane = form.start;
@@ -115,19 +124,19 @@ public class Buchungsformular {
         System.out.println(karte.berechnePreis(zuschlagFilm));*/
     }
 
-    public void getOptionsFromDB(String strClass, String table) {
-        ArrayList<Object> objArray = Kinoverwaltung.getFromDB(strClass, table);
-        switch (strClass) {
-            case "Film":
+    public void getOptionsFromDB(String table) {
+        ArrayList<Object> objArray = Kinoverwaltung.getFromDB(table);
+        switch (table) {
+            case "vc_film":
                 this.selectFilm.setModel(new DefaultComboBoxModel(objArray.toArray()));
                 break;
-            case "Vorstellung":
+            case "vc_vorstellung":
                 this.selectVorstellung.setModel(new DefaultComboBoxModel(objArray.toArray()));
                 break;
-            case "Platzkategorie":
+            case "vc_platzkategorie":
                 this.selectPlatzkategorie.setModel(new DefaultComboBoxModel(objArray.toArray()));
                 break;
-            case "Kartentyp":
+            case "vc_kartentyp":
                 this.selectKartentyp.setModel(new DefaultComboBoxModel(objArray.toArray()));
                 break;
         }

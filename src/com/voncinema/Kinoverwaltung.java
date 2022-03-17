@@ -17,9 +17,10 @@ public class Kinoverwaltung {
     private static ArrayList<Rabatt> rabatte = new ArrayList<>();
     private static ArrayList<Vorstellung> vorstellungen = new ArrayList<>();
 
-    public static ArrayList<Object> getFromDB(String objectClass, String databaseTable)
+    public static ArrayList<Object> getFromDB(String databaseTable)
     {
         ArrayList<Object> objects = new ArrayList<>();
+        Kinoverwaltung.clearTable(databaseTable);
         try {
             Connection conn = setupConnection();
             Statement stat = conn.createStatement();
@@ -27,148 +28,64 @@ public class Kinoverwaltung {
             ResultSet rs = stat.executeQuery(sql);
 
             while (rs.next()) {
-                switch (objectClass) {
-                    case "Buchung":
-                        Buchung buchung = new Buchung(rs.getInt("ID"), rs.getString("person"), rs.getInt("vorstellung"), rs.getString("status"));
-                        objects.add(buchung);
-                        buchungen.add(buchung);
-                        break;
-                    case "BuchungKarten":
-                        BuchungKarten objBuchungKarten = new BuchungKarten(rs.getInt("ID"), rs.getInt("buchung"), rs.getInt("karte"));
-                        objects.add(objBuchungKarten);
-                        buchungKarten.add(objBuchungKarten);
-                        break;
-                    case "Film":
-                        Film film = new Film(rs.getInt("ID"), rs.getString("name"), rs.getString("beschreibung"), rs.getInt("laenge"), rs.getInt("kategorie"), rs.getString("genre"));
-                        objects.add(film);
-                        filme.add(film);
-                        break;
-                    case "FilmKategorie":
-                        FilmKategorie filmKategorie = new FilmKategorie(rs.getInt("ID"), rs.getString("name"), rs.getDouble("zuschlagProzent"));
-                        objects.add(filmKategorie);
-                        filmKategorien.add(filmKategorie);
-                        break;
-                    case "Karte":
-                        Karte karte = new Karte(rs.getInt("ID"), rs.getInt("rabatt"), rs.getInt("platzkategorie"));
-                        objects.add(karte);
-                        karten.add(karte);
-                        break;
-                    case "Kartentyp":
-                        Kartentyp kartentyp = new Kartentyp(rs.getInt("ID"), rs.getString("name"), rs.getDouble("preis"));
-                        objects.add(kartentyp);
-                        kartentypen.add(kartentyp);
-                        break;
-                    case "Kinosaal":
-                        Kinosaal kinosaal = new Kinosaal(rs.getInt("ID"), rs.getInt("konfiguration"));
-                        objects.add(kinosaal);
-                        kinosaele.add(kinosaal);
-                        break;
-                    case "KinosaalKonfiguration":
-                        KinosaalKonfiguration kinosaalKonfiguration = new KinosaalKonfiguration(rs.getInt("ID"));
-                        objects.add(kinosaalKonfiguration);
-                        kinosaalKonfigurationen.add(kinosaalKonfiguration);
-                        break;
-                    case "KinosaalKonfigurationPlatzkategorie":
-                        KinosaalKonfigurationPlatzkategorie kinosaalKonfigurationPlatzkategorie = new KinosaalKonfigurationPlatzkategorie(rs.getInt("ID"), rs.getInt("konfiguration"), rs.getInt("kategorie"), rs.getInt("anzahl"));
-                        objects.add(kinosaalKonfigurationPlatzkategorie);
-                        kinosaalKonfigurationPlatzkategorien.add(kinosaalKonfigurationPlatzkategorie);
-                        break;
-                    case "Platzkategorie":
-                        Platzkategorie platzkategorie = new Platzkategorie(rs.getInt("ID"), rs.getString("name"), rs.getDouble("zuschlagFix"));
-                        objects.add(platzkategorie);
-                        platzkategorien.add(platzkategorie);
-                        break;
-                    case "Rabatt":
-                        Rabatt rabatt = new Rabatt(rs.getInt("ID"), rs.getString("name"), rs.getDouble("wert"));
-                        objects.add(rabatt);
-                        rabatte.add(rabatt);
-                        break;
-                    case "Vorstellung":
-                        Vorstellung vorstellung = new Vorstellung(rs.getInt("ID"), rs.getInt("film"), rs.getInt("kinosaal"), rs.getString("beginn"), rs.getString("ende"));
-                        objects.add(vorstellung);
-                        vorstellungen.add(vorstellung);
-                        break;
-                }
-            }
-
-            rs.close();
-            conn.close();
-        }
-        catch (ClassNotFoundException | SQLException e)
-        {
-            e.printStackTrace();
-        }
-        return objects;
-    }
-
-    public static ArrayList<Object> getFromDB(String objectClass, String databaseTable, String query)
-    {
-        ArrayList<Object> objects = new ArrayList<>();
-        try {
-            Connection conn = setupConnection();
-            Statement stat = conn.createStatement();
-            String sql = "select * from "+databaseTable+" "+query+";";
-            ResultSet rs = stat.executeQuery(sql);
-
-            while (rs.next()) {
-                switch (objectClass) {
-                    case "Buchung":
+                switch (databaseTable) {
+                    case "vc_buchung":
                         Buchung buchung = new Buchung(rs.getInt("ID"), rs.getString("person"), rs.getInt("vorstellung"), rs.getString("status"));
                         objects.add(buchung);
                         Kinoverwaltung.buchungen.add(buchung);
                         break;
-                    case "BuchungKarten":
-                        BuchungKarten buchungKarten = new BuchungKarten(rs.getInt("ID"), rs.getInt("buchung"), rs.getInt("karte"));
-                        objects.add(buchungKarten);
-                        Kinoverwaltung.buchungKarten.add(buchungKarten);
+                    case "vc_buchung_karten":
+                        BuchungKarten objBuchungKarten = new BuchungKarten(rs.getInt("ID"), rs.getInt("buchung"), rs.getInt("karte"));
+                        objects.add(objBuchungKarten);
+                        Kinoverwaltung.buchungKarten.add(objBuchungKarten);
                         break;
-                    case "Film":
+                    case "vc_film":
                         Film film = new Film(rs.getInt("ID"), rs.getString("name"), rs.getString("beschreibung"), rs.getInt("laenge"), rs.getInt("kategorie"), rs.getString("genre"));
                         objects.add(film);
                         Kinoverwaltung.filme.add(film);
                         break;
-                    case "FilmKategorie":
+                    case "vc_film_kategorie":
                         FilmKategorie filmKategorie = new FilmKategorie(rs.getInt("ID"), rs.getString("name"), rs.getDouble("zuschlagProzent"));
                         objects.add(filmKategorie);
                         Kinoverwaltung.filmKategorien.add(filmKategorie);
                         break;
-                    case "Karte":
+                    case "vc_karte":
                         Karte karte = new Karte(rs.getInt("ID"), rs.getInt("rabatt"), rs.getInt("platzkategorie"));
                         objects.add(karte);
                         Kinoverwaltung.karten.add(karte);
                         break;
-                    case "Kartentyp":
+                    case "vc_kartentyp":
                         Kartentyp kartentyp = new Kartentyp(rs.getInt("ID"), rs.getString("name"), rs.getDouble("preis"));
                         objects.add(kartentyp);
                         Kinoverwaltung.kartentypen.add(kartentyp);
                         break;
-                    case "Kinosaal":
+                    case "vc_kinosaal":
                         Kinosaal kinosaal = new Kinosaal(rs.getInt("ID"), rs.getInt("konfiguration"));
                         objects.add(kinosaal);
                         Kinoverwaltung.kinosaele.add(kinosaal);
                         break;
-                    case "KinosaalKonfiguration":
+                    case "vc_kinosaalkonfiguration":
                         KinosaalKonfiguration kinosaalKonfiguration = new KinosaalKonfiguration(rs.getInt("ID"));
                         objects.add(kinosaalKonfiguration);
                         Kinoverwaltung.kinosaalKonfigurationen.add(kinosaalKonfiguration);
                         break;
-                    case "KinosaalKonfigurationPlatzkategorie":
+                    case "vc_kinosaalkonfiguration_platzkategorie":
                         KinosaalKonfigurationPlatzkategorie kinosaalKonfigurationPlatzkategorie = new KinosaalKonfigurationPlatzkategorie(rs.getInt("ID"), rs.getInt("konfiguration"), rs.getInt("kategorie"), rs.getInt("anzahl"));
                         objects.add(kinosaalKonfigurationPlatzkategorie);
                         Kinoverwaltung.kinosaalKonfigurationPlatzkategorien.add(kinosaalKonfigurationPlatzkategorie);
                         break;
-                    case "Platzkategorie":
+                    case "vc_platzkategorie":
                         Platzkategorie platzkategorie = new Platzkategorie(rs.getInt("ID"), rs.getString("name"), rs.getDouble("zuschlagFix"));
                         objects.add(platzkategorie);
                         Kinoverwaltung.platzkategorien.add(platzkategorie);
                         break;
-                    case "Rabatt":
+                    case "vc_rabatt":
                         Rabatt rabatt = new Rabatt(rs.getInt("ID"), rs.getString("name"), rs.getDouble("wert"));
                         objects.add(rabatt);
                         Kinoverwaltung.rabatte.add(rabatt);
                         break;
-                    case "Vorstellung":
-                        Vorstellung vorstellung = new Vorstellung(rs.getInt("ID"), rs.getInt("film"), rs.getInt("kinosaal"), rs.getString("beginn"), rs.getString("ende"));
+                    case "vc_vorstellung":
+                        Vorstellung vorstellung = new Vorstellung(rs.getInt("ID"), rs.getInt("film"), rs.getInt("kinosaal"), rs.getString("uhrzeit"));
                         objects.add(vorstellung);
                         Kinoverwaltung.vorstellungen.add(vorstellung);
                         break;
@@ -183,6 +100,132 @@ public class Kinoverwaltung {
             e.printStackTrace();
         }
         return objects;
+    }
+
+    public static ArrayList<Object> getFromDB(String databaseTable, String query)
+    {
+        ArrayList<Object> objects = new ArrayList<>();
+        Kinoverwaltung.clearTable(databaseTable);
+        try {
+            Connection conn = setupConnection();
+            Statement stat = conn.createStatement();
+            String sql = "select * from "+databaseTable+" "+query+";";
+            ResultSet rs = stat.executeQuery(sql);
+
+            while (rs.next()) {
+                switch (databaseTable) {
+                    case "vc_buchung":
+                        Buchung buchung = new Buchung(rs.getInt("ID"), rs.getString("person"), rs.getInt("vorstellung"), rs.getString("status"));
+                        objects.add(buchung);
+                        Kinoverwaltung.buchungen.add(buchung);
+                        break;
+                    case "vc_buchung_karten":
+                        BuchungKarten objBuchungKarten = new BuchungKarten(rs.getInt("ID"), rs.getInt("buchung"), rs.getInt("karte"));
+                        objects.add(objBuchungKarten);
+                        Kinoverwaltung.buchungKarten.add(objBuchungKarten);
+                        break;
+                    case "vc_film":
+                        Film film = new Film(rs.getInt("ID"), rs.getString("name"), rs.getString("beschreibung"), rs.getInt("laenge"), rs.getInt("kategorie"), rs.getString("genre"));
+                        objects.add(film);
+                        Kinoverwaltung.filme.add(film);
+                        break;
+                    case "vc_film_kategorie":
+                        FilmKategorie filmKategorie = new FilmKategorie(rs.getInt("ID"), rs.getString("name"), rs.getDouble("zuschlagProzent"));
+                        objects.add(filmKategorie);
+                        Kinoverwaltung.filmKategorien.add(filmKategorie);
+                        break;
+                    case "vc_karte":
+                        Karte karte = new Karte(rs.getInt("ID"), rs.getInt("rabatt"), rs.getInt("platzkategorie"));
+                        objects.add(karte);
+                        Kinoverwaltung.karten.add(karte);
+                        break;
+                    case "vc_kartentyp":
+                        Kartentyp kartentyp = new Kartentyp(rs.getInt("ID"), rs.getString("name"), rs.getDouble("preis"));
+                        objects.add(kartentyp);
+                        Kinoverwaltung.kartentypen.add(kartentyp);
+                        break;
+                    case "vc_kinosaal":
+                        Kinosaal kinosaal = new Kinosaal(rs.getInt("ID"), rs.getInt("konfiguration"));
+                        objects.add(kinosaal);
+                        Kinoverwaltung.kinosaele.add(kinosaal);
+                        break;
+                    case "vc_kinosaalkonfiguration":
+                        KinosaalKonfiguration kinosaalKonfiguration = new KinosaalKonfiguration(rs.getInt("ID"));
+                        objects.add(kinosaalKonfiguration);
+                        Kinoverwaltung.kinosaalKonfigurationen.add(kinosaalKonfiguration);
+                        break;
+                    case "vc_kinosaalkonfiguration_platzkategorie":
+                        KinosaalKonfigurationPlatzkategorie kinosaalKonfigurationPlatzkategorie = new KinosaalKonfigurationPlatzkategorie(rs.getInt("ID"), rs.getInt("konfiguration"), rs.getInt("kategorie"), rs.getInt("anzahl"));
+                        objects.add(kinosaalKonfigurationPlatzkategorie);
+                        Kinoverwaltung.kinosaalKonfigurationPlatzkategorien.add(kinosaalKonfigurationPlatzkategorie);
+                        break;
+                    case "vc_platzkategorie":
+                        Platzkategorie platzkategorie = new Platzkategorie(rs.getInt("ID"), rs.getString("name"), rs.getDouble("zuschlagFix"));
+                        objects.add(platzkategorie);
+                        Kinoverwaltung.platzkategorien.add(platzkategorie);
+                        break;
+                    case "vc_rabatt":
+                        Rabatt rabatt = new Rabatt(rs.getInt("ID"), rs.getString("name"), rs.getDouble("wert"));
+                        objects.add(rabatt);
+                        Kinoverwaltung.rabatte.add(rabatt);
+                        break;
+                    case "vc_vorstellung":
+                        Vorstellung vorstellung = new Vorstellung(rs.getInt("ID"), rs.getInt("film"), rs.getInt("kinosaal"), rs.getString("uhrzeit"));
+                        objects.add(vorstellung);
+                        Kinoverwaltung.vorstellungen.add(vorstellung);
+                        break;
+                }
+            }
+
+            rs.close();
+            conn.close();
+        }
+        catch (ClassNotFoundException | SQLException e)
+        {
+            e.printStackTrace();
+        }
+        return objects;
+    }
+
+    private static void clearTable(String databaseTable) {
+        switch (databaseTable) {
+            case "vc_buchung":
+                Kinoverwaltung.buchungen.clear();
+                break;
+            case "vc_buchung_karten":
+                Kinoverwaltung.buchungKarten.clear();
+                break;
+            case "vc_film":
+                Kinoverwaltung.filme.clear();
+                break;
+            case "vc_film_kategorie":
+                Kinoverwaltung.filmKategorien.clear();
+                break;
+            case "vc_karte":
+                Kinoverwaltung.karten.clear();
+                break;
+            case "vc_kartentyp":
+                Kinoverwaltung.kartentypen.clear();
+                break;
+            case "vc_kinosaal":
+                Kinoverwaltung.kinosaele.clear();
+                break;
+            case "vc_kinosaalkonfiguration":
+                Kinoverwaltung.kinosaalKonfigurationen.clear();
+                break;
+            case "vc_kinosaalkonfiguration_platzkategorie":
+                Kinoverwaltung.kinosaalKonfigurationPlatzkategorien.clear();
+                break;
+            case "vc_platzkategorie":
+                Kinoverwaltung.platzkategorien.clear();
+                break;
+            case "vc_rabatt":
+                Kinoverwaltung.rabatte.clear();
+                break;
+            case "vc_vorstellung":
+                Kinoverwaltung.vorstellungen.clear();
+                break;
+        }
     }
 
     public static void bucheBuchung(Vorstellung vorstellung, Buchung buchung)
