@@ -203,6 +203,16 @@ public class Kinoverwaltung {
         return DriverManager.getConnection("jdbc:sqlite:voncinema_db.sqlite");
     }
 
+    public static ArrayList<Buchung> getBuchungenByName(String name) {
+        ArrayList<Buchung> returnArrBuchung = new ArrayList<>();
+        for (Buchung buchung : buchungen) {
+            if (buchung.hasName(name)){
+                returnArrBuchung.add(buchung);
+            }
+        }
+        return returnArrBuchung;
+    }
+
     public static Film getFilm(int ID){
         Film returnFilm = null;
         for (Film film : filme) {

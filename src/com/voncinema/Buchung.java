@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class Buchung {
     private int ID;
@@ -129,6 +130,10 @@ public class Buchung {
 
     public void setVorstellung(int vorstellung) {
         this.vorstellung = vorstellung;
+    }
+
+    public boolean hasName(String name) {
+        return Objects.equals(this.person, name);
     }
 
     @Override
