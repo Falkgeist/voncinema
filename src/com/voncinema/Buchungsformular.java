@@ -80,14 +80,19 @@ public class Buchungsformular {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 String username = textFieldNameLogin.getText();
-                Kinoverwaltung.getFromDB("Buchung", "vc_buchung");
-                ArrayList<Buchung> buchungenForUser = Kinoverwaltung.getBuchungenByName(username);
-                DefaultListModel model = new DefaultListModel();
-                for (Buchung buchung : buchungenForUser) {
-                    model.addElement(buchung.toString());
+                if (username.equals("")){
+                    textAreaFeedback.setText("Bitte einen Namen eingeben");
                 }
-                listMeineBuchungen.setModel(model);
-                listMeineBuchungen.revalidate();
+                else {
+                    Kinoverwaltung.getFromDB("Buchung", "vc_buchung");
+                    ArrayList<Buchung> buchungenForUser = Kinoverwaltung.getBuchungenByName(username);
+                    DefaultListModel model = new DefaultListModel();
+                    for (Buchung buchung : buchungenForUser) {
+                        model.addElement(buchung.toString());
+                    }
+                    listMeineBuchungen.setModel(model);
+                    listMeineBuchungen.revalidate();
+                }
             }
         });
     }
