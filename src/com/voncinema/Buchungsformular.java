@@ -11,7 +11,8 @@ public class Buchungsformular {
     private static Buchungsformular form = new Buchungsformular();
 
     private JPanel start, labelKarten;
-    private JComboBox selectFilm, selectVorstellung, selectKartentyp, selectPlatzkategorie, listMeineBuchungen;
+    private JComboBox selectFilm, selectVorstellung, selectKartentyp, selectPlatzkategorie;
+    private JList listMeineBuchungen;
     private JButton buttonBuchen, buttonHinzufuegenKarte, buttonBuchungenAnzeigen;
     private JSpinner spinnerAnzahl;
     private JTextField inputRabattcode, inputName, inputPerson, textFieldNameLogin;
@@ -25,13 +26,8 @@ public class Buchungsformular {
     private ArrayList<Karte> karten = new ArrayList<>();
 
     /**TODO: im Tab Meine Buchungen:
-     * ein Feld zum angeben des Namen hinzufügen DONE
-     * ein Button BuchungenAnzeigen hinzufügen DONE
      * eine Funktion zum hinzufügen eines Textfeldes und einen button bezahlen und einen button stornieren
      * beim klick auf BuchungAnzeigen jede Buchung mit Funktion zum Tab hinzufügen
-     * Funktion zum bezahlen DONE
-     * Funktion zum stornieren DONE
-     * Textfeld zum anzeigen von Feedback DONE
      */
 
 
@@ -87,7 +83,7 @@ public class Buchungsformular {
                 String username = textFieldNameLogin.getText();
                 Kinoverwaltung.getFromDB("Buchung", "vc_buchung");
                 ArrayList<Buchung> buchungenForUser = Kinoverwaltung.getBuchungenByName(username);
-                DefaultComboBoxModel model = new DefaultComboBoxModel();
+                DefaultListModel model = new DefaultListModel();
                 for (Buchung buchung : buchungenForUser) {
                     model.addElement(buchung.toString());
                 }
