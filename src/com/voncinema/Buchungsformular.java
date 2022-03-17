@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class Buchungsformular {
     private static JFrame frame = new JFrame("VonCinema");
@@ -14,7 +15,7 @@ public class Buchungsformular {
     private JList listMeineBuchungen;
     private JButton buttonBuchen, buttonHinzufuegenKarte, buttonBuchungenAnzeigen;
     private JSpinner spinnerAnzahl;
-    private JTextField inputRabattcode, inputName, inputPerson, textFieldNameLogin;
+    private JTextField inputRabattcode, inputName, textFieldNameLogin;
     private JLabel labelRabattcode, labelPerson, labelFilm, labelVorstellung, labelName, labelPlatzkategorie, labelKartentyp, labelAnzahl;
     private JTabbedPane tabbedPane1;
     private JTextArea textKarten, textBuchung, textAreaFeedback;
@@ -45,6 +46,10 @@ public class Buchungsformular {
         buttonBuchen.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                if (Objects.equals(inputName.getText(), "")) {
+                    textBuchung.append("Bitte einen Namen für die Buchung angeben!");
+                    return;
+                }
                 Buchung buchung = new Buchung();
                 Vorstellung vorstellung = (Vorstellung)selectVorstellung.getSelectedItem();
                 buchung.setPerson(inputName.getText());
