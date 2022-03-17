@@ -21,7 +21,7 @@ public class Vorstellung {
         Film film = Kinoverwaltung.getFilm(this.film);
         LocalTime time = LocalTime.parse(uhrzeit);
         time = time.plusMinutes(film.getLaenge());
-        return uhrzeit + "-" + time.getHour() + ":" + time.getMinute();
+        return uhrzeit + "-" + String.format("%02d", time.getHour()) + ":" + String.format("%02d", time.getMinute());
     }
 
     public void saveToDB()

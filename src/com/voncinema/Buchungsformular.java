@@ -112,7 +112,10 @@ public class Buchungsformular {
     public static void main(String[] args) {
         form.getOptionsFromDB("vc_film");
         Kinoverwaltung.getFromDB("vc_film_kategorie");
-        form.getOptionsFromDB("vc_vorstellung");
+        Film film = (Film)form.selectFilm.getSelectedItem();
+        int filmID = film.getID();
+        ArrayList<Object> vorstellungen = Kinoverwaltung.getFromDB("vc_vorstellung", "WHERE id="+filmID);
+        form.selectVorstellung.setModel(new DefaultComboBoxModel(vorstellungen.toArray()));
         form.getOptionsFromDB("vc_platzkategorie");
         form.getOptionsFromDB("vc_kartentyp");
         Kinoverwaltung.getFromDB("vc_rabatt");
