@@ -18,7 +18,7 @@ public class Buchungsformular {
     private JTextField inputRabattcode, inputName, textFieldNameLogin;
     private JLabel labelRabattcode, labelPerson, labelFilm, labelVorstellung, labelName, labelPlatzkategorie, labelKartentyp, labelAnzahl;
     private JTabbedPane tabbedPane1;
-    private JTextArea textKarten, textBuchung, textAreaFeedback;
+    private JTextArea textAusgabe, textAreaFeedback;
     private JScrollPane scrollPaneMeineBuchungen;
     private JPanel paneBuchungButtons;
     private JButton buttonStornieren;
@@ -41,10 +41,10 @@ public class Buchungsformular {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (Objects.equals(inputName.getText(), "")) {
-                    textBuchung.append("Bitte einen Namen für die Buchung angeben!");
+                    textAusgabe.append("Bitte einen Namen für die Buchung angeben!\n----------\n");
                     return;
                 } else if (karten.isEmpty()) {
-                    textBuchung.append("Bitte Karten hinzufügen!");
+                    textAusgabe.append("Bitte Karten hinzufügen!\n----------\n");
                     return;
                 }
                 Buchung buchung = new Buchung();
@@ -57,13 +57,12 @@ public class Buchungsformular {
                 }
                 karten.clear();
                 Kinoverwaltung.bucheBuchung(vorstellung, buchung);
-                textBuchung.append("Die Buchung wurde gespeichert.\n" +
+                textAusgabe.setText("Die Buchung wurde gespeichert.\n" +
                         "----------\n" +
                         "Details:\n" +
                         buchung + "\n" +
                         "Karten:\n" +
-                        buchung.getKartenAsList() + "\n" +
-                        "----------");
+                        buchung.getKartenAsList());
             }
         });
         buttonHinzufuegenKarte.addActionListener(new ActionListener() {
@@ -77,7 +76,10 @@ public class Buchungsformular {
                     Karte karte = new Karte( platzkategorie.getID(), kartentyp.getID());
                     karten.add(karte);
                 }
-                textKarten.append(spinnerAnzahl.getValue() + " Karten ("+kartentyp.toString()+", "+platzkategorie.toString()+") hinzugefügt.\n----------\n");
+                if (textAusgabe.getText().startsWith("Die Buchung")) {
+                    textAusgabe.setText("");
+                }
+                textAusgabe.append(spinnerAnzahl.getValue() + " Karten ("+kartentyp.toString()+", "+platzkategorie.toString()+") hinzugefügt.\n");
             }
         });
         buttonBuchungenAnzeigen.addActionListener(new ActionListener() {
@@ -85,7 +87,7 @@ public class Buchungsformular {
             public void actionPerformed(ActionEvent actionEvent) {
                 String username = textFieldNameLogin.getText();
                 if (username.equals("")){
-                    textAreaFeedback.setText("Bitte einen Namen eingeben");
+                    textAreaFeedback.setText("Bitte einen Namen eingeben\n");
                 }
                 else {
                     Kinoverwaltung.getFromDB("vc_buchung");
@@ -108,8 +110,7 @@ public class Buchungsformular {
         form.getOptionsFromDB("vc_platzkategorie");
         form.getOptionsFromDB("vc_kartentyp");
         Kinoverwaltung.getFromDB("vc_rabatt");
-        form.textKarten.setLineWrap(true);
-        form.textBuchung.setLineWrap(true);
+        form.textAusgabe.setLineWrap(true);
         JPanel contentPane = form.start;
         frame.setContentPane(contentPane);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

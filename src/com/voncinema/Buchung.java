@@ -179,6 +179,7 @@ public class Buchung {
         for (Karte karte : karten) {
             list.append("- ").append(karte).append("\n");
         }
+        list.setLength(list.length() - 1);
         return list.toString();
     }
 
