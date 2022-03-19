@@ -24,6 +24,7 @@ public class Buchungsformular {
     private JButton buttonStornieren;
     private JButton buttonBezahlen;
     private JTextArea textAreaRabattcodeFeedback;
+    private JButton buttonEntfernenKarte;
     private ArrayList<Karte> karten = new ArrayList<>();
 
 
@@ -45,12 +46,15 @@ public class Buchungsformular {
             }
         });
         buttonHinzufuegenKarte.addActionListener(new ActionListener() {
-
-            //TODO: Überprüfung ob im Kinosaal genug Plätze der kategorie frei sind
-
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 addKarte();
+            }
+        });
+        buttonEntfernenKarte.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                removeKarte();
             }
         });
         buttonBuchungenAnzeigen.addActionListener(new ActionListener() {
@@ -103,7 +107,8 @@ public class Buchungsformular {
         Kinoverwaltung.getFromDB("vc_kinosaal");
         Kinoverwaltung.getFromDB("vc_kinosaalkonfiguration");
         form.textAusgabe.setLineWrap(true);
-        ((SpinnerNumberModel)form.spinnerAnzahl.getModel()).setMinimum(0);
+        form.spinnerAnzahl.getModel().setValue(1);
+        ((SpinnerNumberModel)form.spinnerAnzahl.getModel()).setMinimum(1);
         JPanel contentPane = form.start;
         frame.setContentPane(contentPane);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -138,8 +143,23 @@ public class Buchungsformular {
         Platzkategorie platzkategorie = (Platzkategorie)selectPlatzkategorie.getSelectedItem();
         int removeCount = (int)spinnerAnzahl.getValue();
 
-        karten.removeIf(karte -> removeCount > 0 && karte.getPlatzkategorie() == platzkategorie.getID() && karte.getKartentyp() == kartentyp.getID());
-        textAusgabe.append(spinnerAnzahl.getValue() + " Karten (" + kartentyp.toString() + ", " + platzkategorie.toString() + ") entfernt.\n");
+        int i = 0;
+        boolean notFound = true;
+        while (karten.size() > i && removeCount > 0) {
+            Karte karte = karten.get(i);
+            if (karte.getPlatzkategorie() == platzkategorie.getID() && karte.getKartentyp() == kartentyp.getID()) {
+                karten.remove(i);
+                notFound = false;
+                removeCount--;
+            } else {
+                i++;
+            }
+        }
+        if (notFound) {
+            textAusgabe.append("Es wurden keine Karten zum Entfernen gefunden.\n");
+        } else {
+            textAusgabe.append(spinnerAnzahl.getValue() + " Karten (" + kartentyp + ", " + platzkategorie + ") entfernt.\n");
+        }
     }
 
     private void addKarte() {
