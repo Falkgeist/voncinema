@@ -25,11 +25,12 @@ public class Buchung {
         this.vorstellung = vorstellung;
     }
 
-    Buchung(int ID, String person, int vorstellung, String status) {
+    Buchung(int ID, String person, int vorstellung, String status, int rabatt) {
         this.ID = ID;
         this.person = person;
         this.vorstellung = vorstellung;
         this.status = status;
+        this.rabatt = rabatt;
     }
 
     public void hinzufuegenKarte(Karte karte)
@@ -188,8 +189,10 @@ public class Buchung {
     public String toText() {
         Vorstellung objVorstellung = Kinoverwaltung.getVorstellung(this.vorstellung);
         Film objFilm = Kinoverwaltung.getFilm(objVorstellung.getFilm());
+        Kinosaal objKinosaal = Kinoverwaltung.getKinosaal(objVorstellung.getKinosaal());
         return "Buchungsname: " + this.person + "\n" +
                 "Film: " + objFilm + "\n" +
+                "Kinosaal: " + objKinosaal + "\n" +
                 "Uhrzeit: " + objVorstellung + "\n" +
                 "Preis: " + String.format("%.2f", this.berechneGesamtpreis()) + " €";
 
@@ -199,9 +202,11 @@ public class Buchung {
     public String toString() {
         Vorstellung objVorstellung = Kinoverwaltung.getVorstellung(this.vorstellung);
         Film objFilm = Kinoverwaltung.getFilm(objVorstellung.getFilm());
+        Kinosaal objKinosaal = Kinoverwaltung.getKinosaal(objVorstellung.getKinosaal());
         return "<html>" +
                 "Buchungsname: " + this.person + "<br>" +
                 "Film: " + objFilm + "<br>" +
+                "Kinosaal: " + objKinosaal + "<br>" +
                 "Uhrzeit: " + objVorstellung + "<br>" +
                 "Preis: " + String.format("%.2f", this.berechneGesamtpreis()) + " €" + "<br>" +
                 "Status: " + status + "<br>" +

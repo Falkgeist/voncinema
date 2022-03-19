@@ -30,7 +30,7 @@ public class Kinoverwaltung {
             while (rs.next()) {
                 switch (databaseTable) {
                     case "vc_buchung":
-                        Buchung buchung = new Buchung(rs.getInt("ID"), rs.getString("person"), rs.getInt("vorstellung"), rs.getString("status"));
+                        Buchung buchung = new Buchung(rs.getInt("ID"), rs.getString("person"), rs.getInt("vorstellung"), rs.getString("status"), rs.getInt("rabatt"));
                         objects.add(buchung);
                         Kinoverwaltung.buchungen.add(buchung);
                         break;
@@ -50,7 +50,7 @@ public class Kinoverwaltung {
                         Kinoverwaltung.filmKategorien.add(filmKategorie);
                         break;
                     case "vc_karte":
-                        Karte karte = new Karte(rs.getInt("ID"), rs.getInt("rabatt"), rs.getInt("platzkategorie"));
+                        Karte karte = new Karte(rs.getInt("ID"), rs.getInt("platzkategorie"), rs.getInt("kartentyp"));
                         objects.add(karte);
                         Kinoverwaltung.karten.add(karte);
                         break;
@@ -110,7 +110,7 @@ public class Kinoverwaltung {
             while (rs.next()) {
                 switch (databaseTable) {
                     case "vc_buchung":
-                        Buchung buchung = new Buchung(rs.getInt("ID"), rs.getString("person"), rs.getInt("vorstellung"), rs.getString("status"));
+                        Buchung buchung = new Buchung(rs.getInt("ID"), rs.getString("person"), rs.getInt("vorstellung"), rs.getString("status"), rs.getInt("rabatt"));
                         objects.add(buchung);
                         break;
                     case "vc_buchung_karten":
@@ -126,7 +126,7 @@ public class Kinoverwaltung {
                         objects.add(filmKategorie);
                         break;
                     case "vc_karte":
-                        Karte karte = new Karte(rs.getInt("ID"), rs.getInt("rabatt"), rs.getInt("platzkategorie"));
+                        Karte karte = new Karte(rs.getInt("ID"), rs.getInt("platzkategorie"), rs.getInt("kartentyp"));
                         objects.add(karte);
                         break;
                     case "vc_kartentyp":
