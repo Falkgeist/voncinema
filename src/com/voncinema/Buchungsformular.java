@@ -38,9 +38,6 @@ public class Buchungsformular {
             }
         });
         buttonBuchen.addActionListener(new ActionListener() {
-
-            //TODO: Prüfung ob Rabattcode gültig ist
-
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (Objects.equals(inputName.getText(), "")) {
@@ -140,6 +137,18 @@ public class Buchungsformular {
                     textAreaRabattcodeFeedback.setText("");
                 }
 
+            }
+        });
+        buttonBezahlen.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                //TODO .setstatus("bezahlt")
+            }
+        });
+        buttonStornieren.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                //TODO .setStatus("storniert")
             }
         });
     }

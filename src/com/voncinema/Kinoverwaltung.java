@@ -91,7 +91,6 @@ public class Kinoverwaltung {
                         break;
                 }
             }
-
             rs.close();
             conn.close();
         }
