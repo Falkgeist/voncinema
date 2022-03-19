@@ -102,13 +102,13 @@ public class Buchung {
         return gesamtpreis;
     }
 
-    public void setStatus(String status)
+    public void saveStatus(String status)
     {
         try {
             Connection conn = Kinoverwaltung.setupConnection();
             Statement stat = conn.createStatement();
-            String sql = "UPDATE vc_buchung status = WHERE '" + status + "'ID = " + this.ID +";";
-            stat.executeQuery(sql);
+            String sql = "UPDATE vc_buchung SET status = '" + status + "' WHERE ID = " + this.ID +";";
+            stat.executeUpdate(sql);
             conn.close();
         }
         catch (ClassNotFoundException | SQLException e){e.printStackTrace();}
@@ -133,7 +133,7 @@ public class Buchung {
         try {
             Connection conn = Kinoverwaltung.setupConnection();
             Statement stat = conn.createStatement();
-            String sql = "";
+            String sql;
             if(rabatt == 0){
                 sql = "INSERT INTO vc_buchung (person, vorstellung) VALUES ('"+ person + "','" + vorstellung +"');";
             }
@@ -162,6 +162,10 @@ public class Buchung {
         return list.toString();
     }
 
+    public int getID() {
+        return ID;
+    }
+
     public void setPerson(String person) {
         this.person = person;
     }
@@ -177,8 +181,7 @@ public class Buchung {
     public void setRabatt(int rabatt) {this.rabatt = rabatt;
     }
 
-    @Override
-    public String toString() {
+    public String toText() {
         Vorstellung objVorstellung = Kinoverwaltung.getVorstellung(this.vorstellung);
         Film objFilm = Kinoverwaltung.getFilm(objVorstellung.getFilm());
         return "Buchungsname: " + this.person + "\n" +
@@ -187,7 +190,8 @@ public class Buchung {
                 "Preis: " + String.format("%.2f", this.berechneGesamtpreis()) + " €";
     }
 
-    public String toHTML() {
+    @Override
+    public String toString() {
         Vorstellung objVorstellung = Kinoverwaltung.getVorstellung(this.vorstellung);
         Film objFilm = Kinoverwaltung.getFilm(objVorstellung.getFilm());
         return "<html>Buchungsname: " + this.person + "<br>" +

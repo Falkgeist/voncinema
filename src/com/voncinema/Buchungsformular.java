@@ -1,10 +1,7 @@
 package com.voncinema;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
+import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -58,6 +55,9 @@ public class Buchungsformular {
                 buchung.setPerson(inputName.getText());
                 buchung.setVorstellung(vorstellung.getID());
                 buchung.setRabatt(Rabatt.findIDByString(inputRabattcode.getText()));
+                // TODO: Kann das Speichern der Karten einfach direkt hier passieren?
+                //  Haben wir hier die ID der Buchung oder können sie über buchung.getLastIdFromDb() bekommen (nachdem die Buchung gespeichert wurde)?
+                //  Dann könnte man sich die Instanzvariable karten in Buchung sparen...
                 for (Karte karte : karten) {
                     buchung.hinzufuegenKarte(karte);
                 }
@@ -66,7 +66,7 @@ public class Buchungsformular {
                 textAusgabe.setText("Die Buchung wurde gespeichert.\n" +
                         "----------\n" +
                         "Details:\n" +
-                        buchung + "\n" +
+                        buchung.toText() + "\n" +
                         "Karten:\n" +
                         buchung.getKartenAsList());
             }
@@ -94,20 +94,34 @@ public class Buchungsformular {
         buttonBuchungenAnzeigen.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                String username = textFieldNameLogin.getText();
-                if (username.equals("")){
-                    textAreaFeedback.setText("Bitte einen Namen eingeben\n");
-                }
-                else {
-                    Kinoverwaltung.getFromDB("vc_buchung");
-                    ArrayList<Buchung> buchungenForUser = Kinoverwaltung.getBuchungenByName(username);
-                    DefaultListModel model = new DefaultListModel();
-                    for (Buchung buchung : buchungenForUser) {
-                        model.addElement(buchung.toHTML());
-                    }
-                    listMeineBuchungen.setModel(model);
-                    listMeineBuchungen.revalidate();
-                }
+                showBuchungen();
+            }
+        });
+        textFieldNameLogin.getInputMap(JComponent.WHEN_FOCUSED).put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "enter");
+        textFieldNameLogin.getActionMap().put("enter", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                showBuchungen();
+            }
+        });
+        buttonBezahlen.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                Buchung buchungAusListe = (Buchung)listMeineBuchungen.getSelectedValue();
+                int buchungsID = buchungAusListe.getID();
+                Buchung buchung = (Buchung)Kinoverwaltung.getFromDB("vc_buchung", "WHERE id="+buchungsID).get(0);
+                buchung.saveStatus("bezahlt");
+                textAreaFeedback.setText("Die ausgewählte Buchung wurde bezahlt.");
+            }
+        });
+        buttonStornieren.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                Buchung buchungAusListe = (Buchung)listMeineBuchungen.getSelectedValue();
+                int buchungsID = buchungAusListe.getID();
+                Buchung buchung = (Buchung)Kinoverwaltung.getFromDB("vc_buchung", "WHERE id="+buchungsID).get(0);
+                buchung.saveStatus("storniert");
+                textAreaFeedback.setText("Die ausgewählte Buchung wurde storniert.");
             }
         });
         inputRabattcode.addKeyListener(new KeyAdapter() {
@@ -170,6 +184,24 @@ public class Buchungsformular {
             case "vc_kartentyp":
                 this.selectKartentyp.setModel(new DefaultComboBoxModel(objArray.toArray()));
                 break;
+        }
+    }
+
+    private void showBuchungen(){
+        String username = textFieldNameLogin.getText();
+        if (username.equals("")){
+            textAreaFeedback.setText("Bitte einen Namen eingeben\n");
+        }
+        else {
+            // TODO: Evtl. direkt nur die gewünschten Buchungen aus der DB holen (Performance und Sicherheit)
+            Kinoverwaltung.getFromDB("vc_buchung");
+            ArrayList<Buchung> buchungenForUser = Kinoverwaltung.getBuchungenByName(username);
+            DefaultListModel model = new DefaultListModel();
+            for (Buchung buchung : buchungenForUser) {
+                model.addElement(buchung);
+            }
+            listMeineBuchungen.setModel(model);
+            listMeineBuchungen.revalidate();
         }
     }
 
