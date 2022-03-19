@@ -23,4 +23,12 @@ public class Kinosaal {
         }
         catch (ClassNotFoundException | SQLException e){e.printStackTrace();}
     }
+
+    public int getKonfiguration() {
+        return konfiguration;
+    }
+
+    public boolean hasID(int ID) {
+        return this.ID == ID;
+    }
 }

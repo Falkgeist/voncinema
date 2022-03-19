@@ -40,32 +40,7 @@ public class Buchungsformular {
         buttonBuchen.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (Objects.equals(inputName.getText(), "")) {
-                    textAusgabe.append("Bitte einen Namen für die Buchung angeben!\n----------\n");
-                    return;
-                } else if (karten.isEmpty()) {
-                    textAusgabe.append("Bitte Karten hinzufügen!\n----------\n");
-                    return;
-                }
-                Buchung buchung = new Buchung();
-                Vorstellung vorstellung = (Vorstellung)selectVorstellung.getSelectedItem();
-                buchung.setPerson(inputName.getText());
-                buchung.setVorstellung(vorstellung.getID());
-                buchung.setRabatt(Rabatt.findIDByString(inputRabattcode.getText()));
-                // TODO: Kann das Speichern der Karten einfach direkt hier passieren?
-                //  Haben wir hier die ID der Buchung oder können sie über buchung.getLastIdFromDb() bekommen (nachdem die Buchung gespeichert wurde)?
-                //  Dann könnte man sich die Instanzvariable karten in Buchung sparen...
-                for (Karte karte : karten) {
-                    buchung.hinzufuegenKarte(karte);
-                }
-                karten.clear();
-                Kinoverwaltung.bucheBuchung(vorstellung, buchung);
-                textAusgabe.setText("Die Buchung wurde gespeichert.\n" +
-                        "----------\n" +
-                        "Details:\n" +
-                        buchung.toText() + "\n" +
-                        "Karten:\n" +
-                        buchung.getKartenAsList());
+                bookBuchung();
             }
         });
         buttonHinzufuegenKarte.addActionListener(new ActionListener() {
@@ -74,18 +49,7 @@ public class Buchungsformular {
 
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                Kartentyp kartentyp = (Kartentyp)selectKartentyp.getSelectedItem();
-                Platzkategorie platzkategorie = (Platzkategorie)selectPlatzkategorie.getSelectedItem();
-
-                for (int i = 1; i <= (int)spinnerAnzahl.getValue(); i++){
-
-                    Karte karte = new Karte( platzkategorie.getID(), kartentyp.getID());
-                    karten.add(karte);
-                }
-                if (textAusgabe.getText().startsWith("Die Buchung")) {
-                    textAusgabe.setText("");
-                }
-                textAusgabe.append(spinnerAnzahl.getValue() + " Karten ("+kartentyp.toString()+", "+platzkategorie.toString()+") hinzugefügt.\n");
+                addKarte();
             }
         });
         buttonBuchungenAnzeigen.addActionListener(new ActionListener() {
@@ -104,51 +68,20 @@ public class Buchungsformular {
         buttonBezahlen.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                Buchung buchungAusListe = (Buchung)listMeineBuchungen.getSelectedValue();
-                int buchungsID = buchungAusListe.getID();
-                Buchung buchung = (Buchung)Kinoverwaltung.getFromDB("vc_buchung", "WHERE id="+buchungsID).get(0);
-                buchung.saveStatus("bezahlt");
-                textAreaFeedback.setText("Die ausgewählte Buchung wurde bezahlt.");
+                payBuchung();
             }
         });
         buttonStornieren.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                Buchung buchungAusListe = (Buchung)listMeineBuchungen.getSelectedValue();
-                int buchungsID = buchungAusListe.getID();
-                Buchung buchung = (Buchung)Kinoverwaltung.getFromDB("vc_buchung", "WHERE id="+buchungsID).get(0);
-                buchung.saveStatus("storniert");
-                textAreaFeedback.setText("Die ausgewählte Buchung wurde storniert.");
+                cancelBuchung();
             }
         });
         inputRabattcode.addKeyListener(new KeyAdapter() {
             @Override
             public void keyReleased(KeyEvent e) {
                 super.keyReleased(e);
-                if(inputRabattcode.getText().length() > 0){
-                    if(Rabatt.findIDByString(inputRabattcode.getText()) == 0){
-                        textAreaRabattcodeFeedback.setText("Der Rabattcode ist ungültig.");
-                    }
-                    else{
-                        textAreaRabattcodeFeedback.setText("Der Rabattcode ist gültig.");
-                    }
-                }
-                else{
-                    textAreaRabattcodeFeedback.setText("");
-                }
-
-            }
-        });
-        buttonBezahlen.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                //TODO .setstatus("bezahlt")
-            }
-        });
-        buttonStornieren.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                //TODO .setStatus("storniert")
+                checkRabattcode();
             }
         });
     }
@@ -163,6 +96,8 @@ public class Buchungsformular {
         form.getOptionsFromDB("vc_platzkategorie");
         form.getOptionsFromDB("vc_kartentyp");
         Kinoverwaltung.getFromDB("vc_rabatt");
+        Kinoverwaltung.getFromDB("vc_kinosaal");
+        Kinoverwaltung.getFromDB("vc_kinosaalkonfiguration");
         form.textAusgabe.setLineWrap(true);
         JPanel contentPane = form.start;
         frame.setContentPane(contentPane);
@@ -184,9 +119,6 @@ public class Buchungsformular {
             case "vc_film":
                 this.selectFilm.setModel(new DefaultComboBoxModel(objArray.toArray()));
                 break;
-            case "vc_vorstellung":
-                this.selectVorstellung.setModel(new DefaultComboBoxModel(objArray.toArray()));
-                break;
             case "vc_platzkategorie":
                 this.selectPlatzkategorie.setModel(new DefaultComboBoxModel(objArray.toArray()));
                 break;
@@ -194,6 +126,72 @@ public class Buchungsformular {
                 this.selectKartentyp.setModel(new DefaultComboBoxModel(objArray.toArray()));
                 break;
         }
+    }
+
+    private void addKarte() {
+        Kartentyp kartentyp = (Kartentyp)selectKartentyp.getSelectedItem();
+        Platzkategorie platzkategorie = (Platzkategorie)selectPlatzkategorie.getSelectedItem();
+
+        // check for available seats
+        int freiePlaetze = platzkategorie.getFreiePlaetze((Vorstellung)selectVorstellung.getSelectedItem());
+        if (!karten.isEmpty()) {
+            for (Karte karte : karten) {
+                if (karte.getPlatzkategorie() == platzkategorie.getID()) {
+                    freiePlaetze--;
+                }
+            }
+        }
+        if (freiePlaetze >= (int)spinnerAnzahl.getValue()) {
+
+            for (int i = 1; i <= (int) spinnerAnzahl.getValue(); i++) {
+
+                Karte karte = new Karte(platzkategorie.getID(), kartentyp.getID());
+                karten.add(karte);
+            }
+            if (textAusgabe.getText().startsWith("Die Buchung")) {
+                textAusgabe.setText("");
+            }
+            textAusgabe.append(spinnerAnzahl.getValue() + " Karten (" + kartentyp.toString() + ", " + platzkategorie.toString() + ") hinzugefügt.\n");
+        }
+        else {
+            if (textAusgabe.getText().startsWith("Die Buchung")) {
+                textAusgabe.setText("");
+            }
+            if (freiePlaetze > 0) {
+                textAusgabe.append("Für diese Platzkategorie sind nur noch " + freiePlaetze + " übrig. Versuchen Sie es mit weniger Plätzen oder wählen Sie eine andere Platzkategorie.");
+            } else {
+                textAusgabe.append("Für diese Platzkategorie sind keine Plätze mehr frei. Bitte wählen Sie eine andere Platzkategorie.");
+            }
+        }
+    }
+
+    private void bookBuchung() {
+        if (Objects.equals(inputName.getText(), "")) {
+            textAusgabe.append("Bitte einen Namen für die Buchung angeben!\n----------\n");
+            return;
+        } else if (karten.isEmpty()) {
+            textAusgabe.append("Bitte Karten hinzufügen!\n----------\n");
+            return;
+        }
+        Buchung buchung = new Buchung();
+        Vorstellung vorstellung = (Vorstellung)selectVorstellung.getSelectedItem();
+        buchung.setPerson(inputName.getText());
+        buchung.setVorstellung(vorstellung.getID());
+        buchung.setRabatt(Rabatt.findIDByString(inputRabattcode.getText()));
+        // TODO: Kann das Speichern der Karten einfach direkt hier passieren?
+        //  Haben wir hier die ID der Buchung oder können sie über buchung.getLastIdFromDb() bekommen (nachdem die Buchung gespeichert wurde)?
+        //  Dann könnte man sich die Instanzvariable karten in Buchung sparen...
+        for (Karte karte : karten) {
+            buchung.hinzufuegenKarte(karte);
+        }
+        karten.clear();
+        Kinoverwaltung.bucheBuchung(vorstellung, buchung);
+        textAusgabe.setText("Die Buchung wurde gespeichert.\n" +
+                "----------\n" +
+                "Details:\n" +
+                buchung.toText() + "\n" +
+                "Karten:\n" +
+                buchung.getKartenAsList());
     }
 
     private void showBuchungen(){
@@ -214,6 +212,33 @@ public class Buchungsformular {
         }
     }
 
-    private void createUIComponents() {
+    public void payBuchung() {
+        Buchung buchungAusListe = (Buchung)listMeineBuchungen.getSelectedValue();
+        int buchungsID = buchungAusListe.getID();
+        Buchung buchung = (Buchung)Kinoverwaltung.getFromDB("vc_buchung", "WHERE id="+buchungsID).get(0);
+        buchung.saveStatus("bezahlt");
+        textAreaFeedback.setText("Die ausgewählte Buchung wurde bezahlt.");
+    }
+
+    public void cancelBuchung() {
+        Buchung buchungAusListe = (Buchung)listMeineBuchungen.getSelectedValue();
+        int buchungsID = buchungAusListe.getID();
+        Buchung buchung = (Buchung)Kinoverwaltung.getFromDB("vc_buchung", "WHERE id="+buchungsID).get(0);
+        buchung.saveStatus("storniert");
+        textAreaFeedback.setText("Die ausgewählte Buchung wurde storniert.");
+    }
+
+    public void checkRabattcode() {
+        if(inputRabattcode.getText().length() > 0){
+            if(Rabatt.findIDByString(inputRabattcode.getText()) == 0){
+                textAreaRabattcodeFeedback.setText("Der Rabattcode ist ungültig.");
+            }
+            else{
+                textAreaRabattcodeFeedback.setText("Der Rabattcode ist gültig.");
+            }
+        }
+        else{
+            textAreaRabattcodeFeedback.setText("");
+        }
     }
 }

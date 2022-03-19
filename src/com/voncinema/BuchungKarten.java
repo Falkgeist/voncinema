@@ -29,4 +29,8 @@ public class BuchungKarten {
         }
         catch (ClassNotFoundException | SQLException e){e.printStackTrace();}
     }
+
+    public int getKarte() {
+        return karte;
+    }
 }

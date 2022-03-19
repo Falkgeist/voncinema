@@ -166,6 +166,10 @@ public class Buchung {
         return ID;
     }
 
+    public int getVorstellung() {
+        return vorstellung;
+    }
+
     public void setPerson(String person) {
         this.person = person;
     }

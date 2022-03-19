@@ -101,7 +101,6 @@ public class Kinoverwaltung {
     public static ArrayList<Object> getFromDB(String databaseTable, String query)
     {
         ArrayList<Object> objects = new ArrayList<>();
-        Kinoverwaltung.clearTable(databaseTable);
         try {
             Connection conn = setupConnection();
             Statement stat = conn.createStatement();
@@ -113,62 +112,50 @@ public class Kinoverwaltung {
                     case "vc_buchung":
                         Buchung buchung = new Buchung(rs.getInt("ID"), rs.getString("person"), rs.getInt("vorstellung"), rs.getString("status"));
                         objects.add(buchung);
-                        Kinoverwaltung.buchungen.add(buchung);
                         break;
                     case "vc_buchung_karten":
                         BuchungKarten objBuchungKarten = new BuchungKarten(rs.getInt("ID"), rs.getInt("buchung"), rs.getInt("karte"));
                         objects.add(objBuchungKarten);
-                        Kinoverwaltung.buchungKarten.add(objBuchungKarten);
                         break;
                     case "vc_film":
                         Film film = new Film(rs.getInt("ID"), rs.getString("name"), rs.getString("beschreibung"), rs.getInt("laenge"), rs.getInt("kategorie"), rs.getString("genre"));
                         objects.add(film);
-                        Kinoverwaltung.filme.add(film);
                         break;
                     case "vc_film_kategorie":
                         FilmKategorie filmKategorie = new FilmKategorie(rs.getInt("ID"), rs.getString("name"), rs.getDouble("zuschlagProzent"));
                         objects.add(filmKategorie);
-                        Kinoverwaltung.filmKategorien.add(filmKategorie);
                         break;
                     case "vc_karte":
                         Karte karte = new Karte(rs.getInt("ID"), rs.getInt("rabatt"), rs.getInt("platzkategorie"));
                         objects.add(karte);
-                        Kinoverwaltung.karten.add(karte);
                         break;
                     case "vc_kartentyp":
                         Kartentyp kartentyp = new Kartentyp(rs.getInt("ID"), rs.getString("name"), rs.getDouble("preis"));
                         objects.add(kartentyp);
-                        Kinoverwaltung.kartentypen.add(kartentyp);
                         break;
                     case "vc_kinosaal":
                         Kinosaal kinosaal = new Kinosaal(rs.getInt("ID"), rs.getInt("konfiguration"));
                         objects.add(kinosaal);
-                        Kinoverwaltung.kinosaele.add(kinosaal);
                         break;
                     case "vc_kinosaalkonfiguration":
                         KinosaalKonfiguration kinosaalKonfiguration = new KinosaalKonfiguration(rs.getInt("ID"));
                         objects.add(kinosaalKonfiguration);
-                        Kinoverwaltung.kinosaalKonfigurationen.add(kinosaalKonfiguration);
                         break;
                     case "vc_kinosaalkonfiguration_platzkategorie":
                         KinosaalKonfigurationPlatzkategorie kinosaalKonfigurationPlatzkategorie = new KinosaalKonfigurationPlatzkategorie(rs.getInt("ID"), rs.getInt("konfiguration"), rs.getInt("kategorie"), rs.getInt("anzahl"));
                         objects.add(kinosaalKonfigurationPlatzkategorie);
-                        Kinoverwaltung.kinosaalKonfigurationPlatzkategorien.add(kinosaalKonfigurationPlatzkategorie);
                         break;
                     case "vc_platzkategorie":
                         Platzkategorie platzkategorie = new Platzkategorie(rs.getInt("ID"), rs.getString("name"), rs.getDouble("zuschlagFix"));
                         objects.add(platzkategorie);
-                        Kinoverwaltung.platzkategorien.add(platzkategorie);
                         break;
                     case "vc_rabatt":
                         Rabatt rabatt = new Rabatt(rs.getInt("ID"), rs.getString("name"), rs.getDouble("wert"));
                         objects.add(rabatt);
-                        Kinoverwaltung.rabatte.add(rabatt);
                         break;
                     case "vc_vorstellung":
                         Vorstellung vorstellung = new Vorstellung(rs.getInt("ID"), rs.getInt("film"), rs.getInt("kinosaal"), rs.getString("uhrzeit"));
                         objects.add(vorstellung);
-                        Kinoverwaltung.vorstellungen.add(vorstellung);
                         break;
                 }
             }
@@ -274,6 +261,39 @@ public class Kinoverwaltung {
             }
         }
         return returnKartentyp;
+    }
+
+    public static Kinosaal getKinosaal(int ID) {
+        Kinosaal returnKinosaal = null;
+        for (Kinosaal kinosaal : kinosaele) {
+            if (kinosaal.hasID(ID)){
+                returnKinosaal = kinosaal;
+                break;
+            }
+        }
+        return returnKinosaal;
+    }
+
+    public static KinosaalKonfiguration getKinosaalKonfiguration(int ID) {
+        KinosaalKonfiguration returnKinosaalKonfiguration = null;
+        for (KinosaalKonfiguration kinosaalKonfiguration : kinosaalKonfigurationen) {
+            if (kinosaalKonfiguration.hasID(ID)){
+                returnKinosaalKonfiguration = kinosaalKonfiguration;
+                break;
+            }
+        }
+        return returnKinosaalKonfiguration;
+    }
+
+    public static KinosaalKonfigurationPlatzkategorie getKinosaalKonfigurationPlatzkategorie(int ID) {
+        KinosaalKonfigurationPlatzkategorie returnKinosaalKonfigurationPlatzkategorie = null;
+        for (KinosaalKonfigurationPlatzkategorie kinosaalKonfigurationPlatzkategorie : kinosaalKonfigurationPlatzkategorien) {
+            if (kinosaalKonfigurationPlatzkategorie.hasID(ID)){
+                returnKinosaalKonfigurationPlatzkategorie = kinosaalKonfigurationPlatzkategorie;
+                break;
+            }
+        }
+        return returnKinosaalKonfigurationPlatzkategorie;
     }
 
     public static Platzkategorie getPlatzkategorie(int ID) {

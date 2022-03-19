@@ -44,6 +44,10 @@ public class Vorstellung {
         return film;
     }
 
+    public int getKinosaal() {
+        return kinosaal;
+    }
+
     public boolean hasID(int ID) {
         return this.ID == ID;
     }
