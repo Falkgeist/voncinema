@@ -204,6 +204,7 @@
               <component id="9ad36" class="javax.swing.JTextArea" binding="textAusgabe">
                 <constraints>
                   <grid row="0" column="1" row-span="11" col-span="1" vsize-policy="3" hsize-policy="2" anchor="0" fill="3" indent="0" use-parent-layout="false">
+                    <minimum-size width="300" height="-1"/>
                     <preferred-size width="150" height="150"/>
                   </grid>
                 </constraints>
