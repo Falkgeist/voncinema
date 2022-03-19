@@ -3,6 +3,8 @@ package com.voncinema;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -23,6 +25,7 @@ public class Buchungsformular {
     private JPanel paneBuchungButtons;
     private JButton buttonStornieren;
     private JButton buttonBezahlen;
+    private JTextArea textAreaRabattcodeFeedback;
     private ArrayList<Karte> karten = new ArrayList<>();
 
 
@@ -107,6 +110,12 @@ public class Buchungsformular {
                 }
             }
         });
+        inputRabattcode.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyReleased(KeyEvent e) {
+                super.keyReleased(e);
+            }
+        });
     }
 
     public static void main(String[] args) {
@@ -153,6 +162,5 @@ public class Buchungsformular {
     }
 
     private void createUIComponents() {
-        // TODO: place custom component creation code here
     }
 }
