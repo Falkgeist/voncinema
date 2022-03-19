@@ -51,17 +51,23 @@ public class Buchung {
     {
         double gesamtpreis = 0;
         try {
+            //läd die raten IDs in das ResultSet rs_vc_buchung_karten
             Connection conn = Kinoverwaltung.setupConnection();
             Statement stat = conn.createStatement();
             String sql = "SELECT karte FROM vc_buchung_karten WHERE buchung = " + ID + ";";
             ResultSet rs_vc_buchung_karten = stat.executeQuery(sql);
+            //durchläuft alle Karten
             while(rs_vc_buchung_karten.next()){
+                //läd aus der Tabelle vc_karten die Platzkategorie und läd dann aus der Tabelle vc_platzkategorie dem zuschlagFix Wert
+                //und rechnet diesen zu dem gesamtpreis
                 Statement stat2 = conn.createStatement();
                 sql ="SELECT zuschlagFIX FROM vc_platzkategorie WHERE ID = (SELECT platzkategorie FROM vc_karte WHERE ID = "  + rs_vc_buchung_karten.getInt("karte") +");";
                 ResultSet rs_vc_karte = stat2.executeQuery(sql);
                 gesamtpreis += rs_vc_karte.getInt("zuschlagFix");
                 rs_vc_karte.close();
 
+                //läd aus der Tabelle vc_karten den kartentyp und läd dann aus der Tabelle vc_kartentyp den preis
+                //und rechnet diesen zu dem gesamtpreis
                 Statement stat3 = conn.createStatement();
                 sql ="SELECT preis FROM vc_kartentyp WHERE ID = (SELECT kartentyp FROM vc_karte WHERE ID = "  + rs_vc_buchung_karten.getInt("karte") +");";
                 ResultSet vc_kartentyp = stat3.executeQuery(sql);
@@ -70,28 +76,34 @@ public class Buchung {
             }
             rs_vc_buchung_karten.close();
 
+
+            //läd den Film der Vorstellung, um in der Tabelle vc_Film die kategorie.ID zu laden, um in der Tabelle vc_film_kategorie den zuschlagProzent zu laden
+            //rechnet dann diesen zuschlag auf den gesamtpreis
             stat = conn.createStatement();
             sql = "SELECT zuschlagProzent FROM vc_film_kategorie WHERE ID = (SELECT kategorie FROM vc_film WHERE ID = (SELECT film FROM vc_vorstellung WHERE ID = "+ this.vorstellung+"));";
             ResultSet rs_vc_film_kategorie = stat.executeQuery(sql);
             gesamtpreis *= 1 + ((double)rs_vc_film_kategorie.getInt("zuschlagProzent") / 100);
             rs_vc_film_kategorie.close();
 
+            //läd aus der Tabelle vc_vorstellung den Film, um aus der Tabelle vc_film die länge zu laden
+            //Wenn der Film länger ist als 180 Minuten wird der zuschlagUeberlanege dazugerechnet
             sql = "SELECT laenge FROM vc_film WHERE ID = (SELECT film FROM vc_vorstellung WHERE ID = "+ this.vorstellung+");";
             ResultSet rs_vc_film = stat.executeQuery(sql);
-            //Wenn der Film länger ist als 180 Minuten wird der zuschlagUeberlanege dazugerechnet
             if(rs_vc_film.getInt("laenge") > 180){
                 gesamtpreis *= (1 + zuschlagUeberlaenge);
             }
 
+            //läd aus der Tabelle vc_buchung den rabatt
             Statement stat2 = conn.createStatement();
             sql = "SELECT rabatt FROM vc_buchung WHERE ID = " + this.ID +";";
             ResultSet rs_vc_buchung = stat2.executeQuery(sql);
-            int rabattID = rs_vc_buchung.getInt("rabatt");
+            rabatt = rs_vc_buchung.getInt("rabatt");
             rs_vc_buchung.close();
 
-            if(rabattID > 0){
+            //wenn die Buchung einen Rabatt hat wird der wert aus der Tabelle vc_rabatt mit dem gesamtpreis verrechnet
+            if(rabatt > 0){
                 Statement stat3 = conn.createStatement();
-                sql = "SELECT wert FROM vc_rabatt WHERE ID = " + rabattID +";";
+                sql = "SELECT wert FROM vc_rabatt WHERE ID = " + rabatt +";";
                 ResultSet rs_vc_rabatt = stat3.executeQuery(sql);
                 gesamtpreis *= 1 - rs_vc_rabatt.getDouble("wert");
                 rs_vc_rabatt.close();
@@ -140,8 +152,6 @@ public class Buchung {
             else{
                 sql = "INSERT INTO vc_buchung (person, vorstellung, rabatt) VALUES ('"+ person + "','" + vorstellung + "','" + rabatt + "');";
             }
-
-
             stat.executeUpdate(sql);
             conn.close();
         }
