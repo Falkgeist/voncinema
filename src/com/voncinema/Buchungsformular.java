@@ -2,12 +2,11 @@ package com.voncinema;
 
 import javax.swing.*;
 import java.awt.event.*;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Objects;
 
 public class Buchungsformular {
-    private static JFrame frame = new JFrame("VonCinema");
+    private static JFrame frame = new JFrame("VonCinema - Kinokartenbuchungssystem");
     private static Buchungsformular form = new Buchungsformular();
 
     private JPanel start, labelKarten;
