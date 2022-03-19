@@ -16,6 +16,7 @@ public class Buchung {
     private ArrayList<Karte> karten = new ArrayList<>();
     private String status;
     private int rabatt;
+    private static double zuschlagUeberlaenge = 0.2; // für die Preisberechnung
 
     Buchung(){}
 
@@ -75,21 +76,27 @@ public class Buchung {
             gesamtpreis *= 1 + ((double)rs_vc_film_kategorie.getInt("zuschlagProzent") / 100);
             rs_vc_film_kategorie.close();
 
+            sql = "SELECT laenge FROM vc_film WHERE ID = (SELECT film FROM vc_vorstellung WHERE ID = "+ this.vorstellung+");";
+            ResultSet rs_vc_film = stat.executeQuery(sql);
+            //Wenn der Film länger ist als 180 Minuten wird der zuschlagUeberlanege dazugerechnet
+            if(rs_vc_film.getInt("laenge") > 180){
+                gesamtpreis *= (1 + zuschlagUeberlaenge);
+            }
+
             Statement stat2 = conn.createStatement();
             sql = "SELECT rabatt FROM vc_buchung WHERE ID = " + this.ID +";";
             ResultSet rs_vc_buchung = stat2.executeQuery(sql);
-            int test = rs_vc_buchung.getInt("rabatt");
+            int rabattID = rs_vc_buchung.getInt("rabatt");
             rs_vc_buchung.close();
 
-            if(test > 0){
+            if(rabattID > 0){
                 Statement stat3 = conn.createStatement();
-                sql = "SELECT wert FROM vc_rabatt WHERE ID = " + test +";";
+                sql = "SELECT wert FROM vc_rabatt WHERE ID = " + rabattID +";";
                 ResultSet rs_vc_rabatt = stat3.executeQuery(sql);
                 gesamtpreis *= 1 - rs_vc_rabatt.getDouble("wert");
                 rs_vc_rabatt.close();
             }
             conn.close();
-            //TODO: gesamtpreis + Zuschlag bei überlänge
         }
         catch (ClassNotFoundException | SQLException e){e.printStackTrace();}
         return gesamtpreis;
