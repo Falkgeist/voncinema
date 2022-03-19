@@ -83,14 +83,6 @@
                 </properties>
                 <border type="none" title="Karten"/>
                 <children>
-                  <component id="bf736" class="javax.swing.JSpinner" binding="spinnerAnzahl">
-                    <constraints>
-                      <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="1" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
-                    </constraints>
-                    <properties>
-                      <toolTipText value="Bitte Anzahl der Tickets für die Kategorie &quot;Kind&quot; eingeben."/>
-                    </properties>
-                  </component>
                   <component id="1117" class="javax.swing.JComboBox" binding="selectKartentyp">
                     <constraints>
                       <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
@@ -135,6 +127,19 @@
                       <text value="Karte(n) hinzufügen"/>
                     </properties>
                   </component>
+                  <component id="bf736" class="javax.swing.JSpinner" binding="spinnerAnzahl">
+                    <constraints>
+                      <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="1" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties>
+                      <doubleBuffered value="false"/>
+                      <editor value=""/>
+                      <focusCycleRoot value="false"/>
+                      <focusTraversalPolicyProvider value="false"/>
+                      <toolTipText value=""/>
+                      <verifyInputWhenFocusTarget value="true"/>
+                    </properties>
+                  </component>
                 </children>
               </grid>
               <component id="4e885" class="javax.swing.JButton" binding="buttonBuchen">
@@ -175,6 +180,7 @@
                   </grid>
                 </constraints>
                 <properties>
+                  <disabledTextColor color="-16316654"/>
                   <enabled value="false"/>
                 </properties>
               </component>

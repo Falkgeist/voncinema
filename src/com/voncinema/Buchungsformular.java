@@ -99,6 +99,7 @@ public class Buchungsformular {
         Kinoverwaltung.getFromDB("vc_kinosaal");
         Kinoverwaltung.getFromDB("vc_kinosaalkonfiguration");
         form.textAusgabe.setLineWrap(true);
+        ((SpinnerNumberModel)form.spinnerAnzahl.getModel()).setMinimum(0);
         JPanel contentPane = form.start;
         frame.setContentPane(contentPane);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
