@@ -184,7 +184,10 @@
                     <preferred-size width="150" height="25"/>
                   </grid>
                 </constraints>
-                <properties/>
+                <properties>
+                  <editable value="true"/>
+                  <enabled value="false"/>
+                </properties>
               </component>
             </children>
           </grid>
