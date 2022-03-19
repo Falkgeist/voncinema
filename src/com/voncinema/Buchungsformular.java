@@ -2,6 +2,7 @@ package com.voncinema;
 
 import javax.swing.*;
 import java.awt.event.*;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -69,12 +70,14 @@ public class Buchungsformular {
             @Override
             public void mouseClicked(MouseEvent e) {
                 payBuchung();
+                showBuchungen();
             }
         });
         buttonStornieren.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 cancelBuchung();
+                showBuchungen();
             }
         });
         inputRabattcode.addKeyListener(new KeyAdapter() {
