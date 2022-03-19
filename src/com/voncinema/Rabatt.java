@@ -22,7 +22,7 @@ public class Rabatt {
             stat.setString(1, name);
             ResultSet rs = stat.executeQuery();
 
-            while (rs.next()) {
+            if(rs.next()) {
                 id = rs.getInt("ID");
             }
             rs.close();

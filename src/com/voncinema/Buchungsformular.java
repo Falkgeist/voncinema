@@ -114,6 +114,18 @@ public class Buchungsformular {
             @Override
             public void keyReleased(KeyEvent e) {
                 super.keyReleased(e);
+                if(inputRabattcode.getText().length() > 0){
+                    if(Rabatt.findIDByString(inputRabattcode.getText()) == 0){
+                        textAreaRabattcodeFeedback.setText("Der Rabattcode ist ungültig.");
+                    }
+                    else{
+                        textAreaRabattcodeFeedback.setText("Der Rabattcode ist gültig.");
+                    }
+                }
+                else{
+                    textAreaRabattcodeFeedback.setText("");
+                }
+
             }
         });
     }

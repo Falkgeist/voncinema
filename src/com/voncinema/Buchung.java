@@ -15,7 +15,7 @@ public class Buchung {
     private int vorstellung;
     private ArrayList<Karte> karten = new ArrayList<>();
     private String status;
-    private int rabatt;
+    private int rabatt = 0;
     private static double zuschlagUeberlaenge = 0.2; // für die Preisberechnung
 
     Buchung(){}
