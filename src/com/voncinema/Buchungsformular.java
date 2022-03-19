@@ -128,13 +128,13 @@ public class Buchungsformular {
         buttonBezahlen.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
+                //TODO .setstatus("bezahlt")
             }
         });
         buttonStornieren.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
+                //TODO .setStatus("storniert")
             }
         });
     }
