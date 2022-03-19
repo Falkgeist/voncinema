@@ -31,4 +31,9 @@ public class Kinosaal {
     public boolean hasID(int ID) {
         return this.ID == ID;
     }
+
+    @Override
+    public String toString() {
+        return "Saal " + ID;
+    }
 }

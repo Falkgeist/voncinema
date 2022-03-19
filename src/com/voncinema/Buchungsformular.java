@@ -91,6 +91,7 @@ public class Buchungsformular {
         Kinoverwaltung.getFromDB("vc_film_kategorie");
         Film film = (Film)form.selectFilm.getSelectedItem();
         int filmID = film.getID();
+        Kinoverwaltung.getFromDB("vc_vorstellung");
         ArrayList<Object> vorstellungen = Kinoverwaltung.getFromDB("vc_vorstellung", "WHERE id="+filmID);
         form.selectVorstellung.setModel(new DefaultComboBoxModel(vorstellungen.toArray()));
         form.getOptionsFromDB("vc_platzkategorie");
@@ -129,6 +130,15 @@ public class Buchungsformular {
         }
     }
 
+    private void removeKarte() {
+        Kartentyp kartentyp = (Kartentyp)selectKartentyp.getSelectedItem();
+        Platzkategorie platzkategorie = (Platzkategorie)selectPlatzkategorie.getSelectedItem();
+        int removeCount = (int)spinnerAnzahl.getValue();
+
+        karten.removeIf(karte -> removeCount > 0 && karte.getPlatzkategorie() == platzkategorie.getID() && karte.getKartentyp() == kartentyp.getID());
+        textAusgabe.append(spinnerAnzahl.getValue() + " Karten (" + kartentyp.toString() + ", " + platzkategorie.toString() + ") entfernt.\n");
+    }
+
     private void addKarte() {
         Kartentyp kartentyp = (Kartentyp)selectKartentyp.getSelectedItem();
         Platzkategorie platzkategorie = (Platzkategorie)selectPlatzkategorie.getSelectedItem();
@@ -158,10 +168,12 @@ public class Buchungsformular {
             if (textAusgabe.getText().startsWith("Die Buchung")) {
                 textAusgabe.setText("");
             }
-            if (freiePlaetze > 0) {
-                textAusgabe.append("Für diese Platzkategorie sind nur noch " + freiePlaetze + " übrig. Versuchen Sie es mit weniger Plätzen oder wählen Sie eine andere Platzkategorie.");
+            if (freiePlaetze == 1) {
+                textAusgabe.append("Für diese Platzkategorie ist nur noch " + freiePlaetze + " weiterer Platz frei. Versuchen Sie es mit weniger Plätzen oder wählen Sie eine andere Platzkategorie.\n");
+            } else if (freiePlaetze > 1) {
+                textAusgabe.append("Für diese Platzkategorie sind nur noch " + freiePlaetze + " weitere Plätze frei. Versuchen Sie es mit weniger Plätzen oder wählen Sie eine andere Platzkategorie.\n");
             } else {
-                textAusgabe.append("Für diese Platzkategorie sind keine Plätze mehr frei. Bitte wählen Sie eine andere Platzkategorie.");
+                textAusgabe.append("Für diese Platzkategorie sind keine Plätze mehr frei. Bitte wählen Sie eine andere Platzkategorie.\n");
             }
         }
     }
