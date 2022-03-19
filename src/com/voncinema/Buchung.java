@@ -192,15 +192,19 @@ public class Buchung {
                 "Film: " + objFilm + "\n" +
                 "Uhrzeit: " + objVorstellung + "\n" +
                 "Preis: " + String.format("%.2f", this.berechneGesamtpreis()) + " €";
+
     }
 
     @Override
     public String toString() {
         Vorstellung objVorstellung = Kinoverwaltung.getVorstellung(this.vorstellung);
         Film objFilm = Kinoverwaltung.getFilm(objVorstellung.getFilm());
-        return "<html>Buchungsname: " + this.person + "<br>" +
+        return "<html>" +
+                "Buchungsname: " + this.person + "<br>" +
                 "Film: " + objFilm + "<br>" +
                 "Uhrzeit: " + objVorstellung + "<br>" +
-                "Preis: " + String.format("%.2f", this.berechneGesamtpreis()) + " €</html>";
+                "Preis: " + String.format("%.2f", this.berechneGesamtpreis()) + " €" + "<br>" +
+                "Status: " + status + "<br>" +
+                "</html>";
     }
 }
