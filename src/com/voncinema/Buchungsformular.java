@@ -35,7 +35,7 @@ public class Buchungsformular {
                 JComboBox cb = (JComboBox)e.getSource();
                 Film film = (Film)cb.getSelectedItem();
                 int filmID = film.getID();
-                ArrayList<Object> vorstellungen = Kinoverwaltung.getFromDB("vc_vorstellung", "WHERE film="+filmID);
+                ArrayList<Object> vorstellungen = Kinoverwaltung.getFromDB("vc_vorstellung", "WHERE film=" + filmID + " ORDER BY uhrzeit");
                 selectVorstellung.setModel(new DefaultComboBoxModel(vorstellungen.toArray()));
                 Vorstellung vorstellung = (Vorstellung)selectVorstellung.getSelectedItem();
                 compileSelectPlatzkategorie(vorstellung, 0);
@@ -126,7 +126,7 @@ public class Buchungsformular {
         Kinoverwaltung.getFromDB("vc_rabatt");
         Kinoverwaltung.getFromDB("vc_vorstellung");
         Film film = (Film)form.selectFilm.getSelectedItem();
-        ArrayList<Object> vorstellungen = Kinoverwaltung.getFromDB("vc_vorstellung", "WHERE film="+film.getID());
+        ArrayList<Object> vorstellungen = Kinoverwaltung.getFromDB("vc_vorstellung", "WHERE film=" + film.getID() + " ORDER BY uhrzeit");
         form.selectVorstellung.setModel(new DefaultComboBoxModel(vorstellungen.toArray()));
         Vorstellung vorstellung = (Vorstellung)form.selectVorstellung.getSelectedItem();
         compileSelectPlatzkategorie(vorstellung, 0);
