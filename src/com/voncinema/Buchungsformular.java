@@ -17,8 +17,8 @@ public class Buchungsformular {
     private JList listMeineBuchungen;
     private JButton buttonBuchen, buttonHinzufuegenKarte, buttonBuchungenAnzeigen;
     private JSpinner spinnerAnzahl;
-    private JTextField inputRabattcode, inputName, textFieldNameLogin;
-    private JLabel labelRabattcode, labelPerson, labelFilm, labelVorstellung, labelName, labelPlatzkategorie, labelKartentyp, labelAnzahl;
+    private JTextField inputRabattcode, textFieldNameLogin;
+    private JLabel labelRabattcode, labelPerson, labelFilm, labelVorstellung, labelPlatzkategorie, labelKartentyp, labelAnzahl;
     private JTabbedPane tabbedPane1;
     private JTextArea textAusgabe, textAreaFeedback;
     private JScrollPane scrollPaneMeineBuchungen;
@@ -86,12 +86,7 @@ public class Buchungsformular {
                 removeKarte();
             }
         });
-        buttonBuchungenAnzeigen.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                showBuchungen();
-            }
-        });
+
         buttonLogin.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -104,13 +99,7 @@ public class Buchungsformular {
                 register();
             }
         });
-        textFieldNameLogin.getInputMap(JComponent.WHEN_FOCUSED).put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "enter");
-        textFieldNameLogin.getActionMap().put("enter", new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                showBuchungen();
-            }
-        });
+
         buttonBezahlen.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -273,16 +262,13 @@ public class Buchungsformular {
     }
 
     private void bookBuchung() {
-        if (Objects.equals(inputName.getText(), "")) {
-            textAusgabe.append("Bitte einen Namen für die Buchung angeben!\n----------\n");
-            return;
-        } else if (karten.isEmpty()) {
+        if (karten.isEmpty()) {
             textAusgabe.append("Bitte Karten hinzufügen!\n----------\n");
             return;
         }
         Buchung buchung = new Buchung();
         Vorstellung vorstellung = (Vorstellung) selectVorstellung.getSelectedItem();
-        buchung.setPerson(inputName.getText());
+        buchung.setPerson(currentUser.getEmail());
         buchung.setVorstellung(vorstellung.getID());
         buchung.setRabatt(Rabatt.findIDByString(inputRabattcode.getText()));
         // TODO: Kann das Speichern der Karten einfach direkt hier passieren?
@@ -299,10 +285,12 @@ public class Buchungsformular {
                 buchung.toText() + "\n" +
                 "Karten:\n" +
                 buchung.getKartenAsList());
+
+        showBuchungen();
     }
 
     private void showBuchungen() {
-        String username = textFieldNameLogin.getText();
+        String username = currentUser.getEmail();
         if (username.equals("")) {
             textAreaFeedback.setText("Bitte einen Namen eingeben");
         } else {
@@ -363,9 +351,10 @@ public class Buchungsformular {
             form.tabbedPane1.setEnabledAt(2, true);
             form.tabbedPane1.setEnabledAt(3, true);
             frame.repaint();
-            textFeedbackLogin.append("Sie wurden eingeloggt.\n");
+            textFeedbackLogin.setText("Sie wurden eingeloggt.\n");
+            showBuchungen();
         } else {
-            textFeedbackLogin.append("Für diese Email wurde kein Konto gefunden.\n");
+            textFeedbackLogin.setText("Für diese Email wurde kein Konto gefunden.\n");
         }
     }
 
@@ -378,13 +367,13 @@ public class Buchungsformular {
 
     private void register() {
         if (Kinoverwaltung.getUserByEmail(inputEmail.getText()) != null) {
-            textFeedbackRegister.append("Für diese Email gibt es bereits ein Konto.\n");
+            textFeedbackRegister.setText("Für diese Email gibt es bereits ein Konto.\n");
         } else if (!Objects.equals(inputRegisterPassword.getText(), inputPasswordBestaetigen.getText())) {
-            textFeedbackRegister.append("Die Passwörter stimmen nicht überein.\n");
+            textFeedbackRegister.setText("Die Passwörter stimmen nicht überein.\n");
         } else {
             User user = new User(inputRegisterEmail.getText(), inputRegisterPassword.getText());
             user.saveToDB();
-            textFeedbackRegister.append("Konto wurde erstellt.\n");
+            textFeedbackRegister.setText("Konto wurde erstellt.\n");
         }
     }
 }
