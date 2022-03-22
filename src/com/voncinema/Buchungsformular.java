@@ -1,6 +1,7 @@
 package com.voncinema;
 
 import javax.swing.*;
+import javax.swing.event.*;
 import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.Objects;
@@ -98,6 +99,19 @@ public class Buchungsformular {
             public void keyReleased(KeyEvent e) {
                 super.keyReleased(e);
                 checkRabattcode();
+            }
+        });
+        listMeineBuchungen.addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                Buchung buchung = (Buchung)listMeineBuchungen.getSelectedValue();
+                if (!listMeineBuchungen.isSelectionEmpty() && !Objects.equals(buchung.getStatus(), "gebucht")) {
+                    buttonBezahlen.setEnabled(false);
+                    buttonStornieren.setEnabled(false);
+                } else {
+                    buttonBezahlen.setEnabled(true);
+                    buttonStornieren.setEnabled(true);
+                }
             }
         });
     }
@@ -260,12 +274,23 @@ public class Buchungsformular {
             // TODO: Evtl. direkt nur die gewünschten Buchungen aus der DB holen (Performance und Sicherheit)
             Kinoverwaltung.getFromDB("vc_buchung");
             ArrayList<Buchung> buchungenForUser = Kinoverwaltung.getBuchungenByName(username);
-            DefaultListModel model = new DefaultListModel();
-            for (Buchung buchung : buchungenForUser) {
-                model.addElement(buchung);
+            if (!buchungenForUser.isEmpty()) {
+                DefaultListModel model = new DefaultListModel();
+                for (Buchung buchung : buchungenForUser) {
+                    model.addElement(buchung);
+                }
+                listMeineBuchungen.setModel(model);
+                listMeineBuchungen.revalidate();
+                if (buchungenForUser.size() > 1) {
+                    textAreaFeedback.setText(buchungenForUser.size() + " Buchungen gefunden.");
+                }
+                else {
+                    textAreaFeedback.setText(buchungenForUser.size() + " Buchung gefunden.");
+                }
             }
-            listMeineBuchungen.setModel(model);
-            listMeineBuchungen.revalidate();
+            else {
+                textAreaFeedback.setText("Für den angegebenen Namen wurden keine Buchungen gefunden.");
+            }
         }
     }
 

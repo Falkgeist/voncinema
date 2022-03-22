@@ -13,6 +13,7 @@ public class Vorstellung {
         this.ID = ID;
         this.film = film;
         this.kinosaal = kinosaal;
+        // TODO: change from time to datetime
         this.uhrzeit = uhrzeit;
     }
 
