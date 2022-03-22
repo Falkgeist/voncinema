@@ -15,6 +15,7 @@ public class Kinoverwaltung {
     private static ArrayList<KinosaalKonfigurationPlatzkategorie> kinosaalKonfigurationPlatzkategorien = new ArrayList<>();
     private static ArrayList<Platzkategorie> platzkategorien = new ArrayList<>();
     private static ArrayList<Rabatt> rabatte = new ArrayList<>();
+    private static ArrayList<User> users = new ArrayList<>();
     private static ArrayList<Vorstellung> vorstellungen = new ArrayList<>();
 
     public static ArrayList<Object> getFromDB(String databaseTable)
@@ -83,6 +84,11 @@ public class Kinoverwaltung {
                         Rabatt rabatt = new Rabatt(rs.getInt("ID"), rs.getString("name"), rs.getDouble("wert"));
                         objects.add(rabatt);
                         Kinoverwaltung.rabatte.add(rabatt);
+                        break;
+                    case "vc_user":
+                        User user = new User(rs.getInt("ID"), rs.getString("email"), rs.getString("password"));
+                        objects.add(user);
+                        Kinoverwaltung.users.add(user);
                         break;
                     case "vc_vorstellung":
                         Vorstellung vorstellung = new Vorstellung(rs.getInt("ID"), rs.getInt("film"), rs.getInt("kinosaal"), rs.getString("uhrzeit"));
@@ -153,6 +159,10 @@ public class Kinoverwaltung {
                         Rabatt rabatt = new Rabatt(rs.getInt("ID"), rs.getString("name"), rs.getDouble("wert"));
                         objects.add(rabatt);
                         break;
+                    case "vc_user":
+                        User user = new User(rs.getInt("ID"), rs.getString("email"), rs.getString("password"));
+                        objects.add(user);
+                        break;
                     case "vc_vorstellung":
                         Vorstellung vorstellung = new Vorstellung(rs.getInt("ID"), rs.getInt("film"), rs.getInt("kinosaal"), rs.getString("uhrzeit"));
                         objects.add(vorstellung);
@@ -201,6 +211,9 @@ public class Kinoverwaltung {
             case "vc_rabatt":
                 Kinoverwaltung.rabatte.clear();
                 break;
+            case "vc_user":
+                Kinoverwaltung.users.clear();
+                break;
             case "vc_vorstellung":
                 Kinoverwaltung.vorstellungen.clear();
                 break;
@@ -228,6 +241,17 @@ public class Kinoverwaltung {
             }
         }
         return returnArrBuchung;
+    }
+
+    public static User getUserByEmail(String email) {
+        User returnUser = null;
+        for (User user : users) {
+            if (user.hasEmail(email)){
+                returnUser = user;
+                break;
+            }
+        }
+        return returnUser;
     }
 
     public static Film getFilm(int ID){
@@ -316,6 +340,17 @@ public class Kinoverwaltung {
             }
         }
         return returnRabatt;
+    }
+
+    public static User getUser(int ID) {
+        User returnUser = null;
+        for (User user : users) {
+            if (user.hasID(ID)){
+                returnUser = user;
+                break;
+            }
+        }
+        return returnUser;
     }
 
     public static Vorstellung getVorstellung(int ID) {

@@ -173,6 +173,10 @@ public class Buchung {
         return list.toString();
     }
 
+    public boolean hasName(String name) {
+        return Objects.equals(this.person, name);
+    }
+
     public int getID() {
         return ID;
     }
@@ -203,10 +207,6 @@ public class Buchung {
 
     public void setVorstellung(int vorstellung) {
         this.vorstellung = vorstellung;
-    }
-
-    public boolean hasName(String name) {
-        return Objects.equals(this.person, name);
     }
 
     public void setRabatt(int rabatt) {this.rabatt = rabatt;
