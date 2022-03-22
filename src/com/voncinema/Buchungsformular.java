@@ -130,7 +130,10 @@ public class Buchungsformular {
         form.selectVorstellung.setModel(new DefaultComboBoxModel(vorstellungen.toArray()));
         Vorstellung vorstellung = (Vorstellung)form.selectVorstellung.getSelectedItem();
         compileSelectPlatzkategorie(vorstellung, 0);
+        // TODO: Hier muss noch ein scrollPane drumherum, sonst verschwindet irgendwann der buttonBuchen
         form.textAusgabe.setLineWrap(true);
+        form.buttonBezahlen.setEnabled(false);
+        form.buttonStornieren.setEnabled(false);
         form.spinnerAnzahl.getModel().setValue(1);
         ((SpinnerNumberModel)form.spinnerAnzahl.getModel()).setMinimum(1);
         JPanel contentPane = form.start;
@@ -268,7 +271,7 @@ public class Buchungsformular {
     private void showBuchungen(){
         String username = textFieldNameLogin.getText();
         if (username.equals("")){
-            textAreaFeedback.setText("Bitte einen Namen eingeben\n");
+            textAreaFeedback.setText("Bitte einen Namen eingeben");
         }
         else {
             // TODO: Evtl. direkt nur die gewünschten Buchungen aus der DB holen (Performance und Sicherheit)
