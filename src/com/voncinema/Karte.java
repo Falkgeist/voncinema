@@ -71,8 +71,8 @@ public class Karte {
 
     @Override
     public String toString() {
-        Platzkategorie objPlatzkategorie = Kinoverwaltung.getPlatzkategorie(platzkategorie);
-        Kartentyp objKartentyp = Kinoverwaltung.getKartentyp(kartentyp);
-        return objKartentyp + " (" + objPlatzkategorie + ")";
+        Platzkategorie platzkategorie = Kinoverwaltung.getPlatzkategorie(this.platzkategorie);
+        Kartentyp kartentyp = Kinoverwaltung.getKartentyp(this.kartentyp);
+        return kartentyp.getName() + " (" + platzkategorie.getName() + ")";
     }
 }

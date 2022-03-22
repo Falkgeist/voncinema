@@ -15,6 +15,10 @@ public class Kartentyp {
         return ID;
     }
 
+    public String getName() {
+        return name;
+    }
+
     public double getPreis() {
         return preis;
     }

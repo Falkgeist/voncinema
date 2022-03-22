@@ -1,6 +1,5 @@
 package com.voncinema;
 
-import java.sql.Array;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -10,6 +9,8 @@ public class Platzkategorie {
     private int ID;
     private String name;
     private double zuschlagFix;
+    private boolean hasTempFreiePlaetze;
+    private int tempFreiePlaetze;
 
     Platzkategorie(int ID, String name, double zuschlagFix) {
         this.ID = ID;
@@ -17,7 +18,7 @@ public class Platzkategorie {
         this.zuschlagFix = zuschlagFix;
     }
 
-    public int getFreiePlaetze(Vorstellung vorstellung) {
+    private int getFreiePlaetze(Vorstellung vorstellung) {
         // get the applicable place category configuration
         Kinosaal kinosaal = Kinoverwaltung.getKinosaal(vorstellung.getKinosaal());
         KinosaalKonfiguration konfiguration = Kinoverwaltung.getKinosaalKonfiguration(kinosaal.getKonfiguration());
@@ -58,12 +59,32 @@ public class Platzkategorie {
         catch (ClassNotFoundException | SQLException e){e.printStackTrace();}
     }
 
+    public void setTempFreiePlaetze(Vorstellung vorstellung, int fromCurrentBooking) {
+        this.hasTempFreiePlaetze = true;
+        this.tempFreiePlaetze = getFreiePlaetze(vorstellung);
+        if (fromCurrentBooking >= 0) {
+            this.tempFreiePlaetze -= fromCurrentBooking;
+        }
+    }
+
     public int getID() {
         return ID;
     }
 
+    public String getName() {
+        return name;
+    }
+
     public double getZuschlagFix() {
         return zuschlagFix;
+    }
+
+    public boolean hasTempFreiePlaetze() {
+        return hasTempFreiePlaetze;
+    }
+
+    public int getTempFreiePlaetze() {
+        return tempFreiePlaetze;
     }
 
     public boolean hasID(int ID) {
@@ -72,6 +93,11 @@ public class Platzkategorie {
 
     @Override
     public String toString() {
-        return name;
+        String string = "";
+        string += name;
+        if (this.hasTempFreiePlaetze) {
+            string += " (" + this.tempFreiePlaetze + " frei)";
+        }
+        return string;
     }
 }

@@ -29,6 +29,18 @@ public class KinosaalKonfigurationPlatzkategorie {
         catch (ClassNotFoundException | SQLException e){e.printStackTrace();}
     }
 
+    public int getID() {
+        return ID;
+    }
+
+    public int getKonfiguration() {
+        return konfiguration;
+    }
+
+    public int getPlatzkategorie() {
+        return platzkategorie;
+    }
+
     public int getAnzahl() {
         return anzahl;
     }

@@ -177,8 +177,24 @@ public class Buchung {
         return ID;
     }
 
+    public String getPerson() {
+        return person;
+    }
+
     public int getVorstellung() {
         return vorstellung;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public int getRabatt() {
+        return rabatt;
+    }
+
+    public static double getZuschlagUeberlaenge() {
+        return zuschlagUeberlaenge;
     }
 
     public void setPerson(String person) {

@@ -34,8 +34,18 @@ public class Buchungsformular {
                 JComboBox cb = (JComboBox)e.getSource();
                 Film film = (Film)cb.getSelectedItem();
                 int filmID = film.getID();
-                ArrayList<Object> vorstellungen = Kinoverwaltung.getFromDB("vc_vorstellung", "WHERE id="+filmID);
+                ArrayList<Object> vorstellungen = Kinoverwaltung.getFromDB("vc_vorstellung", "WHERE film="+filmID);
                 selectVorstellung.setModel(new DefaultComboBoxModel(vorstellungen.toArray()));
+                Vorstellung vorstellung = (Vorstellung)selectVorstellung.getSelectedItem();
+                compileSelectPlatzkategorie(vorstellung, 0);
+            }
+        });
+        selectVorstellung.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JComboBox cb = (JComboBox)e.getSource();
+                Vorstellung vorstellung = (Vorstellung)cb.getSelectedItem();
+                compileSelectPlatzkategorie(vorstellung, 0);
             }
         });
         buttonBuchen.addActionListener(new ActionListener() {
@@ -95,16 +105,17 @@ public class Buchungsformular {
     public static void main(String[] args) {
         form.getOptionsFromDB("vc_film");
         Kinoverwaltung.getFromDB("vc_film_kategorie");
-        Film film = (Film)form.selectFilm.getSelectedItem();
-        int filmID = film.getID();
-        Kinoverwaltung.getFromDB("vc_vorstellung");
-        ArrayList<Object> vorstellungen = Kinoverwaltung.getFromDB("vc_vorstellung", "WHERE id="+filmID);
-        form.selectVorstellung.setModel(new DefaultComboBoxModel(vorstellungen.toArray()));
-        form.getOptionsFromDB("vc_platzkategorie");
         form.getOptionsFromDB("vc_kartentyp");
-        Kinoverwaltung.getFromDB("vc_rabatt");
         Kinoverwaltung.getFromDB("vc_kinosaal");
         Kinoverwaltung.getFromDB("vc_kinosaalkonfiguration");
+        Kinoverwaltung.getFromDB("vc_platzkategorie");
+        Kinoverwaltung.getFromDB("vc_rabatt");
+        Kinoverwaltung.getFromDB("vc_vorstellung");
+        Film film = (Film)form.selectFilm.getSelectedItem();
+        ArrayList<Object> vorstellungen = Kinoverwaltung.getFromDB("vc_vorstellung", "WHERE film="+film.getID());
+        form.selectVorstellung.setModel(new DefaultComboBoxModel(vorstellungen.toArray()));
+        Vorstellung vorstellung = (Vorstellung)form.selectVorstellung.getSelectedItem();
+        compileSelectPlatzkategorie(vorstellung, 0);
         form.textAusgabe.setLineWrap(true);
         form.spinnerAnzahl.getModel().setValue(1);
         ((SpinnerNumberModel)form.spinnerAnzahl.getModel()).setMinimum(1);
@@ -113,13 +124,6 @@ public class Buchungsformular {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
         frame.setVisible(true);
-
-        // DEBUGGING FOR CALCULATION
-        /*Karte karte = new Karte(1, 1, 2, 1);
-        Film film = Kinoverwaltung.getFilm(1);
-        FilmKategorie filmKategorie = Kinoverwaltung.getFilmKategorie(film.getKategorie());
-        double zuschlagFilm = filmKategorie.getZuschlagProzent();
-        System.out.println(karte.berechnePreis(zuschlagFilm));*/
     }
 
     public void getOptionsFromDB(String table) {
@@ -135,6 +139,20 @@ public class Buchungsformular {
                 this.selectKartentyp.setModel(new DefaultComboBoxModel(objArray.toArray()));
                 break;
         }
+    }
+
+    private static void compileSelectPlatzkategorie(Vorstellung vorstellung, int fromCurrentBooking) {
+        Kinosaal kinosaal = Kinoverwaltung.getKinosaal(vorstellung.getKinosaal());
+        KinosaalKonfiguration konfiguration = Kinoverwaltung.getKinosaalKonfiguration(kinosaal.getKonfiguration());
+        ArrayList<Object> konfigurationPlatzkategorien = Kinoverwaltung.getFromDB("vc_kinosaalkonfiguration_platzkategorie", "WHERE konfiguration="+konfiguration.getID());
+        ArrayList<Platzkategorie> platzkategorien = new ArrayList<>();
+        for (Object objKonfigurationPlatzkategorie : konfigurationPlatzkategorien) {
+            KinosaalKonfigurationPlatzkategorie konfigurationPlatzkategorie = (KinosaalKonfigurationPlatzkategorie)objKonfigurationPlatzkategorie;
+            Platzkategorie platzkategorie = Kinoverwaltung.getPlatzkategorie(konfigurationPlatzkategorie.getPlatzkategorie());
+            platzkategorie.setTempFreiePlaetze(vorstellung, fromCurrentBooking);
+            platzkategorien.add(platzkategorie);
+        }
+        form.selectPlatzkategorie.setModel(new DefaultComboBoxModel(platzkategorien.toArray()));
     }
 
     private void removeKarte() {
@@ -157,7 +175,8 @@ public class Buchungsformular {
         if (notFound) {
             textAusgabe.append("Es wurden keine Karten zum Entfernen gefunden.\n");
         } else {
-            textAusgabe.append(spinnerAnzahl.getValue() + " Karten (" + kartentyp + ", " + platzkategorie + ") entfernt.\n");
+            compileSelectPlatzkategorie((Vorstellung)selectVorstellung.getSelectedItem(), -(int)spinnerAnzahl.getValue());
+            textAusgabe.append(spinnerAnzahl.getValue() + " Karten (" + kartentyp.getName() + ", " + platzkategorie.getName() + ") entfernt.\n");
         }
     }
 
@@ -166,7 +185,9 @@ public class Buchungsformular {
         Platzkategorie platzkategorie = (Platzkategorie)selectPlatzkategorie.getSelectedItem();
 
         // check for available seats
-        int freiePlaetze = platzkategorie.getFreiePlaetze((Vorstellung)selectVorstellung.getSelectedItem());
+        Vorstellung vorstellung = (Vorstellung)selectVorstellung.getSelectedItem();
+        platzkategorie.setTempFreiePlaetze(vorstellung, 0);
+        int freiePlaetze = platzkategorie.getTempFreiePlaetze();
         if (!karten.isEmpty()) {
             for (Karte karte : karten) {
                 if (karte.getPlatzkategorie() == platzkategorie.getID()) {
@@ -184,7 +205,8 @@ public class Buchungsformular {
             if (textAusgabe.getText().startsWith("Die Buchung")) {
                 textAusgabe.setText("");
             }
-            textAusgabe.append(spinnerAnzahl.getValue() + " Karten (" + kartentyp.toString() + ", " + platzkategorie.toString() + ") hinzugefügt.\n");
+            textAusgabe.append(spinnerAnzahl.getValue() + " Karten (" + kartentyp.getName() + ", " + platzkategorie.getName() + ") hinzugefügt.\n");
+            compileSelectPlatzkategorie(vorstellung, (int)spinnerAnzahl.getValue());
         }
         else {
             if (textAusgabe.getText().startsWith("Die Buchung")) {
