@@ -227,16 +227,20 @@ public class Kinoverwaltung {
         buchung.speichernKarten();
     }
 
-    public static Connection setupConnection() throws ClassNotFoundException, SQLException
-    {
-        Class.forName("org.sqlite.JDBC");
-        return DriverManager.getConnection("jdbc:sqlite:voncinema_db.sqlite");
+    public static void addUser(User user) {
+        users.add(user);
     }
 
     public static ArrayList<Buchung> getBuchungenByName(String name) {
         ArrayList<Buchung> returnArrBuchung = new ArrayList<>();
         for (Buchung buchung : buchungen) {
             if (buchung.hasName(name)){
+                ArrayList<Object> arrBuchungKarten = getFromDB("vc_buchung_karten", "WHERE buchung=" + buchung.getID());
+                for (Object objBuchungKarten : arrBuchungKarten) {
+                    BuchungKarten buchungKarten = (BuchungKarten)objBuchungKarten;
+                    Karte karte = (Karte)getFromDB("vc_karte", "WHERE id=" + buchungKarten.getKarte()).get(0);
+                    buchung.addKarte(karte);
+                }
                 returnArrBuchung.add(buchung);
             }
         }
@@ -252,6 +256,18 @@ public class Kinoverwaltung {
             }
         }
         return returnUser;
+    }
+
+    public static void resetFreiePlaetze() {
+        for (Platzkategorie platzkategorie : platzkategorien) {
+            platzkategorie.setHasTempFreiePlaetze(false);
+        }
+    }
+
+    public static Connection setupConnection() throws ClassNotFoundException, SQLException
+    {
+        Class.forName("org.sqlite.JDBC");
+        return DriverManager.getConnection("jdbc:sqlite:voncinema_db.sqlite");
     }
 
     public static Film getFilm(int ID){

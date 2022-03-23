@@ -52,4 +52,8 @@ public class User {
     public boolean hasEmail(String email) {
         return Objects.equals(this.email, email);
     }
+
+    public boolean hasBookings() {
+        return !Kinoverwaltung.getBuchungenByName(this.email).isEmpty();
+    }
 }

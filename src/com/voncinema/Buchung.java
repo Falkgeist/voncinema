@@ -16,7 +16,7 @@ public class Buchung {
     private ArrayList<Karte> karten = new ArrayList<>();
     private String status;
     private int rabatt = 0;
-    private static double zuschlagUeberlaenge = 0.2; // für die Preisberechnung
+    private static final double zuschlagUeberlaenge = 0.2; // für die Preisberechnung
 
     Buchung(){}
 
@@ -159,13 +159,16 @@ public class Buchung {
         catch (ClassNotFoundException | SQLException e){e.printStackTrace();}
     }
 
+    public void addKarte(Karte karte) {
+        this.karten.add(karte);
+    }
+
     public ArrayList<Karte> getKarten() {
         return karten;
     }
 
     public String getKartenAsList() {
         StringBuilder list = new StringBuilder();
-        int anzahlKarten = 0;
         for (Karte karte : karten) {
             list.append("- ").append(karte).append("\n");
         }
@@ -216,7 +219,7 @@ public class Buchung {
         Vorstellung objVorstellung = Kinoverwaltung.getVorstellung(this.vorstellung);
         Film objFilm = Kinoverwaltung.getFilm(objVorstellung.getFilm());
         Kinosaal objKinosaal = Kinoverwaltung.getKinosaal(objVorstellung.getKinosaal());
-        return "Buchungsname: " + this.person + "\n" +
+        return "Buchung: #" + this.ID + "\n" +
                 "Film: " + objFilm + "\n" +
                 "Kinosaal: " + objKinosaal + "\n" +
                 "Uhrzeit: " + objVorstellung + "\n" +
@@ -229,13 +232,20 @@ public class Buchung {
         Vorstellung objVorstellung = Kinoverwaltung.getVorstellung(this.vorstellung);
         Film objFilm = Kinoverwaltung.getFilm(objVorstellung.getFilm());
         Kinosaal objKinosaal = Kinoverwaltung.getKinosaal(objVorstellung.getKinosaal());
+        StringBuilder list = new StringBuilder();
+        for (Karte karte : this.karten) {
+            list.append("- ").append(karte).append("<br>");
+        }
+        list.setLength(list.length() - 1);
         return "<html>" +
-                "Buchungsname: " + this.person + "<br>" +
+                "Buchung: #" + this.ID + "<br>" +
                 "Film: " + objFilm + "<br>" +
                 "Kinosaal: " + objKinosaal + "<br>" +
                 "Uhrzeit: " + objVorstellung + "<br>" +
                 "Preis: " + String.format("%.2f", this.berechneGesamtpreis()) + " €" + "<br>" +
                 "Status: " + status + "<br>" +
+                "Karten:<br>" +
+                list +
                 "</html>";
     }
 }

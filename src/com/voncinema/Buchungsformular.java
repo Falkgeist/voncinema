@@ -4,29 +4,26 @@ import javax.swing.*;
 import javax.swing.event.*;
 import java.awt.event.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Objects;
 
 public class Buchungsformular {
     private static JFrame frame = new JFrame("VonCinema - Kinokartenbuchungssystem");
     private static Buchungsformular form = new Buchungsformular();
 
+    private static String titleTabLogin = "Login";
+    private static String titleTabRegister = "Registrieren";
+    private static String titleTabNewBooking = "Neue Buchung";
+    private static String titleTabMyBookings = "Meine Buchungen";
+
     private User currentUser;
 
-    private JPanel start, labelKarten;
-    private JComboBox selectFilm, selectVorstellung, selectKartentyp, selectPlatzkategorie;
-    private JList listMeineBuchungen;
-    private JButton buttonBuchen, buttonHinzufuegenKarte, buttonBuchungenAnzeigen;
-    private JSpinner spinnerAnzahl;
-    private JTextField inputRabattcode, textFieldNameLogin;
-    private JLabel labelRabattcode, labelPerson, labelFilm, labelVorstellung, labelPlatzkategorie, labelKartentyp, labelAnzahl;
-    private JTabbedPane tabbedPane1;
-    private JTextArea textAusgabe, textAreaFeedback;
-    private JScrollPane scrollPaneMeineBuchungen;
-    private JPanel paneBuchungButtons;
-    private JButton buttonStornieren;
-    private JButton buttonBezahlen;
-    private JTextArea textAreaRabattcodeFeedback;
-    private JButton buttonEntfernenKarte;
+    private JPanel start;
+    private JTabbedPane tabbedPane;
+    private JPanel tabLogin;
+    private JPanel tabRegister;
+    private JPanel tabNewBooking;
+    private JPanel tabMyBookings;
     // Login fields
     private JLabel labelEmail;
     private JTextField inputEmail;
@@ -43,6 +40,30 @@ public class Buchungsformular {
     private JLabel labelPasswordBestaetigen;
     private JPasswordField inputPasswordBestaetigen;
     private JTextArea textFeedbackRegister;
+    // New booking fields
+    private JLabel labelFilm;
+    private JComboBox selectFilm;
+    private JLabel labelVorstellung;
+    private JComboBox selectVorstellung;
+    private JLabel labelAnzahl;
+    private JSpinner spinnerAnzahl;
+    private JLabel labelKartentyp;
+    private JComboBox selectKartentyp;
+    private JLabel labelPlatzkategorie;
+    private JComboBox selectPlatzkategorie;
+    private JButton buttonHinzufuegenKarte;
+    private JButton buttonEntfernenKarte;
+    private JLabel labelRabattcode;
+    private JTextField inputRabattcode;
+    private JTextArea textAreaRabattcodeFeedback;
+    private JButton buttonBuchen;
+    private JTextArea textAusgabe;
+    // My bookings fields
+    private JList listMeineBuchungen;
+    private JButton buttonBuchungStornieren;
+    private JButton buttonBuchungBezahlen;
+    private JTextArea textAreaFeedback;
+    private JButton buttonLogout;
 
     private ArrayList<Karte> karten = new ArrayList<>();
 
@@ -71,19 +92,19 @@ public class Buchungsformular {
         buttonBuchen.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                bookBuchung();
+                confirmBooking();
             }
         });
         buttonHinzufuegenKarte.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                addKarte();
+                addTicket();
             }
         });
         buttonEntfernenKarte.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                removeKarte();
+                removeTicket();
             }
         });
 
@@ -99,15 +120,21 @@ public class Buchungsformular {
                 register();
             }
         });
+        buttonLogout.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                logout();
+            }
+        });
 
-        buttonBezahlen.addMouseListener(new MouseAdapter() {
+        buttonBuchungBezahlen.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 payBuchung();
                 showBuchungen();
             }
         });
-        buttonStornieren.addMouseListener(new MouseAdapter() {
+        buttonBuchungStornieren.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 cancelBuchung();
@@ -126,11 +153,11 @@ public class Buchungsformular {
             public void valueChanged(ListSelectionEvent e) {
                 Buchung buchung = (Buchung) listMeineBuchungen.getSelectedValue();
                 if (!listMeineBuchungen.isSelectionEmpty() && !Objects.equals(buchung.getStatus(), "gebucht")) {
-                    buttonBezahlen.setEnabled(false);
-                    buttonStornieren.setEnabled(false);
+                    buttonBuchungBezahlen.setEnabled(false);
+                    buttonBuchungStornieren.setEnabled(false);
                 } else {
-                    buttonBezahlen.setEnabled(true);
-                    buttonStornieren.setEnabled(true);
+                    buttonBuchungBezahlen.setEnabled(true);
+                    buttonBuchungStornieren.setEnabled(true);
                 }
             }
         });
@@ -151,12 +178,12 @@ public class Buchungsformular {
         form.selectVorstellung.setModel(new DefaultComboBoxModel(vorstellungen.toArray()));
         Vorstellung vorstellung = (Vorstellung) form.selectVorstellung.getSelectedItem();
         compileSelectPlatzkategorie(vorstellung, 0);
-        form.tabbedPane1.setEnabledAt(2, false);
-        form.tabbedPane1.setEnabledAt(3, false);
+        form.tabbedPane.remove(form.tabNewBooking);
+        form.tabbedPane.remove(form.tabMyBookings);
         // TODO: Hier muss noch ein scrollPane drumherum, sonst verschwindet irgendwann der buttonBuchen
         form.textAusgabe.setLineWrap(true);
-        form.buttonBezahlen.setEnabled(false);
-        form.buttonStornieren.setEnabled(false);
+        form.buttonBuchungBezahlen.setEnabled(false);
+        form.buttonBuchungStornieren.setEnabled(false);
         form.spinnerAnzahl.getModel().setValue(1);
         ((SpinnerNumberModel) form.spinnerAnzahl.getModel()).setMinimum(1);
         JPanel contentPane = form.start;
@@ -195,7 +222,7 @@ public class Buchungsformular {
         form.selectPlatzkategorie.setModel(new DefaultComboBoxModel(platzkategorien.toArray()));
     }
 
-    private void removeKarte() {
+    private void removeTicket() {
         Kartentyp kartentyp = (Kartentyp) selectKartentyp.getSelectedItem();
         Platzkategorie platzkategorie = (Platzkategorie) selectPlatzkategorie.getSelectedItem();
         int removeCount = (int) spinnerAnzahl.getValue();
@@ -220,13 +247,15 @@ public class Buchungsformular {
         }
     }
 
-    private void addKarte() {
+    private void addTicket() {
         Kartentyp kartentyp = (Kartentyp) selectKartentyp.getSelectedItem();
         Platzkategorie platzkategorie = (Platzkategorie) selectPlatzkategorie.getSelectedItem();
 
         // check for available seats
         Vorstellung vorstellung = (Vorstellung) selectVorstellung.getSelectedItem();
-        platzkategorie.setTempFreiePlaetze(vorstellung, 0);
+        if (!platzkategorie.hasTempFreiePlaetze()) {
+            platzkategorie.setTempFreiePlaetze(vorstellung, 0);
+        }
         int freiePlaetze = platzkategorie.getTempFreiePlaetze();
         if (!karten.isEmpty()) {
             for (Karte karte : karten) {
@@ -261,7 +290,7 @@ public class Buchungsformular {
         }
     }
 
-    private void bookBuchung() {
+    private void confirmBooking() {
         if (karten.isEmpty()) {
             textAusgabe.append("Bitte Karten hinzufügen!\n----------\n");
             return;
@@ -278,6 +307,7 @@ public class Buchungsformular {
             buchung.hinzufuegenKarte(karte);
         }
         karten.clear();
+        Kinoverwaltung.resetFreiePlaetze();
         Kinoverwaltung.bucheBuchung(vorstellung, buchung);
         textAusgabe.setText("Die Buchung wurde gespeichert.\n" +
                 "----------\n" +
@@ -285,33 +315,28 @@ public class Buchungsformular {
                 buchung.toText() + "\n" +
                 "Karten:\n" +
                 buchung.getKartenAsList());
-
         showBuchungen();
     }
 
     private void showBuchungen() {
         String username = currentUser.getEmail();
-        if (username.equals("")) {
-            textAreaFeedback.setText("Bitte einen Namen eingeben");
-        } else {
-            // TODO: Evtl. direkt nur die gewünschten Buchungen aus der DB holen (Performance und Sicherheit)
-            Kinoverwaltung.getFromDB("vc_buchung");
-            ArrayList<Buchung> buchungenForUser = Kinoverwaltung.getBuchungenByName(username);
-            if (!buchungenForUser.isEmpty()) {
-                DefaultListModel model = new DefaultListModel();
-                for (Buchung buchung : buchungenForUser) {
-                    model.addElement(buchung);
-                }
-                listMeineBuchungen.setModel(model);
-                listMeineBuchungen.revalidate();
-                if (buchungenForUser.size() > 1) {
-                    textAreaFeedback.setText(buchungenForUser.size() + " Buchungen gefunden.");
-                } else {
-                    textAreaFeedback.setText(buchungenForUser.size() + " Buchung gefunden.");
-                }
-            } else {
-                textAreaFeedback.setText("Für den angegebenen Namen wurden keine Buchungen gefunden.");
+        // TODO: Evtl. direkt nur die gewünschten Buchungen aus der DB holen (Performance und Sicherheit)
+        Kinoverwaltung.getFromDB("vc_buchung");
+        ArrayList<Buchung> buchungenForUser = Kinoverwaltung.getBuchungenByName(username);
+        if (!buchungenForUser.isEmpty()) {
+            DefaultListModel model = new DefaultListModel();
+            for (Buchung buchung : buchungenForUser) {
+                model.addElement(buchung);
             }
+            listMeineBuchungen.setModel(model);
+            listMeineBuchungen.revalidate();
+            if (buchungenForUser.size() > 1) {
+                textAreaFeedback.setText(buchungenForUser.size() + " Buchungen gefunden.");
+            } else {
+                textAreaFeedback.setText(buchungenForUser.size() + " Buchung gefunden.");
+            }
+        } else {
+            textAreaFeedback.setText("Keine Buchungen gefunden.");
         }
     }
 
@@ -328,6 +353,8 @@ public class Buchungsformular {
         int buchungsID = buchungAusListe.getID();
         Buchung buchung = (Buchung) Kinoverwaltung.getFromDB("vc_buchung", "WHERE id=" + buchungsID).get(0);
         buchung.saveStatus("storniert");
+        Vorstellung vorstellung = (Vorstellung)selectVorstellung.getSelectedItem();
+        compileSelectPlatzkategorie(vorstellung, 0);
         textAreaFeedback.setText("Die ausgewählte Buchung wurde storniert.");
     }
 
@@ -345,35 +372,58 @@ public class Buchungsformular {
 
     private void login() {
         User checkUser = Kinoverwaltung.getUserByEmail(inputEmail.getText());
-        if (checkUser != null) {
+        if (checkUser == null) {
+            textFeedbackLogin.setText("Für diese Email wurde kein Konto gefunden.");
+        } else if (Objects.equals(checkUser.getPassword(), Arrays.toString(inputPassword.getPassword()))) {
+            textFeedbackLogin.setText("Das Passwort ist nicht korrekt.");
+        }
+        else {
             currentUser = checkUser;
-            form.tabbedPane1.setEnabledAt(1, false);
-            form.tabbedPane1.setEnabledAt(2, true);
-            form.tabbedPane1.setEnabledAt(3, true);
-            frame.repaint();
-            textFeedbackLogin.setText("Sie wurden eingeloggt.\n");
+            form.tabbedPane.add(form.tabNewBooking);
+            int indexNewBooking = form.tabbedPane.indexOfComponent(form.tabNewBooking);
+            form.tabbedPane.setTitleAt(indexNewBooking, titleTabNewBooking);
+            form.tabbedPane.add(form.tabMyBookings);
+            int indexMyBookings = form.tabbedPane.indexOfComponent(form.tabMyBookings);
+            form.tabbedPane.setTitleAt(indexMyBookings, titleTabMyBookings);
+            if (currentUser.hasBookings()) {
+                form.tabbedPane.setSelectedComponent(tabMyBookings);
+            } else {
+                form.tabbedPane.setSelectedComponent(tabNewBooking);
+            }
+            form.tabbedPane.remove(form.tabLogin);
+            form.tabbedPane.remove(form.tabRegister);
+            form.buttonLogout.setEnabled(true);
+            textFeedbackLogin.setText("Sie wurden eingeloggt.");
             showBuchungen();
+            frame.pack();
+        }
+    }
+
+    private void register() {
+        if (Kinoverwaltung.getUserByEmail(inputRegisterEmail.getText()) != null) {
+            textFeedbackRegister.setText("Für diese Email gibt es bereits ein Konto.");
+        } else if (!Objects.equals(Arrays.toString(inputRegisterPassword.getPassword()), Arrays.toString(inputPasswordBestaetigen.getPassword()))) {
+            textFeedbackRegister.setText("Die Passwörter stimmen nicht überein.");
         } else {
-            textFeedbackLogin.setText("Für diese Email wurde kein Konto gefunden.\n");
+            User user = new User(inputRegisterEmail.getText(), Arrays.toString(inputRegisterPassword.getPassword()));
+            Kinoverwaltung.addUser(user);
+            user.saveToDB();
+            textFeedbackRegister.setText("Konto wurde erstellt.");
         }
     }
 
     private void logout() {
         currentUser = null;
-        form.tabbedPane1.setEnabledAt(2, false);
-        form.tabbedPane1.setEnabledAt(3, false);
-        frame.repaint();
-    }
-
-    private void register() {
-        if (Kinoverwaltung.getUserByEmail(inputEmail.getText()) != null) {
-            textFeedbackRegister.setText("Für diese Email gibt es bereits ein Konto.\n");
-        } else if (!Objects.equals(inputRegisterPassword.getText(), inputPasswordBestaetigen.getText())) {
-            textFeedbackRegister.setText("Die Passwörter stimmen nicht überein.\n");
-        } else {
-            User user = new User(inputRegisterEmail.getText(), inputRegisterPassword.getText());
-            user.saveToDB();
-            textFeedbackRegister.setText("Konto wurde erstellt.\n");
-        }
+        form.tabbedPane.add(form.tabLogin);
+        int indexLogin = form.tabbedPane.indexOfComponent(form.tabLogin);
+        form.tabbedPane.setTitleAt(indexLogin, titleTabLogin);
+        form.tabbedPane.add(form.tabRegister);
+        int indexRegister = form.tabbedPane.indexOfComponent(form.tabRegister);
+        form.tabbedPane.setTitleAt(indexRegister, titleTabRegister);
+        form.tabbedPane.setSelectedComponent(tabLogin);
+        form.tabbedPane.remove(form.tabNewBooking);
+        form.tabbedPane.remove(form.tabMyBookings);
+        form.buttonLogout.setEnabled(false);
+        textFeedbackLogin.setText("Sie wurden ausgeloggt.");
     }
 }

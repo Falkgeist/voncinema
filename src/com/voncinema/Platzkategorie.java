@@ -60,11 +60,11 @@ public class Platzkategorie {
     }
 
     public void setTempFreiePlaetze(Vorstellung vorstellung, int fromCurrentBooking) {
-        this.hasTempFreiePlaetze = true;
-        this.tempFreiePlaetze = getFreiePlaetze(vorstellung);
-        if (fromCurrentBooking >= 0) {
-            this.tempFreiePlaetze -= fromCurrentBooking;
+        if (!this.hasTempFreiePlaetze) {
+            this.hasTempFreiePlaetze = true;
+            this.tempFreiePlaetze = getFreiePlaetze(vorstellung);
         }
+        this.tempFreiePlaetze -= fromCurrentBooking;
     }
 
     public int getID() {
@@ -85,6 +85,10 @@ public class Platzkategorie {
 
     public int getTempFreiePlaetze() {
         return tempFreiePlaetze;
+    }
+
+    public void setHasTempFreiePlaetze(boolean hasTempFreiePlaetze) {
+        this.hasTempFreiePlaetze = hasTempFreiePlaetze;
     }
 
     public boolean hasID(int ID) {
