@@ -208,6 +208,7 @@ public class Buchungsformular {
         }
     }
 
+    // TODO: Kategorie wird noch nicht upgedated, wenn Buchung storniert wird...
     private static void updateSelectPlatzkategorie(Vorstellung vorstellung, int fromCurrentBooking, boolean checkCategory) {
         Platzkategorie selectedPlatzkategorie = (Platzkategorie)form.selectPlatzkategorie.getSelectedItem();
         Kinosaal kinosaal = Kinoverwaltung.getKinosaal(vorstellung.getKinosaal());
@@ -217,7 +218,7 @@ public class Buchungsformular {
         for (Object objKonfigurationPlatzkategorie : konfigurationPlatzkategorien) {
             KinosaalKonfigurationPlatzkategorie konfigurationPlatzkategorie = (KinosaalKonfigurationPlatzkategorie) objKonfigurationPlatzkategorie;
             Platzkategorie platzkategorie = Kinoverwaltung.getPlatzkategorie(konfigurationPlatzkategorie.getPlatzkategorie());
-            if (selectedPlatzkategorie == platzkategorie) {
+            if (checkCategory && selectedPlatzkategorie == platzkategorie) {
                 platzkategorie.setTempFreiePlaetze(vorstellung, fromCurrentBooking);
             } else {
                 platzkategorie.setTempFreiePlaetze(vorstellung, 0);
@@ -317,6 +318,7 @@ public class Buchungsformular {
                 buchung.toText() + "\n" +
                 "Karten:\n" +
                 buchung.getKartenAsList());
+        updateSelectPlatzkategorie(vorstellung, 0, false);
         showBuchungen();
     }
 
@@ -353,9 +355,9 @@ public class Buchungsformular {
     public void cancelBuchung() {
         Buchung buchungAusListe = (Buchung) listMeineBuchungen.getSelectedValue();
         int buchungsID = buchungAusListe.getID();
-        Buchung buchung = (Buchung) Kinoverwaltung.getFromDB("vc_buchung", "WHERE id=" + buchungsID).get(0);
+        Buchung buchung = (Buchung)Kinoverwaltung.getFromDB("vc_buchung", "WHERE id=" + buchungsID).get(0);
         buchung.saveStatus("storniert");
-        Vorstellung vorstellung = (Vorstellung)selectVorstellung.getSelectedItem();
+        Vorstellung vorstellung = (Vorstellung)Kinoverwaltung.getFromDB("vc_vorstellung", "WHERE id=" + buchung.getVorstellung()).get(0);
         updateSelectPlatzkategorie(vorstellung, 0, false);
         textAreaFeedback.setText("Die ausgewählte Buchung wurde storniert.");
     }
