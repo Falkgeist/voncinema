@@ -129,16 +129,16 @@ public class Buchungsformular {
             }
         });
 
-        buttonBuchungBezahlen.addMouseListener(new MouseAdapter() {
+        buttonBuchungBezahlen.addActionListener(new ActionListener() {
             @Override
-            public void mouseClicked(MouseEvent e) {
+            public void actionPerformed(ActionEvent e) {
                 payBuchung();
                 showBuchungen();
             }
         });
-        buttonBuchungStornieren.addMouseListener(new MouseAdapter() {
+        buttonBuchungStornieren.addActionListener(new ActionListener() {
             @Override
-            public void mouseClicked(MouseEvent e) {
+            public void actionPerformed(ActionEvent e) {
                 cancelBuchung();
                 showBuchungen();
             }
