@@ -411,7 +411,11 @@ public class Buchungsformular {
             textFeedbackRegister.setText("Für diese Email gibt es bereits ein Konto.");
         } else if (!Objects.equals(Arrays.toString(inputRegisterPassword.getPassword()), Arrays.toString(inputPasswordBestaetigen.getPassword()))) {
             textFeedbackRegister.setText("Die Passwörter stimmen nicht überein.");
-        } else {
+        }else if(inputRegisterEmail.getText().length() < 4){
+            textFeedbackRegister.setText("Die E-Mail ist ungültig.");
+        }else if(inputRegisterPassword.getText().length() < 4){
+            textFeedbackRegister.setText("Bitte ein längeres Passwort verwenden");
+        }else {
             User user = new User(inputRegisterEmail.getText(), Arrays.toString(inputRegisterPassword.getPassword()));
             Kinoverwaltung.addUser(user);
             user.saveToDB();
