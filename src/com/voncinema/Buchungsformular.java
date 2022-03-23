@@ -78,7 +78,7 @@ public class Buchungsformular {
                 ArrayList<Object> vorstellungen = Kinoverwaltung.getFromDB("vc_vorstellung", "WHERE film=" + filmID + " ORDER BY uhrzeit");
                 selectVorstellung.setModel(new DefaultComboBoxModel(vorstellungen.toArray()));
                 Vorstellung vorstellung = (Vorstellung) selectVorstellung.getSelectedItem();
-                compileSelectPlatzkategorie(vorstellung, 0);
+                updateSelectPlatzkategorie(vorstellung, 0, false);
             }
         });
         selectVorstellung.addActionListener(new ActionListener() {
@@ -86,7 +86,7 @@ public class Buchungsformular {
             public void actionPerformed(ActionEvent e) {
                 JComboBox cb = (JComboBox) e.getSource();
                 Vorstellung vorstellung = (Vorstellung) cb.getSelectedItem();
-                compileSelectPlatzkategorie(vorstellung, 0);
+                updateSelectPlatzkategorie(vorstellung, 0, false);
             }
         });
         buttonBuchen.addActionListener(new ActionListener() {
@@ -177,7 +177,7 @@ public class Buchungsformular {
         ArrayList<Object> vorstellungen = Kinoverwaltung.getFromDB("vc_vorstellung", "WHERE film=" + film.getID() + " ORDER BY uhrzeit");
         form.selectVorstellung.setModel(new DefaultComboBoxModel(vorstellungen.toArray()));
         Vorstellung vorstellung = (Vorstellung) form.selectVorstellung.getSelectedItem();
-        compileSelectPlatzkategorie(vorstellung, 0);
+        updateSelectPlatzkategorie(vorstellung, 0, false);
         form.tabbedPane.remove(form.tabNewBooking);
         form.tabbedPane.remove(form.tabMyBookings);
         // TODO: Hier muss noch ein scrollPane drumherum, sonst verschwindet irgendwann der buttonBuchen
@@ -208,7 +208,8 @@ public class Buchungsformular {
         }
     }
 
-    private static void compileSelectPlatzkategorie(Vorstellung vorstellung, int fromCurrentBooking) {
+    private static void updateSelectPlatzkategorie(Vorstellung vorstellung, int fromCurrentBooking, boolean checkCategory) {
+        Platzkategorie selectedPlatzkategorie = (Platzkategorie)form.selectPlatzkategorie.getSelectedItem();
         Kinosaal kinosaal = Kinoverwaltung.getKinosaal(vorstellung.getKinosaal());
         KinosaalKonfiguration konfiguration = Kinoverwaltung.getKinosaalKonfiguration(kinosaal.getKonfiguration());
         ArrayList<Object> konfigurationPlatzkategorien = Kinoverwaltung.getFromDB("vc_kinosaalkonfiguration_platzkategorie", "WHERE konfiguration=" + konfiguration.getID());
@@ -216,10 +217,17 @@ public class Buchungsformular {
         for (Object objKonfigurationPlatzkategorie : konfigurationPlatzkategorien) {
             KinosaalKonfigurationPlatzkategorie konfigurationPlatzkategorie = (KinosaalKonfigurationPlatzkategorie) objKonfigurationPlatzkategorie;
             Platzkategorie platzkategorie = Kinoverwaltung.getPlatzkategorie(konfigurationPlatzkategorie.getPlatzkategorie());
-            platzkategorie.setTempFreiePlaetze(vorstellung, fromCurrentBooking);
+            if (selectedPlatzkategorie == platzkategorie) {
+                platzkategorie.setTempFreiePlaetze(vorstellung, fromCurrentBooking);
+            } else {
+                platzkategorie.setTempFreiePlaetze(vorstellung, 0);
+            }
             platzkategorien.add(platzkategorie);
         }
         form.selectPlatzkategorie.setModel(new DefaultComboBoxModel(platzkategorien.toArray()));
+        if (checkCategory) {
+            form.selectPlatzkategorie.setSelectedItem(selectedPlatzkategorie);
+        }
     }
 
     private void removeTicket() {
@@ -240,9 +248,10 @@ public class Buchungsformular {
             }
         }
         if (notFound) {
-            textAusgabe.append("Es wurden keine Karten zum Entfernen gefunden.\n");
+            textAusgabe.append("----------\nEs wurden keine Karten zum Entfernen gefunden.\n----------\n");
         } else {
-            compileSelectPlatzkategorie((Vorstellung) selectVorstellung.getSelectedItem(), -(int) spinnerAnzahl.getValue());
+            Vorstellung vorstellung = (Vorstellung) selectVorstellung.getSelectedItem();
+            updateSelectPlatzkategorie(vorstellung, -(int)spinnerAnzahl.getValue(), true);
             textAusgabe.append(spinnerAnzahl.getValue() + " Karten (" + kartentyp.getName() + ", " + platzkategorie.getName() + ") entfernt.\n");
         }
     }
@@ -257,42 +266,35 @@ public class Buchungsformular {
             platzkategorie.setTempFreiePlaetze(vorstellung, 0);
         }
         int freiePlaetze = platzkategorie.getTempFreiePlaetze();
-        if (!karten.isEmpty()) {
-            for (Karte karte : karten) {
-                if (karte.getPlatzkategorie() == platzkategorie.getID()) {
-                    freiePlaetze--;
-                }
-            }
-        }
-        if (freiePlaetze >= (int) spinnerAnzahl.getValue()) {
-
-            for (int i = 1; i <= (int) spinnerAnzahl.getValue(); i++) {
+        if (freiePlaetze >= (int)spinnerAnzahl.getValue()) {
+            for (int i = 1; i <= (int)spinnerAnzahl.getValue(); i++) {
 
                 Karte karte = new Karte(platzkategorie.getID(), kartentyp.getID());
                 karten.add(karte);
+                freiePlaetze--;
             }
             if (textAusgabe.getText().startsWith("Die Buchung")) {
                 textAusgabe.setText("");
             }
             textAusgabe.append(spinnerAnzahl.getValue() + " Karten (" + kartentyp.getName() + ", " + platzkategorie.getName() + ") hinzugefügt.\n");
-            compileSelectPlatzkategorie(vorstellung, (int) spinnerAnzahl.getValue());
+            updateSelectPlatzkategorie(vorstellung, (int)spinnerAnzahl.getValue(), true);
         } else {
             if (textAusgabe.getText().startsWith("Die Buchung")) {
                 textAusgabe.setText("");
             }
             if (freiePlaetze == 1) {
-                textAusgabe.append("Für diese Platzkategorie ist nur noch " + freiePlaetze + " weiterer Platz frei. Versuchen Sie es mit weniger Plätzen oder wählen Sie eine andere Platzkategorie.\n");
+                textAusgabe.append("----------\nFür diese Platzkategorie ist nur noch " + freiePlaetze + " weiterer Platz frei.\nVersuchen Sie es mit weniger Plätzen oder wählen Sie eine andere Platzkategorie.\n----------\n");
             } else if (freiePlaetze > 1) {
-                textAusgabe.append("Für diese Platzkategorie sind nur noch " + freiePlaetze + " weitere Plätze frei. Versuchen Sie es mit weniger Plätzen oder wählen Sie eine andere Platzkategorie.\n");
+                textAusgabe.append("----------\nFür diese Platzkategorie sind nur noch " + freiePlaetze + " weitere Plätze frei.\nVersuchen Sie es mit weniger Plätzen oder wählen Sie eine andere Platzkategorie.\n----------\n");
             } else {
-                textAusgabe.append("Für diese Platzkategorie sind keine Plätze mehr frei. Bitte wählen Sie eine andere Platzkategorie.\n");
+                textAusgabe.append("----------\nFür diese Platzkategorie sind keine Plätze mehr frei.\nBitte wählen Sie eine andere Platzkategorie.\n----------\n");
             }
         }
     }
 
     private void confirmBooking() {
         if (karten.isEmpty()) {
-            textAusgabe.append("Bitte Karten hinzufügen!\n----------\n");
+            textAusgabe.append("----------\nBitte Karten hinzufügen!\n----------\n");
             return;
         }
         Buchung buchung = new Buchung();
@@ -354,7 +356,7 @@ public class Buchungsformular {
         Buchung buchung = (Buchung) Kinoverwaltung.getFromDB("vc_buchung", "WHERE id=" + buchungsID).get(0);
         buchung.saveStatus("storniert");
         Vorstellung vorstellung = (Vorstellung)selectVorstellung.getSelectedItem();
-        compileSelectPlatzkategorie(vorstellung, 0);
+        updateSelectPlatzkategorie(vorstellung, 0, false);
         textAreaFeedback.setText("Die ausgewählte Buchung wurde storniert.");
     }
 
