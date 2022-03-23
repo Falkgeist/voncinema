@@ -78,6 +78,7 @@ public class Buchungsformular {
                 ArrayList<Object> vorstellungen = Kinoverwaltung.getFromDB("vc_vorstellung", "WHERE film=" + filmID + " ORDER BY uhrzeit");
                 selectVorstellung.setModel(new DefaultComboBoxModel(vorstellungen.toArray()));
                 Vorstellung vorstellung = (Vorstellung) selectVorstellung.getSelectedItem();
+                Kinoverwaltung.resetFreiePlaetze();
                 updateSelectPlatzkategorie(vorstellung, 0, false);
             }
         });
@@ -86,6 +87,7 @@ public class Buchungsformular {
             public void actionPerformed(ActionEvent e) {
                 JComboBox cb = (JComboBox) e.getSource();
                 Vorstellung vorstellung = (Vorstellung) cb.getSelectedItem();
+                Kinoverwaltung.resetFreiePlaetze();
                 updateSelectPlatzkategorie(vorstellung, 0, false);
             }
         });
@@ -177,6 +179,7 @@ public class Buchungsformular {
         ArrayList<Object> vorstellungen = Kinoverwaltung.getFromDB("vc_vorstellung", "WHERE film=" + film.getID() + " ORDER BY uhrzeit");
         form.selectVorstellung.setModel(new DefaultComboBoxModel(vorstellungen.toArray()));
         Vorstellung vorstellung = (Vorstellung) form.selectVorstellung.getSelectedItem();
+        Kinoverwaltung.resetFreiePlaetze();
         updateSelectPlatzkategorie(vorstellung, 0, false);
         form.tabbedPane.remove(form.tabNewBooking);
         form.tabbedPane.remove(form.tabMyBookings);
