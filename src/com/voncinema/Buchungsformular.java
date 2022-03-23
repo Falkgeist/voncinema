@@ -374,7 +374,7 @@ public class Buchungsformular {
         User checkUser = Kinoverwaltung.getUserByEmail(inputEmail.getText());
         if (checkUser == null) {
             textFeedbackLogin.setText("Für diese Email wurde kein Konto gefunden.");
-        } else if (Objects.equals(checkUser.getPassword(), Arrays.toString(inputPassword.getPassword()))) {
+        } else if (!Objects.equals(checkUser.getPassword(), Arrays.toString(inputPassword.getPassword()))) {
             textFeedbackLogin.setText("Das Passwort ist nicht korrekt.");
         }
         else {
